@@ -44,7 +44,7 @@ public class Week1 implements IWindowListener {
 	 * 
 	 */
 	@Override
-	public void init(GLCapabilities capabilities) {
+	public void init() {
 		// Compile the shader
 		try {
 			File vertexShader = new File(DIRECTORY, VERTEX_SHADER);
