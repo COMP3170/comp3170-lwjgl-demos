@@ -3,12 +3,14 @@ package comp3170.demos.week3.animation;
 import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.glClear;
 import static org.lwjgl.opengl.GL11.glClearColor;
+import static org.lwjgl.opengl.GL11.glFlush;
 import static org.lwjgl.opengl.GL11.glViewport;
 
 import java.awt.Color;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
 
 import org.joml.Vector2f;
 
@@ -30,7 +32,7 @@ public class Week3 implements IWindowListener {
 	final private String VERTEX_SHADER = "vertex.glsl";
 	final private String FRAGMENT_SHADER = "fragment.glsl";
 
-	final private int NSQUARES = 100;
+	final private int NSQUARES = 10;
 	
 	private Shader shader;
 	private Window window;
@@ -38,6 +40,8 @@ public class Week3 implements IWindowListener {
 	private int screenWidth = 800;
 	private int screenHeight = 800;
 	private ArrayList<Square> squares;
+	
+	private int frameRate = 60;
 	
 	private long oldTime;
 	
@@ -128,8 +132,14 @@ public class Week3 implements IWindowListener {
 
 		for (Square square : squares) {
 			square.draw(shader);
+		}		
+
+		// restrict the framerate by sleeping between frames
+		try {
+			TimeUnit.MILLISECONDS.sleep(1000 / frameRate);
+		} catch (InterruptedException e) {
 		}
-		
+
 	}
 
 	/**
