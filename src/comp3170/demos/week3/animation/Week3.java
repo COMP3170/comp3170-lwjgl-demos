@@ -32,7 +32,7 @@ public class Week3 implements IWindowListener {
 	final private String VERTEX_SHADER = "vertex.glsl";
 	final private String FRAGMENT_SHADER = "fragment.glsl";
 
-	final private int NSQUARES = 10;
+	final private int NSQUARES = 100;
 	
 	private Shader shader;
 	private Window window;
@@ -41,7 +41,7 @@ public class Week3 implements IWindowListener {
 	private int screenHeight = 800;
 	private ArrayList<Square> squares;
 	
-	private int frameRate = 60;
+	private int frameRate = 100;
 	
 	private long oldTime;
 	
@@ -95,9 +95,9 @@ public class Week3 implements IWindowListener {
 		return shader;
 	}
 
-	private static final Vector2f MOVEMENT_SPEED = new Vector2f(0.1f, 0);
+	private static final Vector2f MOVEMENT_SPEED = new Vector2f(0.0f, 0);
 	private static final float ROTATION_SPEED = TAU / 6;
-	private static final float SCALE_SPEED = 1.1f;
+	private static final float SCALE_SPEED = 1.0f;
 
 	private Vector2f movement = new Vector2f();
 
