@@ -1,10 +1,15 @@
 package comp3170.demos.week1;
 
+import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
+import static org.lwjgl.opengl.GL11.GL_TRIANGLES;
+import static org.lwjgl.opengl.GL11.glClear;
+import static org.lwjgl.opengl.GL11.glClearColor;
+import static org.lwjgl.opengl.GL11.glDrawArrays;
+import static org.lwjgl.opengl.GL11.glViewport;
+import static org.lwjgl.opengl.GL20.GL_FLOAT_VEC2;
+
 import java.io.File;
 import java.io.IOException;
-
-import org.lwjgl.opengl.GLCapabilities;
-import static org.lwjgl.opengl.GL20.*;
 
 import comp3170.GLBuffers;
 import comp3170.IWindowListener;
@@ -33,7 +38,8 @@ public class Week1 implements IWindowListener {
 	private int screenHeight = 800;
 
 	public Week1() throws OpenGLException {
-		window = new Window("Week 1", screenWidth, screenHeight, true, this);
+		window = new Window("Week 1", screenWidth, screenHeight, this);
+		window.setResizable(true);
 		window.run();
 	}
 
@@ -45,6 +51,7 @@ public class Week1 implements IWindowListener {
 	 */
 	@Override
 	public void init() {
+		
 		// Compile the shader
 		try {
 			File vertexShader = new File(DIRECTORY, VERTEX_SHADER);

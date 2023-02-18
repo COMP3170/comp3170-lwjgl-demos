@@ -42,7 +42,7 @@ public class Week3 implements IWindowListener {
 	private long oldTime;
 	
 	public Week3() throws OpenGLException {
-		window = new Window("Week 3", screenWidth, screenHeight, true, this);
+		window = new Window("Week 3", screenWidth, screenHeight, this);
 		window.run();
 	}
 
@@ -54,6 +54,7 @@ public class Week3 implements IWindowListener {
 	 */
 	@Override
 	public void init() {
+				
 		// Compile the shader
 		shader = compileShader(VERTEX_SHADER, FRAGMENT_SHADER);
 
