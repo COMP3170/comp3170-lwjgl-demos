@@ -3,7 +3,6 @@ package comp3170.demos.week3.animation;
 import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.glClear;
 import static org.lwjgl.opengl.GL11.glClearColor;
-import static org.lwjgl.opengl.GL11.glFlush;
 import static org.lwjgl.opengl.GL11.glViewport;
 
 import java.awt.Color;
@@ -24,7 +23,7 @@ import comp3170.Window;
  *
  */
 
-public class Week3 implements IWindowListener {
+public class AnimationDemo implements IWindowListener {
 
 	public static final float TAU = (float) (2 * Math.PI);		// https://tauday.com/tau-manifesto
 
@@ -45,7 +44,7 @@ public class Week3 implements IWindowListener {
 	
 	private long oldTime;
 	
-	public Week3() throws OpenGLException {
+	public AnimationDemo() throws OpenGLException {
 		window = new Window("Week 3", screenWidth, screenHeight, this);
 		window.run();
 	}
@@ -160,7 +159,7 @@ public class Week3 implements IWindowListener {
 	}
 
 	public static void main(String[] args) throws IOException, OpenGLException {
-		new Week3();
+		new AnimationDemo();
 	}
 
 }
