@@ -71,13 +71,13 @@ public class Week1 implements IWindowListener {
 		// @formatter:off
 
 		vertices = new float[] {
-			1.0f, 1.0f, 
-			-1.0f, 1.0f, 
+			 1.0f,  1.0f, 
+			-1.0f,  1.0f, 
 			-1.0f, -1.0f,
 
 			-1.0f, -1.0f, 
-			1.0f, -1.0f, 
-			1.0f, 1.0f, 
+			 1.0f, -1.0f, 
+			 1.0f,  1.0f, 
 		};
 		// @formatter:on
 
