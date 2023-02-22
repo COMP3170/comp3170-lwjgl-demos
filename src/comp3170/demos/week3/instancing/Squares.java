@@ -150,14 +150,19 @@ public class Squares {
 	
 	public void update(float dt) {
 		// update all the squares
-//		MOVEMENT_SPEED.mul(dt, movement); // movement = speed * dt
-//
-//		for (int i = 0; i < position.length; i++) {
-//			position[i].add(movement);
-//			angle[i] = (angle[i] + ROTATION_SPEED * dt) % TAU;
-//			scale[i] = scale[i] * (float) Math.pow(SCALE_SPEED, dt);
-//		}
-		
+		MOVEMENT_SPEED.mul(dt, movement); // movement = speed * dt
+
+		for (int i = 0; i < position.length; i++) {
+			position[i].add(movement);
+			angle[i] = (angle[i] + ROTATION_SPEED * dt) % TAU;
+			scale[i] = scale[i] * (float) Math.pow(SCALE_SPEED, dt);
+		}
+
+		// update the data in the buffers
+		GLBuffers.updateBuffer(positionBuffer, position);
+		GLBuffers.updateBuffer(rotationBuffer, angle, GL_FLOAT);
+		GLBuffers.updateBuffer(scaleBuffer, scale, GL_FLOAT);
+
 	}
 
 }
