@@ -5,17 +5,10 @@ import static org.lwjgl.opengl.GL11.glClear;
 import static org.lwjgl.opengl.GL11.glClearColor;
 import static org.lwjgl.opengl.GL11.glViewport;
 
-import java.awt.Color;
-import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.concurrent.TimeUnit;
-
-import org.joml.Vector2f;
 
 import comp3170.IWindowListener;
 import comp3170.OpenGLException;
-import comp3170.Shader;
 import comp3170.Window;
 
 /**
