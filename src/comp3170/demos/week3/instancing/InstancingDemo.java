@@ -31,7 +31,7 @@ public class InstancingDemo implements IWindowListener {
 	private long oldTime;
 	
 	public InstancingDemo() throws OpenGLException {
-		window = new Window("Week 3", screenWidth, screenHeight, this);
+		window = new Window("Instancing demo", screenWidth, screenHeight, this);
 		window.run();
 	}
 
