@@ -14,7 +14,7 @@ import org.lwjgl.opengl.*;
 import static org.lwjgl.opengl.GL41.*;
 
 public class Square {
-	private float[] vertices;
+	private Vector3f[] vertices;
 	private int vertexBuffer;
 	private int[] indices;
 	private int indexBuffer;
@@ -43,15 +43,15 @@ public class Square {
 		//       0-----------1
 		//  (-0.5,-0.5)  (0.5,-0.5)		
 		
-		vertices = new float[] {
-			-0.5f, -0.5f, 1,
-			 0.5f, -0.5f, 1,
-			-0.5f,  0.5f, 1,
-			 0.5f,  0.5f, 1,
+		vertices = new Vector3f[] {
+			new Vector3f(-0.5f, -0.5f, 1),
+			new Vector3f( 0.5f, -0.5f, 1),
+			new Vector3f(-0.5f,  0.5f, 1),
+			new Vector3f( 0.5f,  0.5f, 1),
 		};
 		
 		// copy the data into a Vertex Buffer Object in graphics memory		
-	    vertexBuffer = GLBuffers.createBuffer(vertices, GL_FLOAT_VEC3);
+	    vertexBuffer = GLBuffers.createBuffer(vertices);
 	    
 	    indices = new int[] {
 	    	0, 1, 2,
@@ -151,14 +151,14 @@ public class Square {
 
 	private void calculateModelMatrix() {
 		//      [ 1  0  Tx ]
-		// MT = [ 0  1  Ty ]
+		//  T = [ 0  1  Ty ]
 		//      [ 0  0  1  ]
 		
 		translationMatrix.m20(position.x);
 		translationMatrix.m21(position.y);
 		
 		//      [ cos(a)  -sin(a)  0 ]
-		// MR = [ sin(a)   cos(a)  0 ]
+		//  R = [ sin(a)   cos(a)  0 ]
 		//      [ 0        0       1 ]
 		
 		float s = (float) Math.sin(angle);
@@ -169,13 +169,13 @@ public class Square {
 		rotationMatrix.m11(c);
 
 		//      [ sx  0   0 ]
-		// MS = [ 0   sy  0 ]
+		//  S = [ 0   sy  0 ]
 		//      [ 0   0   1 ]
 
 		scaleMatrix.m00(scale.x);
 		scaleMatrix.m11(scale.y);
 
-		// M = MT * MR * MS (in TRaSheS order)
+		// M = T * R * S (in TRaSheS order)
 		
 		modelMatrix.identity();
 		modelMatrix.mul(translationMatrix);

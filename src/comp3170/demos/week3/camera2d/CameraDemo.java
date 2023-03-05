@@ -51,19 +51,20 @@ public class CameraDemo implements IWindowListener {
 	private Shader shader;
 	private Window window;
 
-	private int width = 2400;
-	private int height = 800;
+	private int width = 1200;
+	private int height = 1200;
 	
 	private long oldTime;
 	private InputManager input;
 
 	private Axes worldAxes;
 	private Axes modelAxes;
+	private Axes cameraAxes;
 	private House house;
 	private Camera camera;
 	
 	public CameraDemo() throws OpenGLException {
-		window = new Window("Model / World / View", width, height, this);
+		window = new Window("Model / World / View / NDC", width, height, this);
 		window.run();
 	}
 
@@ -82,6 +83,7 @@ public class CameraDemo implements IWindowListener {
 
 		worldAxes = new Axes();
 		modelAxes = new Axes();
+		cameraAxes = new Axes();
 		house = new House();
 		camera = new Camera();
 				
@@ -111,11 +113,13 @@ public class CameraDemo implements IWindowListener {
 	private Matrix4f modelMatrix = new Matrix4f();
 	private Matrix4f cameraModelMatrix = new Matrix4f();
 	private Matrix4f viewMatrix = new Matrix4f();
+	private Matrix4f perspectiveMatrix = new Matrix4f();
 
 	private static final float MOVEMENT_SPEED = 0.1f;
 	private static final float ROTATION_SPEED = TAU / 6;
 	private static final float SCALE_SPEED = 1.1f;
-
+	private float cameraScale = 1;
+	
 	private void update() {
 		long time = System.currentTimeMillis();
 		float dt = (time - oldTime) / 1000f;
@@ -151,32 +155,44 @@ public class CameraDemo implements IWindowListener {
 			modelMatrix.translateLocal(MOVEMENT_SPEED * dt, 0, 0);	
 		}
 		
-		// Camera movement using KP_
+		// Camera movement using keypad KP_
 		
 		if (input.isKeyDown(GLFW_KEY_KP_1)) {
-			cameraModelMatrix.scale((float) Math.pow(SCALE_SPEED, dt)); 	// scale up
+			float s = (float)Math.pow(SCALE_SPEED, dt);
+			cameraScale *= s;
+			cameraModelMatrix.scale(s); 		// scale up
+			perspectiveMatrix.scale(1f/s); 	// scale down
 		}
 		if (input.isKeyDown(GLFW_KEY_KP_0)) {
-			cameraModelMatrix.scale((float) Math.pow(1f / SCALE_SPEED, dt));	// scale down
+			float s = (float)Math.pow(SCALE_SPEED, dt);
+			cameraScale /= s;
+			cameraModelMatrix.scale(1f/s); 		// scale down
+			perspectiveMatrix.scale(s); 	// scale up
 		}
 		
 		if (input.isKeyDown(GLFW_KEY_KP_7)) {
 			cameraModelMatrix.rotateZ(ROTATION_SPEED * dt);	
+			viewMatrix.rotateLocalZ(-ROTATION_SPEED * dt);	
 		}
 		if (input.isKeyDown(GLFW_KEY_KP_9)) {
 			cameraModelMatrix.rotateZ(-ROTATION_SPEED * dt);	
+			viewMatrix.rotateLocalZ(ROTATION_SPEED * dt);	
 		}
 		if (input.isKeyDown(GLFW_KEY_KP_8)) {
-			cameraModelMatrix.translate(0, MOVEMENT_SPEED * dt, 0);	
+			cameraModelMatrix.translate(0, MOVEMENT_SPEED / cameraScale * dt, 0);	
+			viewMatrix.translateLocal(0, -MOVEMENT_SPEED * dt, 0);	
 		}
 		if (input.isKeyDown(GLFW_KEY_KP_2)) {
-			cameraModelMatrix.translate(0, -MOVEMENT_SPEED * dt, 0);	
+			cameraModelMatrix.translate(0, -MOVEMENT_SPEED / cameraScale * dt, 0);	
+			viewMatrix.translateLocal(0, MOVEMENT_SPEED * dt, 0);	
 		}
 		if (input.isKeyDown(GLFW_KEY_KP_4)) {
-			cameraModelMatrix.translate(-MOVEMENT_SPEED * dt, 0, 0);	
+			cameraModelMatrix.translate(-MOVEMENT_SPEED / cameraScale *dt, 0, 0);	
+			viewMatrix.translateLocal(MOVEMENT_SPEED * dt, 0, 0);	
 		}
 		if (input.isKeyDown(GLFW_KEY_KP_6)) {
-			cameraModelMatrix.translate(MOVEMENT_SPEED * dt, 0, 0);	
+			cameraModelMatrix.translate(MOVEMENT_SPEED / cameraScale *dt, 0, 0);	
+			viewMatrix.translateLocal(-MOVEMENT_SPEED * dt, 0, 0);	
 		}
 
 	}
@@ -192,26 +208,28 @@ public class CameraDemo implements IWindowListener {
 
 		// MODEL COORDINATES
 		
-		glViewport(0,0,width/3,height);
-		glScissor(0,0,width/3,height);
+		glViewport(0,height/2,width/2,height/2);
+		glScissor(0,height/2,width/2,height/2);
 		glClearColor(0.1f, 0.0f, 0.0f, 1.0f);			
 		glClear(GL_COLOR_BUFFER_BIT);		
 		
 		shader.setUniform("u_modelMatrix", identity);
 		shader.setUniform("u_viewMatrix", identity);		
-
+		shader.setUniform("u_perspectiveMatrix", identity);	
+		
 		modelAxes.draw(shader);
 		house.draw(shader);
 
 		// WORLD COORDINATES
 		
-		glViewport(width/3,0,width/3,height);
-		glScissor(width/3,0,width/3,height);
+		glViewport(width/2,height/2,width/2,height/2);
+		glScissor(width/2,height/2,width/2,height/2);
 		glClearColor(0.0f, 0.1f, 0.0f, 1.0f);			
 		glClear(GL_COLOR_BUFFER_BIT);		
 		
 		shader.setUniform("u_modelMatrix", identity);
 		shader.setUniform("u_viewMatrix", identity);		
+		shader.setUniform("u_perspectiveMatrix", identity);		
 		worldAxes.draw(shader);
 
 		shader.setUniform("u_modelMatrix", modelMatrix);
@@ -219,17 +237,39 @@ public class CameraDemo implements IWindowListener {
 		house.draw(shader);
 
 		shader.setUniform("u_modelMatrix", cameraModelMatrix);
+		cameraAxes.draw(shader);
 		camera.draw(shader);
 
 		// VIEW COORDINATES
-		
-		glViewport(2*width/3,0,width/3,height);
-		glScissor(2*width/3,0,width/3,height);
+
+		glViewport(0,0,width/2,height/2);
+		glScissor(0,0,width/2,height/2);
 		glClearColor(0.0f, 0.0f, 0.1f, 1.0f);			
 		glClear(GL_COLOR_BUFFER_BIT);		
-		
-		cameraModelMatrix.invert(viewMatrix);
+
 		shader.setUniform("u_viewMatrix", viewMatrix);		
+		shader.setUniform("u_perspectiveMatrix", identity);		
+
+		shader.setUniform("u_modelMatrix", identity);
+		worldAxes.draw(shader);
+
+		shader.setUniform("u_modelMatrix", modelMatrix);
+		modelAxes.draw(shader);
+		house.draw(shader);
+
+		shader.setUniform("u_modelMatrix", cameraModelMatrix);
+		cameraAxes.draw(shader);
+		camera.draw(shader);
+
+		// NDC COORDINATES
+		
+		glViewport(width/2,0,width/2,height/2);
+		glScissor(width/2,0,width/2,height/2);
+		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);			
+		glClear(GL_COLOR_BUFFER_BIT);		
+		
+		shader.setUniform("u_viewMatrix", viewMatrix);		
+		shader.setUniform("u_perspectiveMatrix", perspectiveMatrix);		
 
 		shader.setUniform("u_modelMatrix", identity);
 		worldAxes.draw(shader);

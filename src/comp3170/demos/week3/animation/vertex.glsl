@@ -1,6 +1,6 @@
 #version 410
 
-in vec3 a_position;	// vertex position as a 2D vector in MODEL
+in vec3 a_position;	// vertex position as a 2D homogeneous vector in MODEL
 
 uniform mat3 u_modelMatrix; // model->world transformation matrix 
 
