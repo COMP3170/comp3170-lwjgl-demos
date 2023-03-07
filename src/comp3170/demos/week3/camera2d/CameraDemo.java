@@ -110,7 +110,6 @@ public class CameraDemo implements IWindowListener {
 	}
 
 	private Matrix4f identity = new Matrix4f().identity();
-	private Matrix4f modelMatrix = new Matrix4f();
 	private Matrix4f cameraModelMatrix = new Matrix4f();
 	private Matrix4f viewMatrix = new Matrix4f();
 	private Matrix4f perspectiveMatrix = new Matrix4f();
@@ -124,36 +123,8 @@ public class CameraDemo implements IWindowListener {
 		long time = System.currentTimeMillis();
 		float dt = (time - oldTime) / 1000f;
 		oldTime = time;
-				
-		if (input.isKeyDown(GLFW_KEY_Z)) {
-			modelMatrix.scale((float) Math.pow(SCALE_SPEED, dt)); 	// scale up
-		}
-		if (input.isKeyDown(GLFW_KEY_X)) {
-			modelMatrix.scale((float) Math.pow(1f / SCALE_SPEED, dt));	// scale down
-		}
-		
-		if (input.isKeyDown(GLFW_KEY_Q)) {
-			modelMatrix.rotateZ(ROTATION_SPEED * dt);	
-		}
-		if (input.isKeyDown(GLFW_KEY_E)) {
-			modelMatrix.rotateZ(-ROTATION_SPEED * dt);	
-		}
-		if (input.isKeyDown(GLFW_KEY_W)) {
-			// multiply translation matrix on the left to move in world space
-			modelMatrix.translateLocal(0, MOVEMENT_SPEED * dt, 0);	
-		}
-		if (input.isKeyDown(GLFW_KEY_S)) {
-			// multiply translation matrix on the left to move in world space
-			modelMatrix.translateLocal(0, -MOVEMENT_SPEED * dt, 0);	
-		}
-		if (input.isKeyDown(GLFW_KEY_A)) {
-			// multiply translation matrix on the left to move in world space
-			modelMatrix.translateLocal(-MOVEMENT_SPEED * dt, 0, 0);	
-		}
-		if (input.isKeyDown(GLFW_KEY_D)) {
-			// multiply translation matrix on the left to move in world space
-			modelMatrix.translateLocal(MOVEMENT_SPEED * dt, 0, 0);	
-		}
+
+		house.update(input, dt);
 		
 		// Camera movement using keypad KP_
 		
@@ -195,13 +166,14 @@ public class CameraDemo implements IWindowListener {
 			viewMatrix.translateLocal(-MOVEMENT_SPEED * dt, 0, 0);	
 		}
 
+		input.clear();
 	}
 	
 	@Override
 	/**
 	 * Called when the canvas is redrawn
 	 */
-	public void draw() {
+	public void draw() {	
 		update();
 		
 		shader.enable();
@@ -232,7 +204,7 @@ public class CameraDemo implements IWindowListener {
 		shader.setUniform("u_perspectiveMatrix", identity);		
 		worldAxes.draw(shader);
 
-		shader.setUniform("u_modelMatrix", modelMatrix);
+		shader.setUniform("u_modelMatrix", house.getMatrix());
 		modelAxes.draw(shader);
 		house.draw(shader);
 
@@ -253,7 +225,7 @@ public class CameraDemo implements IWindowListener {
 		shader.setUniform("u_modelMatrix", identity);
 		worldAxes.draw(shader);
 
-		shader.setUniform("u_modelMatrix", modelMatrix);
+		shader.setUniform("u_modelMatrix", house.getMatrix());
 		modelAxes.draw(shader);
 		house.draw(shader);
 
@@ -274,7 +246,7 @@ public class CameraDemo implements IWindowListener {
 		shader.setUniform("u_modelMatrix", identity);
 		worldAxes.draw(shader);
 
-		shader.setUniform("u_modelMatrix", modelMatrix);
+		shader.setUniform("u_modelMatrix", house.getMatrix());
 		modelAxes.draw(shader);
 		house.draw(shader);
 
