@@ -1,7 +1,12 @@
 package comp3170.demos.week4.scenegraph;
 
-import org.joml.Matrix3f;
+import org.joml.Matrix4f;
 
+/**
+ * A simple Transform class for 2D objects that uses Mat4s and Vec4s.
+ * 
+ * Essentially, this allows you to write your 2D scene using the affordances of Mat4s and Vec4s, but not worry about accidentally altering the z-values.
+ */
 public class Transform {
 	
 	public static final float TAU = (float)Math.PI * 2; 
@@ -16,7 +21,7 @@ public class Transform {
 	 * @return
 	 */
 	
-	public static Matrix3f translationMatrix(float tx, float ty, Matrix3f dest) {
+	public static Matrix4f translationMatrix(float tx, float ty, Matrix3f dest) {
 		// clear the matrix to the identity matrix
 		dest.identity();
 		
@@ -39,7 +44,7 @@ public class Transform {
 	 * @return
 	 */
 
-	public static Matrix3f rotationMatrix(float angle, Matrix3f dest) {
+	public static Matrix4f rotationMatrix(float angle, Matrix3f dest) {
 		
 		// clear the matrix to the identity matrix
 		dest.identity();
@@ -69,14 +74,15 @@ public class Transform {
 	 * @return
 	 */
 	
-	public static Matrix3f scaleMatrix(float sx, float sy, Matrix3f dest) {
+	public static Matrix4f scaleMatrix(float sx, float sy, Matrix4f dest) {
 		
 		// clear the matrix to the identity matrix
 		dest.identity();
 		
-		//     [ sx  0  0 ]
-		// S = [  0 sy  0 ]
-		//     [  0  0  1 ]
+		//     [ sx  0  0  0]
+		// S = [  0 sy  0  0]
+		//     [  0  0  sz 0]
+		//	   [ 0  0   0  1]
 		
 		dest.m00(sx);
 		dest.m11(sy);

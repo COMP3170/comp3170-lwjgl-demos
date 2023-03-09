@@ -1,8 +1,5 @@
 package comp3170.demos.week4.scenegraph;
 
-import comp3170.OpenGLException;
-import comp3170.Shader;
-
 import static org.lwjgl.opengl.GL11.GL_TRIANGLES;
 import static org.lwjgl.opengl.GL11.GL_UNSIGNED_INT;
 import static org.lwjgl.opengl.GL11.glDrawElements;
@@ -12,11 +9,11 @@ import static org.lwjgl.opengl.GL20.GL_FLOAT_VEC2;
 
 import java.awt.Color;
 
-import org.joml.Matrix3f;
-import org.joml.Vector2f;
+import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
 import comp3170.GLBuffers;
+import comp3170.SceneObject;
 import comp3170.Shader;
 
 public class Arm extends SceneObject {
@@ -25,10 +22,20 @@ public class Arm extends SceneObject {
 	private int[] indices;
 	private int indexBuffer;
 	
+	private Vector3f position; 
+	private float angle;
+	private Vector3f scale;
+	
+	protected Matrix4f modelMatrix;
+	private Matrix4f translationMatrix;
+	private Matrix4f rotationMatrix;
+	private Matrix4f scaleMatrix;
+	
 	private Vector3f colour;
 	
+	private Shader shader;
+	
 	public Arm(Shader shader, float width, float height) {
-		super(shader);
 		
 		// vertices for a wxh square with origin at the end
 		// 
@@ -59,6 +66,16 @@ public class Arm extends SceneObject {
 	    
 	    this.indexBuffer = GLBuffers.createIndexBuffer(indices);
 	    this.colour = new Vector3f(1f, 1f, 1f);	// default is white
+	    shader = shader;
+	    
+	    position = new Vector3f(0,0,0);
+	    
+	    scale = new Vector3f(1,1,0);
+	    
+		modelMatrix = new Matrix4f();
+		translationMatrix = new Matrix4f();
+		rotationMatrix = new Matrix4f();
+		scaleMatrix = new Matrix4f();
 	}
 	
 	public Vector3f getColour() {
@@ -71,9 +88,66 @@ public class Arm extends SceneObject {
 		colour.z = color.getGreen() / 255f;
 	}
 	
-	@Override
-	public void drawSelf() {
+	public Vector3f getPosition(Vector3f armPosition) {
+		return armPosition.get(position);
+	}
+
+	public void setPosition(float x, float y, float z) {
+		position.x = x;
+		position.y = y;
+		position.z = z;
+	}
+
+	public float getAngle() {
+		return angle;
+	}
 		
+	public void setAngle(float angle) {
+		this.angle = angle;
+	}
+	
+	public Vector3f getScale(Vector3f dest) {
+		return dest.set(scale);
+	}
+
+	public void setScale(float sx, float sy) {
+		this.scale.x = sx;
+		this.scale.y = sy;
+	}	
+		
+	public void draw(Matrix4f parentMatrix, Shader shader) {
+		
+		// set the model matrix
+		
+		calculateModelMatrix(parentMatrix);
+		
+		// draw self
+		
+		drawSelf(parentMatrix);
+		
+
+	}
+
+	private Matrix4f calculateModelMatrix(Matrix4f parentMatrix) {
+		translationMatrix.translate(position);
+		//Transform.translationMatrix(position.x, position.y, translationMatrix);
+		rotationMatrix.rotateZ(angle);
+		//Transform.rotationMatrix(angle, rotationMatrix);
+		scaleMatrix.scale(scale.x,scale.y,1);
+
+		// M = MP * T * R * S
+		
+		modelMatrix.set(parentMatrix);
+		modelMatrix.mul(translationMatrix);
+		modelMatrix.mul(rotationMatrix);
+		modelMatrix.mul(scaleMatrix);
+		
+		return modelMatrix;
+	}
+	
+	@Override
+	protected void drawSelf(Matrix4f matrix) {
+				
 		// set the model matrix		
 		shader.setUniform("u_modelMatrix", modelMatrix);
 		
