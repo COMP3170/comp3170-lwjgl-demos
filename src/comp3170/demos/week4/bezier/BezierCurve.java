@@ -1,13 +1,23 @@
 package comp3170.demos.week4.bezier;
 
+import comp3170.OpenGLException;
+import comp3170.Shader;
+
 import org.joml.Vector3f;
 
-import com.jogamp.opengl.GL;
-import com.jogamp.opengl.GL4;
-import com.jogamp.opengl.GLContext;
+import static org.lwjgl.opengl.GL11.GL_TRIANGLES;
+import static org.lwjgl.opengl.GL11.GL_UNSIGNED_INT;
+import static org.lwjgl.opengl.GL11.glDrawElements;
+import static org.lwjgl.opengl.GL15.GL_ELEMENT_ARRAY_BUFFER;
+import static org.lwjgl.opengl.GL15.glBindBuffer;
+import static org.lwjgl.opengl.GL20.*;
 
 import comp3170.GLBuffers;
-import comp3170.Shader;
+import comp3170.IWindowListener;
+import comp3170.InputManager;
+import comp3170.Window;
+
+
 
 public class BezierCurve {
 
@@ -58,18 +68,18 @@ public class BezierCurve {
 	}
 	
 	public void draw() {
-		GL4 gl = (GL4) GLContext.getCurrentGL();
 		
         // connect the vertex buffer to the a_position attribute		   
 	    shader.setAttribute("a_position", vertexBuffer);
 
 	    // draw lines in blue
-	    shader.setUniform("u_colour", new float[] {0,0,1});	    	    
-	    gl.glDrawArrays(GL.GL_LINE_STRIP, 0, vertices.length);		
+	    shader.setUniform("u_colour", new float[] {0,1,1});	   
+	    glDrawArrays(GL_LINE_STRIP, 0, vertices.length);		
 
 	    // draw points in yellow 
-	    shader.setUniform("u_colour", new float[] {1,1,0});	    
-	    gl.glDrawArrays(GL.GL_POINTS, 0, vertices.length);		
+	    shader.setUniform("u_colour", new float[] {1,0,0});	 
+	    glPointSize(10f);
+	    glDrawArrays(GL_POINTS, 0, vertices.length);		
 
 	}
 
