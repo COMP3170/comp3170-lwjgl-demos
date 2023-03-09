@@ -46,7 +46,7 @@ public class Arm extends SceneObject {
 		};
 		
 		// copy the data into a Vertex Buffer Object in graphics memory		
-	    this.vertexBuffer = GLBuffers.createBuffer(vertices, GL4.GL_FLOAT_VEC2);
+	    this.vertexBuffer = GLBuffers.createBuffer(vertices, GL_FLOAT_VEC2);
 	    
 	    this.indices = new int[] {
 	    	0, 1, 2,

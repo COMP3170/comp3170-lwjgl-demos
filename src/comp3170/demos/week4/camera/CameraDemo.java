@@ -92,11 +92,11 @@ public class CameraDemo implements IWindowListener {
 	    
 	    // Set up the camera
 
-	    this.camera = new Camera(shader);
-	    this.camera.setPosition(0,0);
-	    this.camera.setAngle(0);
-	    this.camera.setZoom(width * 2f);	// pixels per world unit
-	    this.camera.setSize(width, height);
+	    camera = new Camera(shader);
+	    camera.setPosition(0,0);
+	    camera.setAngle(0);
+	    camera.setZoom(width * 2f);	// pixels per world unit
+	    camera.setSize(width, height);
 	    
 	    // allocation view and projection matrices
 	    viewMatrix = new Matrix3f();
@@ -108,7 +108,7 @@ public class CameraDemo implements IWindowListener {
 
 	private static final float ROTATION_SPEED = TAU / 6;
 	private static final float CAMERA_ROTATION_SPEED = TAU / 6;
-	private static final float CAMERA_MOVEMENT_SPEED = 0.5f;
+	private static final float CAMERA_MOVEMENT_SPEED = 1f;
 	private static final float CAMERA_ZOOM_SPEED = 1.5f;
 	
 	private void update() {
@@ -127,6 +127,7 @@ public class CameraDemo implements IWindowListener {
 
 		if (input.isKeyDown(GLFW_KEY_W)) {
 			camera.translate(0, CAMERA_MOVEMENT_SPEED * deltaTime);
+			
 		}
 		if (input.isKeyDown(GLFW_KEY_S)) {
 			camera.translate(0, -CAMERA_MOVEMENT_SPEED * deltaTime);
@@ -148,6 +149,8 @@ public class CameraDemo implements IWindowListener {
 			showCamera = !showCamera;
 		}
 		input.clear();		
+		
+		squares.update(deltaTime);
 	}
 	
 	
@@ -184,6 +187,7 @@ public class CameraDemo implements IWindowListener {
 		
 		// draw the squares
 		squares.draw();
+
 		
 		if (showCamera) {
 			// draw the camera rectangle

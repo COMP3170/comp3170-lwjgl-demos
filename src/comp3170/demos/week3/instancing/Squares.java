@@ -159,9 +159,9 @@ public class Squares {
 		}
 
 		// update the data in the buffers
-//		GLBuffers.updateBuffer(positionBuffer, position);
-//		GLBuffers.updateBuffer(rotationBuffer, angle, GL_FLOAT);
-//		GLBuffers.updateBuffer(scaleBuffer, scale, GL_FLOAT);
+		GLBuffers.updateBuffer(positionBuffer, position);
+		GLBuffers.updateBuffer(rotationBuffer, angle, GL_FLOAT);
+		GLBuffers.updateBuffer(scaleBuffer, scale, GL_FLOAT);
 
 	}
 

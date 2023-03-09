@@ -1,168 +1,182 @@
 package comp3170.demos.week4.camera;
 
-import static org.lwjgl.opengl.GL11.GL_FLOAT;
-import static org.lwjgl.opengl.GL11.GL_TRIANGLES;
-import static org.lwjgl.opengl.GL11.GL_UNSIGNED_INT;
-import static org.lwjgl.opengl.GL15.GL_ELEMENT_ARRAY_BUFFER;
-import static org.lwjgl.opengl.GL15.glBindBuffer;
-import static org.lwjgl.opengl.GL20.GL_FLOAT_VEC2;
-import static org.lwjgl.opengl.GL31.glDrawElementsInstanced;
-import static org.lwjgl.opengl.GL33.glVertexAttribDivisor;
+import static com.jogamp.opengl.GL.GL_TRIANGLES;
 
 import java.awt.Color;
-import java.io.File;
-import java.io.IOException;
 
+import org.joml.Matrix3f;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 
+import com.jogamp.opengl.GL;
+import com.jogamp.opengl.GL4;
+import com.jogamp.opengl.GLContext;
+
 import comp3170.GLBuffers;
-import comp3170.OpenGLException;
 import comp3170.Shader;
 
-public class Squares {
-
-	public static final float TAU = (float) (2 * Math.PI);		// https://tauday.com/tau-manifesto
-
-	final private File DIRECTORY = new File("src/comp3170/demos/week4/camera");
-	final private String VERTEX_SHADER = "vertex.glsl";
-	final private String FRAGMENT_SHADER = "fragment.glsl";
-
+public class Square {
 	private float[] vertices;
 	private int vertexBuffer;
 	private int[] indices;
 	private int indexBuffer;
 
-	private int nSquares;
-	private Vector2f[] position;
-	private float[] angle;
-	private float[] scale;
-	private Vector3f[] colour;
-	private Shader shader;
-
-	private int positionBuffer;
-	private int rotationBuffer;
-	private int scaleBuffer;
-	private int colourBuffer;
-
-	public Squares(int nSquares) {
-		this.nSquares = nSquares;
-		
-		// Compile the shader
-		shader = compileShader(VERTEX_SHADER, FRAGMENT_SHADER);
-
-		// Make one copy of the mesh
-		makeMesh();
-
-		// One transform per instance
-		position = new Vector2f[nSquares];
-		angle = new float[nSquares];
-		scale = new float[nSquares];
-		colour = new Vector3f[nSquares];
-
-		for (int i = 0; i < nSquares; i++) {
-			float x = (float) Math.random() * 2 - 1;
-			float y = (float) Math.random() * 2 - 1;
-			position[i] = new Vector2f(x, y);
-			angle[i] = 0;
-			scale[i] = 0.1f;
-			Color c = Color.getHSBColor((float) Math.random(), 1, 1);
-			colour[i] = new Vector3f(c.getRed() / 255f, c.getGreen() / 255f, c.getBlue() / 255f);
-		}
-		
-		
-		// create buffers for all the matrices and colours
-		positionBuffer = GLBuffers.createBuffer(position);
-		rotationBuffer = GLBuffers.createBuffer(angle, GL_FLOAT);
-		scaleBuffer = GLBuffers.createBuffer(scale, GL_FLOAT);
-		colourBuffer = GLBuffers.createBuffer(colour);
-
-	}
-
-	private Shader compileShader(String vertexShader, String fragmentShader) {
-		Shader shader = null;
-		try {
-			File vs = new File(DIRECTORY, vertexShader);
-			File fs = new File(DIRECTORY, fragmentShader);
-			shader = new Shader(vs, fs);
-		} catch (IOException e) {
-			e.printStackTrace();
-			System.exit(1);
-		} catch (OpenGLException e) {
-			e.printStackTrace();
-			System.exit(1);
-		}
-		return shader;
-	}
-
-	private void makeMesh() {
-
-		vertices = new float[] { 
-			-0.5f, -0.5f,     
-			 0.5f, -0.5f, 
-			-0.5f,  0.5f, 
-			 0.5f,  0.5f, 
-		};
-
-		// copy the data into a Vertex Buffer Object in graphics memory
-		vertexBuffer = GLBuffers.createBuffer(vertices, GL_FLOAT_VEC2);
-
-		indices = new int[] { 
-			0, 1, 2, 
-			3, 2, 1, 
-		};
-
-		indexBuffer = GLBuffers.createIndexBuffer(indices);
-	}
-
-	public void draw() {
-
-		shader.enable();
-		
-		// pass in all the model matrices
-		shader.setAttribute("a_worldPos", positionBuffer);
-		glVertexAttribDivisor(shader.getAttribute("a_worldPos"), 1);
-
-		shader.setAttribute("a_rotation", rotationBuffer);
-		glVertexAttribDivisor(shader.getAttribute("a_rotation"), 1);
-
-		shader.setAttribute("a_scale", scaleBuffer);
-		glVertexAttribDivisor(shader.getAttribute("a_scale"), 1);
-
-		// write the colour value into the u_colour uniform
-		shader.setAttribute("a_colour", colourBuffer);
-		glVertexAttribDivisor(shader.getAttribute("a_colour"), 1);
-		
-		// connect the vertex buffer to the a_position attribute
-		shader.setAttribute("a_position", vertexBuffer);
-
-		// draw using an index buffer
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
-		glDrawElementsInstanced(GL_TRIANGLES, indices.length, GL_UNSIGNED_INT, 0, nSquares);
-	}
-
-
-	private static final Vector2f MOVEMENT_SPEED = new Vector2f(0.0f, 0.0f);
-	private static final float ROTATION_SPEED = TAU / 6;
-	private static final float SCALE_SPEED = 1.0f;
-	private Vector2f movement = new Vector2f();
+	private Vector2f position; 
+	private float angle;
+	private Vector2f scale;
 	
-	public void update(float dt) {
-		// update all the squares
-		MOVEMENT_SPEED.mul(dt, movement); // movement = speed * dt
+	private Matrix3f modelMatrix;
+	private Matrix3f translationMatrix;
+	private Matrix3f rotationMatrix;
+	private Matrix3f scaleMatrix;
+	private Vector3f colour;
+	
+	public Square(Shader shader) {
+		
+		// verices for a 1x1 square with origin in the centre
+		// 
+		//  (-0.5,0.5)   (0.5,0.5)
+		//       2-----------3
+		//       | \         |
+		//       |   \       |
+		//       |     \     |
+		//       |       \   |
+		//       |         \ |
+		//       0-----------1
+		//  (-0.5,-0.5)  (0.5,-0.5)		
+		
+		this.vertices = new float[] {
+			-0.5f, -0.5f,
+			 0.5f, -0.5f,
+			-0.5f,  0.5f,
+			 0.5f,  0.5f,
+		};
+		
+		// copy the data into a Vertex Buffer Object in graphics memory		
+	    this.vertexBuffer = GLBuffers.createBuffer(vertices, GL4.GL_FLOAT_VEC2);
+	    
+	    this.indices = new int[] {
+	    	0, 1, 2,
+	    	3, 2, 1,
+	    };
+	    
+	    this.indexBuffer = GLBuffers.createIndexBuffer(indices);
 
-		for (int i = 0; i < position.length; i++) {
-			position[i].add(movement);
-			angle[i] = (angle[i] + ROTATION_SPEED * dt) % TAU;
-			scale[i] = scale[i] * (float) Math.pow(SCALE_SPEED, dt);
-		}
-
-		// update the data in the buffers
-//		GLBuffers.updateBuffer(positionBuffer, position);
-//		GLBuffers.updateBuffer(rotationBuffer, angle, GL_FLOAT);
-//		GLBuffers.updateBuffer(scaleBuffer, scale, GL_FLOAT);
-
+	    // set up transform
+	    
+	    this.position = new Vector2f(0f, 0f);
+	    this.angle = 0f;
+	    this.scale = new Vector2f(1f, 1f);
+	    this.modelMatrix = new Matrix3f();	    
+	    
+	    this.translationMatrix = new Matrix3f();    
+	    this.rotationMatrix = new Matrix3f();
+	    this.scaleMatrix = new Matrix3f();
+	    
+	    // colour
+	    
+	    this.colour = new Vector3f(1f, 1f, 1f);	// default is white
+	}
+	
+	public Vector2f getPosition() {
+		return position;
 	}
 
-}
+	public void setPosition(float x, float y) {
+		position.x = x;
+		position.y = y;
+	}
 
+	public void translate(Vector2f movement) {
+		position.x += movement.x;
+		position.y += movement.y;
+	}
+	
+	public float getAngle() {
+		return angle;
+	}
+		
+	public void setAngle(float angle) {
+		this.angle = angle;
+	}
+	
+	public void rotate(float radians) {
+		angle += radians;
+	}
+	
+	public Vector2f getScale() {
+		return scale;
+	}
+
+	public void setScale(float sx, float sy) {
+		this.scale.x = sx;
+		this.scale.y = sy;
+	}
+
+	public void scale(float factor) {
+		scale.mul(factor);		
+	}	
+	
+	public Vector3f getColour() {
+		return colour;
+	}
+	
+	public void setColour(Color color) {		
+		colour.x = color.getRed() / 255f;
+		colour.y = color.getBlue() / 255f;
+		colour.z = color.getGreen() / 255f;
+	}
+	
+	public void draw(Shader shader) {
+		GL4 gl = (GL4) GLContext.getCurrentGL();
+		
+		// set the model matrix
+		
+		calculateModelMatrix();
+		shader.setUniform("u_modelMatrix", modelMatrix);
+		
+        // connect the vertex buffer to the a_position attribute		   
+	    shader.setAttribute("a_position", vertexBuffer);
+
+	    // write the colour value into the u_colour uniform 
+	    shader.setUniform("u_colour", colour);	    
+	    
+	    gl.glBindBuffer(GL.GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
+	    gl.glDrawElements(GL_TRIANGLES, indices.length, GL.GL_UNSIGNED_INT, 0);		
+	}
+
+	private void calculateModelMatrix() {
+		//      [ 1  0  Tx ]
+		// MT = [ 0  1  Ty ]
+		//      [ 0  0  1  ]
+		
+		translationMatrix.m20(position.x);
+		translationMatrix.m21(position.y);
+		
+		//      [ cos(a)  -sin(a)  0 ]
+		// MR = [ sin(a)   cos(a)  0 ]
+		//      [ 0        0       1 ]
+		
+		float s = (float) Math.sin(angle);
+		float c = (float) Math.cos(angle);
+		rotationMatrix.m00(c);
+		rotationMatrix.m01(s);
+		rotationMatrix.m10(-s);
+		rotationMatrix.m11(c);
+
+		//      [ sx  0   0 ]
+		// MS = [ 0   sy  0 ]
+		//      [ 0   0   1 ]
+
+		scaleMatrix.m00(scale.x);
+		scaleMatrix.m11(scale.y);
+
+		// M = MT * MR * MS
+		
+		modelMatrix.identity();
+		modelMatrix.mul(translationMatrix);
+		modelMatrix.mul(rotationMatrix);
+		modelMatrix.mul(scaleMatrix);
+	}
+	
+}
