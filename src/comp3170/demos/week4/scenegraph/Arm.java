@@ -1,16 +1,20 @@
 package comp3170.demos.week4.scenegraph;
 
-import static com.jogamp.opengl.GL.GL_TRIANGLES;
+import comp3170.OpenGLException;
+import comp3170.Shader;
+
+import static org.lwjgl.opengl.GL11.GL_TRIANGLES;
+import static org.lwjgl.opengl.GL11.GL_UNSIGNED_INT;
+import static org.lwjgl.opengl.GL11.glDrawElements;
+import static org.lwjgl.opengl.GL15.GL_ELEMENT_ARRAY_BUFFER;
+import static org.lwjgl.opengl.GL15.glBindBuffer;
+import static org.lwjgl.opengl.GL20.GL_FLOAT_VEC2;
 
 import java.awt.Color;
 
 import org.joml.Matrix3f;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
-
-import com.jogamp.opengl.GL;
-import com.jogamp.opengl.GL4;
-import com.jogamp.opengl.GLContext;
 
 import comp3170.GLBuffers;
 import comp3170.Shader;
@@ -46,7 +50,7 @@ public class Arm extends SceneObject {
 		};
 		
 		// copy the data into a Vertex Buffer Object in graphics memory		
-	    this.vertexBuffer = GLBuffers.createBuffer(vertices, GL_FLOAT_VEC2);
+	    vertexBuffer = GLBuffers.createBuffer(vertices, GL_FLOAT_VEC2);
 	    
 	    this.indices = new int[] {
 	    	0, 1, 2,
@@ -69,7 +73,6 @@ public class Arm extends SceneObject {
 	
 	@Override
 	public void drawSelf() {
-		GL4 gl = (GL4) GLContext.getCurrentGL();
 		
 		// set the model matrix		
 		shader.setUniform("u_modelMatrix", modelMatrix);
@@ -80,8 +83,8 @@ public class Arm extends SceneObject {
 	    // write the colour value into the u_colour uniform 
 	    shader.setUniform("u_colour", colour);	    
 	    
-	    gl.glBindBuffer(GL.GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
-	    gl.glDrawElements(GL_TRIANGLES, indices.length, GL.GL_UNSIGNED_INT, 0);		
+	    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
+	    glDrawElements(GL_TRIANGLES, indices.length, GL_UNSIGNED_INT, 0);	
 	}
 
 	

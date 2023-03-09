@@ -1,48 +1,55 @@
 
 package comp3170.demos.week4.scenegraph;
 
-import static com.jogamp.opengl.GL.GL_COLOR_BUFFER_BIT;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_W;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_A;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_S;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_D;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_SPACE;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_LEFT;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_RIGHT;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_UP;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_DOWN;
+
+import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
+import static org.lwjgl.opengl.GL11.GL_SCISSOR_TEST;
+import static org.lwjgl.opengl.GL11.glClear;
+import static org.lwjgl.opengl.GL11.glClearColor;
+import static org.lwjgl.opengl.GL11.glEnable;
+import static org.lwjgl.opengl.GL11.glScissor;
+import static org.lwjgl.opengl.GL11.glViewport;
 
 import java.awt.Color;
-import java.awt.event.KeyEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.IOException;
-
-import javax.swing.JFrame;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.joml.Matrix3f;
+import org.joml.Matrix4f;
 import org.joml.Vector2f;
 
-import com.jogamp.opengl.GL4;
-import com.jogamp.opengl.GLAutoDrawable;
-import com.jogamp.opengl.GLCapabilities;
-import com.jogamp.opengl.GLContext;
-import com.jogamp.opengl.GLEventListener;
-import com.jogamp.opengl.GLProfile;
-import com.jogamp.opengl.awt.GLCanvas;
-import com.jogamp.opengl.util.Animator;
-
-import comp3170.GLException;
+import comp3170.IWindowListener;
 import comp3170.InputManager;
+import comp3170.OpenGLException;
 import comp3170.Shader;
+import comp3170.Window;
+import comp3170.demos.week4.camera.Square;
 
-public class SceneGraphDemo extends JFrame implements GLEventListener {
+public class SceneGraphDemo implements IWindowListener {
 
 	public static final float TAU = (float) (2 * Math.PI);		// https://tauday.com/tau-manifesto
 	
 	private int width = 800;
 	private int height = 800;
 
-	private GLCanvas canvas;
+	private Window window;
 	private Shader shader;
 	
 	final private File DIRECTORY = new File("src/comp3170/demos/week4/scenegraph"); 
 	final private String VERTEX_SHADER = "vertex.glsl";
 	final private String FRAGMENT_SHADER = "fragment.glsl";
 
-	private Animator animator;
 	private long oldTime;
 	private InputManager input;
 
@@ -53,42 +60,18 @@ public class SceneGraphDemo extends JFrame implements GLEventListener {
 	private SceneObject sceneGraph;
 	private Arm[] arms;
 	
-	public SceneGraphDemo() {
-		super("Week 4 scene graph demo");
-
-		// set up a GL canvas
-		GLProfile profile = GLProfile.get(GLProfile.GL4);		 
-		GLCapabilities capabilities = new GLCapabilities(profile);
-		this.canvas = new GLCanvas(capabilities);
-		this.canvas.addGLEventListener(this);
-		this.add(canvas);
-		
-		// set up the JFrame
-		
-		this.setSize(width,height);
-		this.setVisible(true);
-		this.addWindowListener(new WindowAdapter() {
-			public void windowClosing(WindowEvent e) {
-				System.exit(0);
-			}
-		});
-		
-		// set up Animator		
-		this.animator = new Animator(canvas);
-		this.animator.start();
-		this.oldTime = System.currentTimeMillis();		
-		
-		// set up Input manager
-		this.input = new InputManager(canvas);
-
+	public SceneGraphDemo() throws OpenGLException {
+		window = new Window("Week 4 Camera Demo", width, height, this);
+		window.setResizable(true);
+		window.run();
 	}
 
+
 	@Override
-	public void init(GLAutoDrawable arg0) {
-		GL4 gl = (GL4) GLContext.getCurrentGL();
+	public void init() {
 		
 		// set the background colour to black
-		gl.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		
 		// Compile the shader
 		try {
@@ -98,10 +81,12 @@ public class SceneGraphDemo extends JFrame implements GLEventListener {
 		} catch (IOException e) {
 			e.printStackTrace();
 			System.exit(1);
-		} catch (GLException e) {
+		} catch (OpenGLException e) {
 			e.printStackTrace();
 			System.exit(1);
 		}
+		
+		input = new InputManager(window);
 
 		// Set up the scene
 		//
@@ -145,10 +130,10 @@ public class SceneGraphDemo extends JFrame implements GLEventListener {
 
 		arms[0].getPosition(armPosition);
 		
-		if (input.isKeyDown(KeyEvent.VK_LEFT)) {
+		if (input.isKeyDown(GLFW_KEY_A)) {
 			arms[0].setPosition(armPosition.x - MOVEMENT_SPEED * deltaTime, armPosition.y);
 		}
-		if (input.isKeyDown(KeyEvent.VK_RIGHT)) {
+		if (input.isKeyDown(GLFW_KEY_D)) {
 			arms[0].setPosition(armPosition.x + MOVEMENT_SPEED * deltaTime, armPosition.y);
 		}
 
@@ -157,22 +142,22 @@ public class SceneGraphDemo extends JFrame implements GLEventListener {
 		float angle2 = arms[2].getAngle();
 		float rot = ROTATION_SPEED * deltaTime;
 		
-		if (input.isKeyDown(KeyEvent.VK_NUMPAD1)) {
+		if (input.isKeyDown(GLFW_KEY_W)) {
 			arms[0].setAngle(angle0 + rot);
 		}
-		if (input.isKeyDown(KeyEvent.VK_NUMPAD2)) {
+		if (input.isKeyDown(GLFW_KEY_S)) {
 			arms[0].setAngle(angle0 - rot);
 		}
-		if (input.isKeyDown(KeyEvent.VK_NUMPAD4)) {
+		if (input.isKeyDown(GLFW_KEY_LEFT)) {
 			arms[1].setAngle(angle1 + rot);
 		}
-		if (input.isKeyDown(KeyEvent.VK_NUMPAD5)) {
+		if (input.isKeyDown(GLFW_KEY_RIGHT)) {
 			arms[1].setAngle(angle1 - rot);
 		}
-		if (input.isKeyDown(KeyEvent.VK_NUMPAD7)) {
+		if (input.isKeyDown(GLFW_KEY_UP)) {
 			arms[2].setAngle(angle2 + rot);
 		}
-		if (input.isKeyDown(KeyEvent.VK_NUMPAD8)) {
+		if (input.isKeyDown(GLFW_KEY_DOWN)) {
 			arms[2].setAngle(angle2 - rot);
 		}
 		
@@ -180,14 +165,13 @@ public class SceneGraphDemo extends JFrame implements GLEventListener {
 	}
 	
 	@Override
-	public void display(GLAutoDrawable arg0) {
-		GL4 gl = (GL4) GLContext.getCurrentGL();
+	public void draw() {
 		
 		// update the scene
 		update();	
 
         // clear the colour buffer
-		gl.glClear(GL_COLOR_BUFFER_BIT);		
+		glClear(GL_COLOR_BUFFER_BIT);		
 
 		// activate the shader
 		this.shader.enable();		
@@ -203,19 +187,26 @@ public class SceneGraphDemo extends JFrame implements GLEventListener {
 		
 	}
 
+
 	@Override
-	public void reshape(GLAutoDrawable d, int x, int y, int width, int height) {
+	public void resize(int width, int height) {
+		
 		this.width = width;
-		this.height = height;		
+		this.height = height;
+		glViewport(0, 0, width, height);
+		
+		
+
+		
 	}
 
 	@Override
-	public void dispose(GLAutoDrawable arg0) {
+	public void close() {
 		// TODO Auto-generated method stub
 		
 	}
 	
-	public static void main(String[] args) { 
+	public static void main(String[] args) throws OpenGLException { 
 		new SceneGraphDemo();
 	}
 

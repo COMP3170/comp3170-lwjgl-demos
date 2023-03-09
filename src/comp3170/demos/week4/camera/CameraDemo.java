@@ -8,8 +8,8 @@ import static org.lwjgl.glfw.GLFW.GLFW_KEY_D;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_SPACE;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_LEFT;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_RIGHT;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_PAGE_UP;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_PAGE_DOWN;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_O;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_L;
 
 import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.GL_SCISSOR_TEST;
@@ -33,7 +33,7 @@ import comp3170.InputManager;
 import comp3170.OpenGLException;
 import comp3170.Shader;
 import comp3170.Window;
-import comp3170.demos.week3.instancing.Squares;
+import comp3170.demos.week4.camera.Square;
 
 public class CameraDemo implements IWindowListener {
 
@@ -49,7 +49,7 @@ public class CameraDemo implements IWindowListener {
 	final private String VERTEX_SHADER = "vertex.glsl";
 	final private String FRAGMENT_SHADER = "fragment.glsl";
 
-	private Squares squares;
+	private List<Square> squares;
 
 	private long oldTime;
 	private InputManager input;
@@ -61,6 +61,7 @@ public class CameraDemo implements IWindowListener {
 
 	public CameraDemo() throws OpenGLException {
 		window = new Window("Week 4 Camera Demo", width, height, this);
+		window.setResizable(true);
 		window.run();
 	}
 
@@ -68,10 +69,10 @@ public class CameraDemo implements IWindowListener {
 	
 	@Override
 	public void init() {
-		glEnable(GL_SCISSOR_TEST);
+		//glEnable(GL_SCISSOR_TEST);
 		
 		// set the background colour to black
-		glClearColor(0.1f, 0.0f, 0.0f, 1.0f);
+		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		
 		// Compile the shader
 		try {
@@ -88,7 +89,19 @@ public class CameraDemo implements IWindowListener {
 
 		// Set up the scene
 		
-	    squares = new Squares(NSQUARES);
+	    this.squares = new ArrayList<Square>();
+
+	    for (int i = 0; i < NSQUARES; i++) {
+			Square square = new Square(shader);
+			float x = (float) Math.random() * 2 - 1;
+			float y = (float) Math.random() * 2 - 1;
+			square.setPosition(x, y);
+			Color colour = Color.getHSBColor((float) Math.random(), 1, 1);
+			square.setColour(colour);
+			square.setAngle(0);
+			square.setScale(0.1f, 0.1f);
+			squares.add(square);
+	    }
 	    
 	    // Set up the camera
 
@@ -116,6 +129,10 @@ public class CameraDemo implements IWindowListener {
 		float deltaTime = (time - oldTime) / 1000f;
 		oldTime = time;
 		
+		for (Square sq : squares) {
+			sq.rotate(ROTATION_SPEED * deltaTime);
+		}
+		
 		
 		if (input.isKeyDown(GLFW_KEY_LEFT)) {
 			camera.rotate(-CAMERA_ROTATION_SPEED * deltaTime);
@@ -138,10 +155,10 @@ public class CameraDemo implements IWindowListener {
 		if (input.isKeyDown(GLFW_KEY_D)) {
 			camera.translate(CAMERA_MOVEMENT_SPEED * deltaTime, 0);
 		}
-		if (input.isKeyDown(GLFW_KEY_PAGE_UP)) {
+		if (input.isKeyDown(GLFW_KEY_O)) {
 			camera.zoom((float) Math.pow(1.0f / CAMERA_ZOOM_SPEED, deltaTime));
 		}
-		if (input.isKeyDown(GLFW_KEY_PAGE_DOWN)) {
+		if (input.isKeyDown(GLFW_KEY_L)) {
 			camera.zoom((float) Math.pow(CAMERA_ZOOM_SPEED, deltaTime));
 		}
 
@@ -150,7 +167,7 @@ public class CameraDemo implements IWindowListener {
 		}
 		input.clear();		
 		
-		squares.update(deltaTime);
+
 	}
 	
 	
@@ -165,7 +182,7 @@ public class CameraDemo implements IWindowListener {
 		// update the scene
 		update();	
 		
-		glViewport(0, 0, width, height);
+		//glViewport(0, 0, width, height);
 		
 		glClear(GL_COLOR_BUFFER_BIT);		
 		
@@ -186,7 +203,9 @@ public class CameraDemo implements IWindowListener {
 		shader.setUniform("u_projectionMatrix", projectionMatrix);
 		
 		// draw the squares
-		squares.draw();
+		for (Square sq : squares) {
+			sq.draw(shader);
+		}
 
 		
 		if (showCamera) {
@@ -201,8 +220,11 @@ public class CameraDemo implements IWindowListener {
 		
 		this.width = width;
 		this.height = height;
-			
+		glViewport(0, 0, width, height);
+		
 		camera.setSize(width, height);
+		
+
 		
 	}
 

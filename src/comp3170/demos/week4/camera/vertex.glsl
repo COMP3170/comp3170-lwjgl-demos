@@ -11,13 +11,8 @@ void main() {
 	vec3 p = vec3(a_position, 1);	// MODEL
 	
 	// apply the model->world transform
-	p = u_modelMatrix * p;			// WORLD
-	p = u_viewMatrix * p;			// VIEW
-	p = u_projectionMatrix * p; 	// NDC
-	
-	// or in a single line:
-    //	
-    //	p = u_projectionMatrix * u_viewMatrix * u_modelMatrix * p;
+
+    	p = u_projectionMatrix * u_viewMatrix * u_modelMatrix * p;
     //
 	
 	// pad to a homogeneous 3D point NDC

@@ -1,8 +1,6 @@
 
 package comp3170.demos.week4.bezier;
 
-import static com.jogamp.opengl.GL.GL_COLOR_BUFFER_BIT;
-
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -13,26 +11,29 @@ import javax.swing.JFrame;
 
 import org.joml.Vector3f;
 
-import com.jogamp.opengl.GL4;
-import com.jogamp.opengl.GLAutoDrawable;
-import com.jogamp.opengl.GLCapabilities;
-import com.jogamp.opengl.GLContext;
-import com.jogamp.opengl.GLEventListener;
-import com.jogamp.opengl.GLProfile;
-import com.jogamp.opengl.awt.GLCanvas;
+import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
+import static org.lwjgl.opengl.GL11.GL_TRIANGLES;
+import static org.lwjgl.opengl.GL11.GL_UNSIGNED_INT;
+import static org.lwjgl.opengl.GL11.glClear;
+import static org.lwjgl.opengl.GL11.glClearColor;
+import static org.lwjgl.opengl.GL11.glDrawElements;
+import static org.lwjgl.opengl.GL15.GL_ELEMENT_ARRAY_BUFFER;
+import static org.lwjgl.opengl.GL15.glBindBuffer;
+import static org.lwjgl.opengl.GL20.GL_FLOAT_VEC2;
 
-import comp3170.GLException;
+import comp3170.IWindowListener;
+import comp3170.OpenGLException;
 import comp3170.Shader;
-import comp3170.demos.week3.Square;
+import comp3170.Window;
 
-public class BezierDemo extends JFrame implements GLEventListener {
+public class BezierDemo implements IWindowListener {
 
 	public static final float TAU = (float) (2 * Math.PI);		// https://tauday.com/tau-manifesto
 	
 	private int width = 800;
 	private int height = 800;
 
-	private GLCanvas canvas;
+	private Window window;
 	private Shader shader;
 	
 	final private File DIRECTORY = new File("src/comp3170/demos/week4/bezier"); 
@@ -42,33 +43,17 @@ public class BezierDemo extends JFrame implements GLEventListener {
 	private BezierCurve curve;
 
 
-	public BezierDemo() {
-		super("Week 4 Bézier demo");
-
-		// set up a GL canvas
-		GLProfile profile = GLProfile.get(GLProfile.GL4);		 
-		GLCapabilities capabilities = new GLCapabilities(profile);
-		this.canvas = new GLCanvas(capabilities);
-		this.canvas.addGLEventListener(this);
-		this.add(canvas);
-		
-		// set up the JFrame
-		
-		this.setSize(width,height);
-		this.setVisible(true);
-		this.addWindowListener(new WindowAdapter() {
-			public void windowClosing(WindowEvent e) {
-				System.exit(0);
-			}
-		});
+	public BezierDemo() throws OpenGLException {
+		window = new Window("Week 4 Camera Demo", width, height, this);
+		window.setResizable(true);
+		window.run();
 	}
 
 	@Override
-	public void init(GLAutoDrawable arg0) {
-		GL4 gl = (GL4) GLContext.getCurrentGL();
+	public void init() {
 		
 		// set the background colour to black
-		gl.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		
 		// Compile the shader
 		try {
@@ -78,7 +63,7 @@ public class BezierDemo extends JFrame implements GLEventListener {
 		} catch (IOException e) {
 			e.printStackTrace();
 			System.exit(1);
-		} catch (GLException e) {
+		} catch (OpenGLException e) {
 			e.printStackTrace();
 			System.exit(1);
 		}
@@ -95,12 +80,10 @@ public class BezierDemo extends JFrame implements GLEventListener {
 		this.curve = new BezierCurve(shader, points);
 	}
 
-	@Override
-	public void display(GLAutoDrawable arg0) {
-		GL4 gl = (GL4) GLContext.getCurrentGL();
+	public void draw() {
 		
         // clear the colour buffer
-		gl.glClear(GL_COLOR_BUFFER_BIT);		
+		glClear(GL_COLOR_BUFFER_BIT);	
 
 		// activate the shader
 		this.shader.enable();		
@@ -108,21 +91,22 @@ public class BezierDemo extends JFrame implements GLEventListener {
 		// draw the curve
 		this.curve.draw();
 	}
-
-	@Override
-	public void reshape(GLAutoDrawable d, int x, int y, int width, int height) {
-		this.width = width;
-		this.height = height;		
+	
+	public static void main(String[] args) throws OpenGLException { 
+		new BezierDemo();
 	}
 
 	@Override
-	public void dispose(GLAutoDrawable arg0) {
-		// TODO Auto-generated method stub
+	public void resize(int width, int height) {
+		this.width = width;
+		this.height = height;
 		
 	}
-	
-	public static void main(String[] args) { 
-		new BezierDemo();
+
+	@Override
+	public void close() {
+		// TODO Auto-generated method stub
+		
 	}
 
 

@@ -6,9 +6,6 @@ import java.util.List;
 import org.joml.Matrix3f;
 import org.joml.Vector2f;
 
-import com.jogamp.opengl.GL4;
-import com.jogamp.opengl.GLContext;
-
 import comp3170.Shader;
 
 public class SceneObject {
@@ -89,7 +86,6 @@ public class SceneObject {
 	}
 	
 	public void draw(Matrix3f parentMatrix) {
-		GL4 gl = (GL4) GLContext.getCurrentGL();
 		
 		// set the model matrix
 		

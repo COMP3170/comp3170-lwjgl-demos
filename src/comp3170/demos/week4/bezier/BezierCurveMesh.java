@@ -7,12 +7,18 @@ import org.joml.Matrix3f;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 
-import com.jogamp.opengl.GL;
-import com.jogamp.opengl.GL4;
-import com.jogamp.opengl.GLContext;
+import static org.lwjgl.opengl.GL11.GL_TRIANGLES;
+import static org.lwjgl.opengl.GL11.GL_UNSIGNED_INT;
+import static org.lwjgl.opengl.GL11.glDrawElements;
+import static org.lwjgl.opengl.GL15.GL_ELEMENT_ARRAY_BUFFER;
+import static org.lwjgl.opengl.GL15.glBindBuffer;
+import static org.lwjgl.opengl.GL20.*;
 
 import comp3170.GLBuffers;
+import comp3170.IWindowListener;
+import comp3170.InputManager;
 import comp3170.Shader;
+import comp3170.Window;
 
 public class BezierCurveMesh {
 
@@ -63,7 +69,6 @@ public class BezierCurveMesh {
 	}
 	
 	public void draw() {
-		GL4 gl = (GL4) GLContext.getCurrentGL();
 		
         // connect the vertex buffer to the a_position attribute		   
 	    shader.setAttribute("a_position", vertexBuffer);
@@ -72,13 +77,13 @@ public class BezierCurveMesh {
 	    shader.setUniform("u_colour", new float[] {0,0,1});	    
 	    
 	    // draw a rectangle as a line loop
-	    gl.glDrawArrays(GL.GL_LINE_STRIP, 0, vertices.length);		
+	    glDrawArrays(GL_LINE_STRIP, 0, vertices.length);		
 
 	    // write the colour value into the u_colour uniform 
 	    shader.setUniform("u_colour", new float[] {1,1,0});	    
 	    
 	    // draw a rectangle as a line loop
-	    gl.glDrawArrays(GL.GL_POINTS, 0, vertices.length);		
+	    glDrawArrays(GL_POINTS, 0, vertices.length);		
 
 	}
 

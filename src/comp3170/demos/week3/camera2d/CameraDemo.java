@@ -65,6 +65,7 @@ public class CameraDemo implements IWindowListener {
 	
 	public CameraDemo() throws OpenGLException {
 		window = new Window("Model / World / View / NDC", width, height, this);
+		window.setResizable(true);
 		window.run();
 	}
 
