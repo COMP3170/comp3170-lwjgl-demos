@@ -1,21 +1,14 @@
 package comp3170.demos.week4.bezier;
 
-import comp3170.OpenGLException;
-import comp3170.Shader;
+import static org.lwjgl.opengl.GL11.GL_LINE_STRIP;
+import static org.lwjgl.opengl.GL11.GL_POINTS;
+import static org.lwjgl.opengl.GL11.glDrawArrays;
+import static org.lwjgl.opengl.GL11.glPointSize;
 
 import org.joml.Vector3f;
 
-import static org.lwjgl.opengl.GL11.GL_TRIANGLES;
-import static org.lwjgl.opengl.GL11.GL_UNSIGNED_INT;
-import static org.lwjgl.opengl.GL11.glDrawElements;
-import static org.lwjgl.opengl.GL15.GL_ELEMENT_ARRAY_BUFFER;
-import static org.lwjgl.opengl.GL15.glBindBuffer;
-import static org.lwjgl.opengl.GL20.*;
-
 import comp3170.GLBuffers;
-import comp3170.IWindowListener;
-import comp3170.InputManager;
-import comp3170.Window;
+import comp3170.Shader;
 
 
 
