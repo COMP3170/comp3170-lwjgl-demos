@@ -9,6 +9,7 @@ import static org.lwjgl.glfw.GLFW.GLFW_KEY_RIGHT;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_S;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_UP;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_W;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_SPACE;
 import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.glClear;
 import static org.lwjgl.opengl.GL11.glClearColor;
@@ -18,7 +19,6 @@ import java.awt.Color;
 import java.io.File;
 import java.io.IOException;
 
-import org.joml.Matrix3f;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
@@ -52,6 +52,8 @@ public class SceneGraphDemo implements IWindowListener {
 	
 	private SceneObject root;
 	private Arm[] arms;
+	private Camera camera;
+	private boolean showCamera = true;
 	
 	public SceneGraphDemo() throws OpenGLException {
 		window = new Window("Week 4 Camera Demo", width, height, this);
@@ -104,6 +106,10 @@ public class SceneGraphDemo implements IWindowListener {
 	    arms[2].setParent(arms[1]);
 	    arms[2].getMatrix().translate(0f, 0.4f, 0f);
 	    arms[2].setColour(Color.BLUE);
+	    
+	    camera = new Camera(shader);
+	    
+	    camera.setParent(arms[2]);
 		
 		
 	    // allocation view and projection matrices
@@ -148,6 +154,10 @@ public class SceneGraphDemo implements IWindowListener {
 			arms[2].getMatrix().rotateZ(-rot);
 		}
 		
+		if (input.wasKeyPressed(GLFW_KEY_SPACE)) {
+			showCamera = !showCamera;
+		}
+		
 		input.clear();		
 	}
 	
@@ -163,8 +173,15 @@ public class SceneGraphDemo implements IWindowListener {
 		// activate the shader
 		this.shader.enable();		
 				
-		viewMatrix.identity();
-		projectionMatrix.identity();
+		if (showCamera) {
+			viewMatrix.identity();
+			projectionMatrix.identity();
+		}
+		else {
+			Matrix4f camMatrix = camera.getMatrix();
+			camera.getViewMatrix(viewMatrix, camMatrix);
+			camera.getProjectionMatrix(projectionMatrix, camMatrix);
+		}
 		
 		shader.setUniform("u_viewMatrix", viewMatrix);
 		shader.setUniform("u_projectionMatrix", projectionMatrix);
@@ -186,7 +203,6 @@ public class SceneGraphDemo implements IWindowListener {
 
 	@Override
 	public void close() {
-		// TODO Auto-generated method stub
 		
 	}
 	
