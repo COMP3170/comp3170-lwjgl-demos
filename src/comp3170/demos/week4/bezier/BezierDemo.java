@@ -41,8 +41,8 @@ public class BezierDemo implements IWindowListener {
 	@Override
 	public void init() {
 		
-		// set the background colour to black
-		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+		// set the background colour
+		glClearColor(0.1f, 0.f, 0.1f, 1.0f);
 		
 		// Compile the shader
 		try {
@@ -62,11 +62,11 @@ public class BezierDemo implements IWindowListener {
 		Vector3f points[] = new Vector3f[] {
 			new Vector3f(-0.9f, -1f, 1f),
 			new Vector3f(-0.9f,  1f, 1f),
-			new Vector3f( 0.9f,  0.8f, 1f),
-			new Vector3f( 0.9f,  1f, 1f),				
+			new Vector3f(0.9f,  0.8f, 1f),
+			new Vector3f(0.9f,  1f, 1f),				
 		};
 		
-		this.curve = new BezierCurve(shader, points);
+		curve = new BezierCurve(shader, points);
 	}
 
 	public void draw() {
@@ -75,10 +75,10 @@ public class BezierDemo implements IWindowListener {
 		glClear(GL_COLOR_BUFFER_BIT);	
 
 		// activate the shader
-		this.shader.enable();		
+		shader.enable();		
 		
 		// draw the curve
-		this.curve.draw();
+		curve.draw();
 	}
 	
 	public static void main(String[] args) throws OpenGLException { 
