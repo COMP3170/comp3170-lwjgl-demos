@@ -1,11 +1,12 @@
 package comp3170.demos.week4.camera;
 
 
-import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
-import static org.lwjgl.opengl.GL11.GL_LINE_LOOP;
-import static org.lwjgl.opengl.GL11.GL_SCISSOR_TEST;
-import static org.lwjgl.opengl.GL11.glDrawArrays;
-import static org.lwjgl.opengl.GL20.*;
+import static org.lwjgl.opengl.GL11.GL_TRIANGLES;
+import static org.lwjgl.opengl.GL11.GL_UNSIGNED_INT;
+import static org.lwjgl.opengl.GL11.glDrawElements;
+import static org.lwjgl.opengl.GL15.GL_ELEMENT_ARRAY_BUFFER;
+import static org.lwjgl.opengl.GL15.glBindBuffer;
+import static org.lwjgl.opengl.GL20.GL_FLOAT_VEC2;
 
 import java.awt.Color;
 
@@ -13,11 +14,8 @@ import org.joml.Matrix3f;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 
-
-import comp3170.OpenGLException;
 import comp3170.GLBuffers;
 import comp3170.Shader;
-import comp3170.Window;
 
 public class Square {
 	private float[] vertices;

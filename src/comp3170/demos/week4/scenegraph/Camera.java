@@ -22,17 +22,12 @@ public class Camera extends SceneObject {
 	private AxisAngle4f angle;
 	private float zoom;
 	private float aspect;
+	private Vector3f scale;
 	
 	private Shader shader;
-	
-	private Matrix3f modelMatrix;
-	private Matrix3f translationMatrix;
-	private Matrix3f rotationMatrix;
-	private Matrix3f scaleMatrix;
+
 	private float[] vertices;
 	private int vertexBuffer;
-	private float width;
-	private float height;
 		
 	public Camera(Shader shader) {
 		
@@ -40,6 +35,7 @@ public class Camera extends SceneObject {
 		
 		position = new Vector3f(0,0,0);
 		angle = new AxisAngle4f(0,0,0,0);
+		scale = new Vector3f(0,0,0);
 		// vertices for a 2x2 square with origin in the centre
 		// 
 		//  (-1,1)         (1,1)
@@ -80,14 +76,19 @@ public class Camera extends SceneObject {
 		
 		matrix.getRotation(angle);
 		
+		dest.identity();
+		
 		dest.translate(position).rotate(angle);
 		// view matrix is the inverse of the camera's model matrix
 		return dest.invert();	
 	}
 	
-	public Matrix4f getProjectionMatrix(Matrix4f dest, Matrix4f matrix) {
+	public Matrix4f getProjectionMatrix(Matrix4f dest, Matrix4f matrix, float width, float height) {
 		
-		dest.scale(width / zoom, height / zoom, 0f);
+		matrix.getScale(scale);
+		
+		dest.identity();
+		dest.scale(2/scale.x, 2/scale.y, 1);
 
 		return dest;
 		

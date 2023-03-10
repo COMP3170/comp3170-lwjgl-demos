@@ -9,6 +9,8 @@ import static org.lwjgl.glfw.GLFW.GLFW_KEY_RIGHT;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_S;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_UP;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_W;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_O;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_L;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_SPACE;
 import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.glClear;
@@ -46,9 +48,11 @@ public class SceneGraphDemo implements IWindowListener {
 	private long oldTime;
 	private InputManager input;
 
-	private Matrix4f modelMatrix;
 	private Matrix4f viewMatrix;
 	private Matrix4f projectionMatrix;
+	
+	private Matrix4f camGraphMatrix;
+	private Matrix4f camLocalMatrix;
 	
 	private SceneObject root;
 	private Arm[] arms;
@@ -80,7 +84,7 @@ public class SceneGraphDemo implements IWindowListener {
 			e.printStackTrace();
 			System.exit(1);
 		}
-		
+				
 		input = new InputManager(window);
 
 		// Set up the scene
@@ -110,16 +114,20 @@ public class SceneGraphDemo implements IWindowListener {
 	    camera = new Camera(shader);
 	    
 	    camera.setParent(arms[2]);
+	    
+//	    camera.getMatrix().translate(0, 0.2f, 0f);
 		
 		
 	    // allocation view and projection matrices
-	    modelMatrix = new Matrix4f();
 	    viewMatrix = new Matrix4f();
 	    projectionMatrix = new Matrix4f();
+	    camGraphMatrix = new Matrix4f();
+		camLocalMatrix = new Matrix4f();
 	}
 
 	private final float ROTATION_SPEED = TAU / 8;
 	private final float MOVEMENT_SPEED = 0.1f;
+	private final float SCALE_SPEED = 0.1f;
 	private Vector3f armPosition = new Vector3f();
 	
 	private void update() {
@@ -154,6 +162,14 @@ public class SceneGraphDemo implements IWindowListener {
 			arms[2].getMatrix().rotateZ(-rot);
 		}
 		
+		if (input.isKeyDown(GLFW_KEY_O)) {
+			arms[2].getMatrix().scale((float)Math.pow(SCALE_SPEED, -deltaTime));
+		}
+		if (input.isKeyDown(GLFW_KEY_L)) {
+			arms[2].getMatrix().scale((float)Math.pow(SCALE_SPEED, deltaTime));
+		}
+		
+		
 		if (input.wasKeyPressed(GLFW_KEY_SPACE)) {
 			showCamera = !showCamera;
 		}
@@ -178,15 +194,15 @@ public class SceneGraphDemo implements IWindowListener {
 			projectionMatrix.identity();
 		}
 		else {
-			Matrix4f camMatrix = camera.getMatrix();
-			camera.getViewMatrix(viewMatrix, camMatrix);
-			camera.getProjectionMatrix(projectionMatrix, camMatrix);
+			camera.getModelToWorldMatrix(camGraphMatrix);
+			camera.getMatrix(camLocalMatrix);
+			camera.getViewMatrix(viewMatrix, camGraphMatrix);
+			camera.getProjectionMatrix(projectionMatrix, camLocalMatrix, width, height);
 		}
 		
 		shader.setUniform("u_viewMatrix", viewMatrix);
 		shader.setUniform("u_projectionMatrix", projectionMatrix);
 		
-		modelMatrix.identity();
 		root.draw();
 		
 	}

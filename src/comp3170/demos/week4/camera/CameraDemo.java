@@ -235,13 +235,7 @@ public class CameraDemo implements IWindowListener {
 		
 		camera.setSize(width, height);
 		
-		glViewport(
-				   0, 0, width, height);
-
-				glEnable(GL_SCISSOR_TEST);
-				glScissor( 0, 0, width/2, height/2);
-
-				glClear(GL_COLOR_BUFFER_BIT);
+		glViewport(0, 0, width, height);
 
 		
 
