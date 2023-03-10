@@ -1,39 +1,37 @@
 
 package comp3170.demos.week4.camera;
 
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_W;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_A;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_S;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_D;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_SPACE;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_LEFT;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_RIGHT;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_O;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_L;
-
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_LEFT;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_O;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_RIGHT;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_S;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_SPACE;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_W;
 import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.GL_SCISSOR_TEST;
 import static org.lwjgl.opengl.GL11.glClear;
-import static org.lwjgl.opengl.GL11.glClearColor;
 import static org.lwjgl.opengl.GL11.glEnable;
-import static org.lwjgl.opengl.GL11.glScissor;
+import static org.lwjgl.opengl.GL11.glClearColor;
 import static org.lwjgl.opengl.GL11.glViewport;
+import static org.lwjgl.opengl.GL11.glScissor;
 
 import java.awt.Color;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import org.joml.Matrix3f;
-import org.joml.Matrix4f;
 
 import comp3170.IWindowListener;
 import comp3170.InputManager;
 import comp3170.OpenGLException;
 import comp3170.Shader;
 import comp3170.Window;
-import comp3170.demos.week4.camera.Square;
 
 public class CameraDemo implements IWindowListener {
 
@@ -52,6 +50,7 @@ public class CameraDemo implements IWindowListener {
 	private List<Square> squares;
 
 	private long oldTime;
+	private int frameRate = 60;
 	private InputManager input;
 
 	private Camera camera;
@@ -70,6 +69,7 @@ public class CameraDemo implements IWindowListener {
 	@Override
 	public void init() {
 		//glEnable(GL_SCISSOR_TEST);
+		
 		
 		// set the background colour to black
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
@@ -117,6 +117,10 @@ public class CameraDemo implements IWindowListener {
 	    
 	    // add an input manager
 		input = new InputManager(window);
+		
+	    // initialise oldTime
+	    oldTime = System.currentTimeMillis();
+
 	}
 
 	private static final float ROTATION_SPEED = TAU / 6;
@@ -128,10 +132,11 @@ public class CameraDemo implements IWindowListener {
 		long time = System.currentTimeMillis();
 		float deltaTime = (time - oldTime) / 1000f;
 		oldTime = time;
-		
+		System.out.println("update: dt = " + deltaTime + "s");
+				
 		for (Square sq : squares) {
-			sq.rotate(ROTATION_SPEED * deltaTime);
-		}
+			sq.rotate(ROTATION_SPEED * deltaTime);  
+		}	
 		
 		
 		if (input.isKeyDown(GLFW_KEY_LEFT)) {
@@ -213,6 +218,12 @@ public class CameraDemo implements IWindowListener {
 			camera.draw(shader);			
 		}
 		
+		// restrict the framerate by sleeping between frames
+		try {
+			TimeUnit.MILLISECONDS.sleep(1000 / frameRate);
+		} catch (InterruptedException e) {
+		}
+
 	}
 
 	@Override
@@ -220,9 +231,18 @@ public class CameraDemo implements IWindowListener {
 		
 		this.width = width;
 		this.height = height;
-		glViewport(0, 0, width, height);
+		
 		
 		camera.setSize(width, height);
+		
+		glViewport(
+				   0, 0, width, height);
+
+				glEnable(GL_SCISSOR_TEST);
+				glScissor( 0, 0, width/2, height/2);
+
+				glClear(GL_COLOR_BUFFER_BIT);
+
 		
 
 		

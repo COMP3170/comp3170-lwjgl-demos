@@ -1,26 +1,14 @@
 package comp3170.demos.week4.camera;
 
-import org.joml.Matrix3f;
-import org.joml.Matrix4f;
-import org.joml.Vector2f;
-
-import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.GL_LINE_LOOP;
-import static org.lwjgl.opengl.GL11.GL_SCISSOR_TEST;
 import static org.lwjgl.opengl.GL11.glDrawArrays;
 import static org.lwjgl.opengl.GL20.GL_FLOAT_VEC2;
 
-import java.awt.Color;
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
-import comp3170.OpenGLException;
-import comp3170.Shader;
-import comp3170.Window;
+import org.joml.Matrix3f;
+import org.joml.Vector2f;
 
 import comp3170.GLBuffers;
+import comp3170.Shader;
 
 public class Camera {
 

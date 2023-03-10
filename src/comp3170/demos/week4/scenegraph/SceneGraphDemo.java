@@ -19,6 +19,7 @@ import java.io.File;
 import java.io.IOException;
 
 import org.joml.Matrix3f;
+import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
 import comp3170.IWindowListener;
@@ -45,9 +46,9 @@ public class SceneGraphDemo implements IWindowListener {
 	private long oldTime;
 	private InputManager input;
 
-	private Matrix3f modelMatrix;
-	private Matrix3f viewMatrix;
-	private Matrix3f projectionMatrix;
+	private Matrix4f modelMatrix;
+	private Matrix4f viewMatrix;
+	private Matrix4f projectionMatrix;
 	
 	private SceneObject root;
 	private Arm[] arms;
@@ -90,25 +91,25 @@ public class SceneGraphDemo implements IWindowListener {
 		
 	    arms[0] = new Arm(shader, 0.2f, 1);
 	    arms[0].setParent(root);
-	    arms[0].setPosition(0f, -1.0f, 0f);
-//	    arms[0].setScale(2, 1);		// this causes shear in child objects
+	    arms[0].getMatrix().translate(0f, -1.0f, 0f);
+//	    arms[0].getMatrix().scale(2,1,1);		// this causes shear in child objects
 	    arms[0].setColour(Color.RED);
 	    
 	    arms[1] = new Arm(shader, 0.15f, 0.5f);
 	    arms[1].setParent(arms[0]);
-	    arms[1].setPosition(0f, 0.9f, 0f);
+	    arms[1].getMatrix().translate(0f, 0.9f, 0f);
 	    arms[1].setColour(Color.GREEN);
 
 	    arms[2] = new Arm(shader, 0.1f, 0.25f);
 	    arms[2].setParent(arms[1]);
-	    arms[2].setPosition(0f, 0.4f, 0f);
+	    arms[2].getMatrix().translate(0f, 0.4f, 0f);
 	    arms[2].setColour(Color.BLUE);
 		
 		
 	    // allocation view and projection matrices
-	    modelMatrix = new Matrix3f();
-	    viewMatrix = new Matrix3f();
-	    projectionMatrix = new Matrix3f();
+	    modelMatrix = new Matrix4f();
+	    viewMatrix = new Matrix4f();
+	    projectionMatrix = new Matrix4f();
 	}
 
 	private final float ROTATION_SPEED = TAU / 8;
@@ -119,38 +120,32 @@ public class SceneGraphDemo implements IWindowListener {
 		long time = System.currentTimeMillis();
 		float deltaTime = (time - oldTime) / 1000f;
 		oldTime = time;
-
-		arms[0].getPosition(armPosition);
 		
 		if (input.isKeyDown(GLFW_KEY_A)) {
-			arms[0].setPosition(armPosition.x - MOVEMENT_SPEED * deltaTime, armPosition.y, 0f);
+			arms[0].getMatrix().translate(armPosition.x - MOVEMENT_SPEED * deltaTime, armPosition.y, 0f);
 		}
 		if (input.isKeyDown(GLFW_KEY_D)) {
-			arms[0].setPosition(armPosition.x + MOVEMENT_SPEED * deltaTime, armPosition.y, 0f);
+			arms[0].getMatrix().translate(armPosition.x + MOVEMENT_SPEED * deltaTime, armPosition.y, 0f);
 		}
-
-		float angle0 = arms[0].getAngle();
-		float angle1 = arms[1].getAngle();
-		float angle2 = arms[2].getAngle();
 		float rot = ROTATION_SPEED * deltaTime;
 		
 		if (input.isKeyDown(GLFW_KEY_W)) {
-			arms[0].setAngle(angle0 + rot);
+			arms[0].getMatrix().rotateZ(rot);
 		}
 		if (input.isKeyDown(GLFW_KEY_S)) {
-			arms[0].setAngle(angle0 - rot);
+			arms[0].getMatrix().rotateZ(-rot);
 		}
 		if (input.isKeyDown(GLFW_KEY_LEFT)) {
-			arms[1].setAngle(angle1 + rot);
+			arms[1].getMatrix().rotateZ(rot);
 		}
 		if (input.isKeyDown(GLFW_KEY_RIGHT)) {
-			arms[1].setAngle(angle1 - rot);
+			arms[1].getMatrix().rotateZ(-rot);
 		}
 		if (input.isKeyDown(GLFW_KEY_UP)) {
-			arms[2].setAngle(angle2 + rot);
+			arms[2].getMatrix().rotateZ(rot);
 		}
 		if (input.isKeyDown(GLFW_KEY_DOWN)) {
-			arms[2].setAngle(angle2 - rot);
+			arms[2].getMatrix().rotateZ(-rot);
 		}
 		
 		input.clear();		
