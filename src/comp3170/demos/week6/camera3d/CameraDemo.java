@@ -11,8 +11,6 @@ import static org.lwjgl.opengl.GL14.GL_COLOR_BUFFER_BIT;
 
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_SPACE;
 
-import java.awt.Color;
-
 import org.joml.Matrix4f;
 import org.joml.Vector4f;
 
@@ -61,7 +59,7 @@ public class CameraDemo implements IWindowListener {
 	private SceneObject root;
 
 	public CameraDemo() throws OpenGLException {
-		window = new Window("Week 6 Backface Culling Demo", width, height, this);
+		window = new Window("Week 6 Camera Demo", width, height, this);
 		window.setResizable(true);
 		window.run();
 		
@@ -116,6 +114,8 @@ public class CameraDemo implements IWindowListener {
 			perspectiveCamera,
 		};
 		currentCamera = 0;
+		cameras[0].setParent(root);
+		cameras[1].setParent(root);
 		
 		input = new InputManager(window);
 	
@@ -149,7 +149,7 @@ public class CameraDemo implements IWindowListener {
 		cameras[currentCamera].getViewMatrix(viewMatrix);
 		cameras[currentCamera].getProjectionMatrix(projectionMatrix);
 		
-		// pre-multiply projetion and view matrices
+		// pre-multiply projection and view matrices
 		mvpMatrix.set(projectionMatrix).mul(viewMatrix);
 		
 		root.draw(mvpMatrix);		

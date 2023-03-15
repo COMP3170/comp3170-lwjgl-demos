@@ -4,13 +4,14 @@ import static org.lwjgl.glfw.GLFW.GLFW_KEY_UP;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_DOWN;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_LEFT;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_RIGHT;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_PAGE_UP;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_PAGE_DOWN;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_W;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_S;
 
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
 import comp3170.InputManager;
+import comp3170.SceneObject;
 
 /**
  * A camera that revolves around the origin
@@ -18,7 +19,7 @@ import comp3170.InputManager;
  *
  */
 
-public abstract class Camera {
+public abstract class Camera extends SceneObject {
 
 	public static final float TAU = (float) (2 * Math.PI);		// https://tauday.com/tau-manifesto
 
@@ -62,10 +63,10 @@ public abstract class Camera {
 		if (input.isKeyDown(GLFW_KEY_RIGHT)) {
 			angle.y += ROTATION_SPEED * deltaTime;
 		}
-		if (input.isKeyDown(GLFW_KEY_PAGE_DOWN)) {
+		if (input.isKeyDown(GLFW_KEY_S)) {
 			distance += MOVEMENT_SPEED * deltaTime;
 		}
-		if (input.isKeyDown(GLFW_KEY_PAGE_UP)) {
+		if (input.isKeyDown(GLFW_KEY_W)) {
 			distance -= MOVEMENT_SPEED * deltaTime;
 		}
 		

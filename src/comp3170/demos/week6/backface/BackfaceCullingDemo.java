@@ -3,17 +3,22 @@ package comp3170.demos.week6.backface;
 import static org.lwjgl.opengl.GL11.glClear;
 import static org.lwjgl.opengl.GL11.glClearColor;
 import static org.lwjgl.opengl.GL11.glCullFace;
+import static org.lwjgl.opengl.GL11.glFrontFace;
 import static org.lwjgl.opengl.GL11.glDisable;
 import static org.lwjgl.opengl.GL11.glEnable;
 import static org.lwjgl.opengl.GL11.glViewport;
 
 import static org.lwjgl.opengl.GL11.GL_BACK;
+import static org.lwjgl.opengl.GL14.GL_CCW;
+import static org.lwjgl.opengl.GL14.GL_CW;
 import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.GL_CULL_FACE;
 import static org.lwjgl.opengl.GL11.GL_FRONT;
 
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_B;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_F;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_E;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_R;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_SPACE;
 
 import java.awt.Color;
@@ -85,7 +90,7 @@ public class BackfaceCullingDemo implements IWindowListener {
 		}
 		
 		glCullFace(cullFace);
-		
+				
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);	
 		
 
@@ -102,8 +107,9 @@ public class BackfaceCullingDemo implements IWindowListener {
 		triangle = new Triangle(shader, Color.YELLOW);
 		triangle.setParent(root);
 		
-		camera = new PerspectiveCamera(2, TAU/6, 1, 0.1f, 10f);		
-		
+		camera = new PerspectiveCamera(2, TAU/6, 1, 0.1f, 10f);	
+		camera.setParent(root);
+				
 		input = new InputManager(window);
 	}
 	
@@ -133,6 +139,14 @@ public class BackfaceCullingDemo implements IWindowListener {
 		if (input.wasKeyPressed(GLFW_KEY_B)) {
 			glCullFace(GL_BACK);
 		}
+		
+		// Change winding order, so switching what is "front" and what is "back"
+		// This can get confusing, so make sure you understand switching cullFaces a bit first.
+		/*
+		 * if (input.wasKeyPressed(GLFW_KEY_E)) { glFrontFace(GL_CW); }
+		 * 
+		 * if (input.wasKeyPressed(GLFW_KEY_R)) { glFrontFace(GL_CCW); }
+		 */
 
 		camera.update(input, deltaTime);
 		
