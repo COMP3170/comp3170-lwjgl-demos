@@ -5,20 +5,20 @@ import java.awt.Color;
 import org.joml.Matrix4f;
 import org.joml.Vector4f;
 
-import com.jogamp.opengl.GL;
-import com.jogamp.opengl.GL4;
-import com.jogamp.opengl.GLContext;
+import static org.lwjgl.opengl.GL11.GL_TRIANGLES;
+import static org.lwjgl.opengl.GL11.glDrawArrays;
 
 import comp3170.GLBuffers;
+import comp3170.SceneObject;
 import comp3170.Shader;
-import comp3170.demos.SceneObject;
+import comp3170.demos.week6.shaders.ShaderLibrary;
 
 public class Triangle extends SceneObject {
 
 	private Shader shader;
 	private Vector4f[] vertices;
 	private int vertexBuffer;
-	private float[] colour = {1f, 1f, 1f};
+	private float[] colour = {1f, 1f, 1f, 1f};
 	
 	public Triangle(Shader shader, Color colour) {
 		this.shader = shader;
@@ -45,8 +45,7 @@ public class Triangle extends SceneObject {
 	}
 
 	@Override
-	public void drawSelf(Matrix4f mvpMatrix) {
-		GL4 gl = (GL4) GLContext.getCurrentGL();
+	protected void drawSelf(Matrix4f mvpMatrix) {
 
 		shader.enable();
 		shader.setUniform("u_mvpMatrix", mvpMatrix);
@@ -54,7 +53,7 @@ public class Triangle extends SceneObject {
 		shader.setUniform("u_colour", colour);
 
 		// Draw a solid triangle
-		gl.glDrawArrays(GL.GL_TRIANGLES, 0, vertices.length);           	
+		glDrawArrays(GL_TRIANGLES, 0, vertices.length);           	
 	}
 
 	

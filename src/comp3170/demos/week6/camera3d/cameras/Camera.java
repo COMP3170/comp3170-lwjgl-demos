@@ -1,6 +1,11 @@
 package comp3170.demos.week6.camera3d.cameras;
 
-import java.awt.event.KeyEvent;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_UP;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_DOWN;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_LEFT;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_RIGHT;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_PAGE_UP;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_PAGE_DOWN;
 
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
@@ -9,7 +14,7 @@ import comp3170.InputManager;
 
 /**
  * A camera that revolves around the origin
- * @author malcolmryan
+ * @author malcolmryan. Ported to GLFW controls by camedmond
  *
  */
 
@@ -43,24 +48,26 @@ public abstract class Camera {
 
 	public void update(InputManager input, float deltaTime) {
 		
+		System.out.println("update: dt = " + deltaTime + "s");
+		
 		// key controls to orbit camera around the origin
 		
-		if (input.isKeyDown(KeyEvent.VK_UP)) {
+		if (input.isKeyDown(GLFW_KEY_UP)) {
 			angle.x -= ROTATION_SPEED * deltaTime;
 		}
-		if (input.isKeyDown(KeyEvent.VK_DOWN)) {
+		if (input.isKeyDown(GLFW_KEY_DOWN)) {
 			angle.x += ROTATION_SPEED * deltaTime;
 		}
-		if (input.isKeyDown(KeyEvent.VK_LEFT)) {
+		if (input.isKeyDown(GLFW_KEY_LEFT)) {
 			angle.y -= ROTATION_SPEED * deltaTime;
 		}
-		if (input.isKeyDown(KeyEvent.VK_RIGHT)) {
+		if (input.isKeyDown(GLFW_KEY_RIGHT)) {
 			angle.y += ROTATION_SPEED * deltaTime;
 		}
-		if (input.isKeyDown(KeyEvent.VK_PAGE_DOWN)) {
+		if (input.isKeyDown(GLFW_KEY_PAGE_DOWN)) {
 			distance += MOVEMENT_SPEED * deltaTime;
 		}
-		if (input.isKeyDown(KeyEvent.VK_PAGE_UP)) {
+		if (input.isKeyDown(GLFW_KEY_PAGE_UP)) {
 			distance -= MOVEMENT_SPEED * deltaTime;
 		}
 		

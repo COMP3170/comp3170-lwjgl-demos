@@ -1,6 +1,8 @@
 package comp3170.demos.week6.camera3d.cameras;
 
-import java.awt.event.KeyEvent;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_Q;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_A;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_Z;
 
 import org.joml.Matrix4f;
 
@@ -32,15 +34,15 @@ public class PerspectiveCamera extends Camera {
 	
 	@Override
 	public void update(InputManager input, float deltaTime) {
-		super.update(input, deltaTime);	
 		
-		if (input.isKeyDown(KeyEvent.VK_Q)) {
+		super.update(input, deltaTime);	
+		if (input.isKeyDown(GLFW_KEY_Z)) {
 			fovy += FOV_CHANGE * deltaTime;
 		}
-		if (input.isKeyDown(KeyEvent.VK_A)) {
+		if (input.isKeyDown(GLFW_KEY_A)) {
 			fovy = FOV_DEFAULT;
 		}
-		if (input.isKeyDown(KeyEvent.VK_Z)) {
+		if (input.isKeyDown(GLFW_KEY_Q)) {
 			fovy -= FOV_CHANGE * deltaTime;
 		}		
 	}

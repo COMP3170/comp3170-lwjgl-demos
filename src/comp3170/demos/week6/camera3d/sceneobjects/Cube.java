@@ -1,17 +1,24 @@
 package comp3170.demos.week6.camera3d.sceneobjects;
 
+import static org.lwjgl.opengl.GL11.GL_TRIANGLES;
+import static org.lwjgl.opengl.GL11.GL_FRONT_AND_BACK;
+import static org.lwjgl.opengl.GL41.GL_ELEMENT_ARRAY_BUFFER;
+import static org.lwjgl.opengl.GL11.GL_LINE;
+import static org.lwjgl.opengl.GL11.GL_UNSIGNED_INT;
+
+import static org.lwjgl.opengl.GL11.glPolygonMode;
+import static org.lwjgl.opengl.GL11.glDrawElements;
+import static org.lwjgl.opengl.GL41.glBindBuffer;
+
 import java.awt.Color;
 
 import org.joml.Matrix4f;
 import org.joml.Vector4f;
 
-import com.jogamp.opengl.GL;
-import com.jogamp.opengl.GL4;
-import com.jogamp.opengl.GLContext;
-
 import comp3170.GLBuffers;
+import comp3170.SceneObject;
 import comp3170.Shader;
-import comp3170.demos.SceneObject;
+import comp3170.demos.week6.shaders.ShaderLibrary;
 
 public class Cube extends SceneObject {
 	private Shader shader;
@@ -90,21 +97,20 @@ public class Cube extends SceneObject {
 
 	@Override
 	public void drawSelf(Matrix4f mvpMatrix) {
-		GL4 gl = (GL4) GLContext.getCurrentGL();
-
+		
 		shader.enable();
 		shader.setUniform("u_mvpMatrix", mvpMatrix);
 		shader.setAttribute("a_position", vertexBuffer);
 		shader.setUniform("u_colour", colour);
 
-		gl.glBindBuffer(GL.GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
 
 		// DEBUG: Just draw the vertices
 //		gl.glDrawElements(GL.GL_POINTS, indices.length, GL.GL_UNSIGNED_INT, 0);
 
 		// Draw the wireframe
-		gl.glPolygonMode(GL.GL_FRONT_AND_BACK, GL4.GL_LINE);
-		gl.glDrawElements(GL.GL_TRIANGLES, indices.length, GL.GL_UNSIGNED_INT, 0);
+		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+		glDrawElements(GL_TRIANGLES, indices.length, GL_UNSIGNED_INT, 0);
 	}
 
 }

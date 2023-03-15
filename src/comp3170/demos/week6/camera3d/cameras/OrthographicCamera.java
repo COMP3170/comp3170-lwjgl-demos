@@ -2,8 +2,6 @@ package comp3170.demos.week6.camera3d.cameras;
 
 import org.joml.Matrix4f;
 
-import comp3170.InputManager;
-
 public class OrthographicCamera extends Camera {
 
 	private float width;

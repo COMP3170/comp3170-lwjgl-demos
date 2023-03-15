@@ -1,15 +1,17 @@
 package comp3170.demos.week6.camera3d.sceneobjects;
 
+import static org.lwjgl.opengl.GL11.glDrawElements;
+import static org.lwjgl.opengl.GL15.glBindBuffer;
+import static org.lwjgl.opengl.GL11.GL_LINES;
+import static org.lwjgl.opengl.GL11.GL_UNSIGNED_INT;
+import static org.lwjgl.opengl.GL15.GL_ELEMENT_ARRAY_BUFFER;
+
 import org.joml.Matrix4f;
 import org.joml.Vector4f;
 
-import com.jogamp.opengl.GL;
-import com.jogamp.opengl.GL4;
-import com.jogamp.opengl.GLContext;
-
 import comp3170.GLBuffers;
+import comp3170.SceneObject;
 import comp3170.Shader;
-import comp3170.demos.SceneObject;
 
 public class Grid extends SceneObject {
 	
@@ -18,7 +20,7 @@ public class Grid extends SceneObject {
 	private int vertexBuffer;
 	private int[] indices;
 	private int indexBuffer;
-	private float[] colour = {1f, 1f, 1f};
+	private float[] colour = {1f, 1f, 1f, 1f};
 
 	public Grid(Shader shader, int nLines) {
 		this.shader = shader;
@@ -47,16 +49,14 @@ public class Grid extends SceneObject {
 	
 
 	@Override
-	public void drawSelf(Matrix4f mvpMatrix) {
-		GL4 gl = (GL4) GLContext.getCurrentGL();
-
+	protected void drawSelf(Matrix4f matrix) {
 		shader.enable();
-		shader.setUniform("u_mvpMatrix", mvpMatrix);
+		shader.setUniform("u_mvpMatrix", matrix);
 		shader.setAttribute("a_position", vertexBuffer);
 		shader.setUniform("u_colour", colour);
 
-		gl.glBindBuffer(GL.GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
-		gl.glDrawElements(GL.GL_LINES, indices.length, GL.GL_UNSIGNED_INT, 0);		
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
+		glDrawElements(GL_LINES, indices.length, GL_UNSIGNED_INT, 0);		
 	}
 
 }

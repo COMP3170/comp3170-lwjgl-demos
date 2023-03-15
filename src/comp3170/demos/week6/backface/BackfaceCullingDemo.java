@@ -2,52 +2,24 @@ package comp3170.demos.week6.backface;
 
 import static org.lwjgl.opengl.GL11.glClear;
 import static org.lwjgl.opengl.GL11.glClearColor;
-import static org.lwjgl.opengl.GL11.glDrawElements;
-import static org.lwjgl.opengl.GL11.glPolygonMode;
-import static org.lwjgl.opengl.GL15.glBindBuffer;
-import static org.lwjgl.opengl.GL11.glViewport;
-import static org.lwjgl.opengl.GL11.glEnable;
-import static org.lwjgl.opengl.GL11.glDisable;
 import static org.lwjgl.opengl.GL11.glCullFace;
+import static org.lwjgl.opengl.GL11.glDisable;
+import static org.lwjgl.opengl.GL11.glEnable;
+import static org.lwjgl.opengl.GL11.glViewport;
 
-import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
-import static org.lwjgl.opengl.GL11.GL_FILL;
-import static org.lwjgl.opengl.GL11.GL_FRONT_AND_BACK;
-import static org.lwjgl.opengl.GL11.GL_FRONT;
 import static org.lwjgl.opengl.GL11.GL_BACK;
+import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.GL_CULL_FACE;
-import static org.lwjgl.opengl.GL11.GL_TRIANGLES;
-import static org.lwjgl.opengl.GL11.GL_UNSIGNED_INT;
-import static org.lwjgl.opengl.GL15.GL_ELEMENT_ARRAY_BUFFER;
+import static org.lwjgl.opengl.GL11.GL_FRONT;
 
-import static org.lwjgl.opengl.GL20.GL_FLOAT_VEC2;
-import static org.lwjgl.opengl.GL20.GL_FLOAT_VEC3;
-
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_F;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_B;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_DOWN;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_LEFT;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_RIGHT;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_S;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_UP;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_W;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_O;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_L;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_F;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_SPACE;
 
 import java.awt.Color;
-import java.io.File;
-import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
 import org.joml.Matrix4f;
-
-
-
-import java.awt.Color;
-import java.io.File;
-import java.io.IOException;
-
-import org.joml.Matrix4f;
-import org.joml.Vector3f;
 
 import comp3170.IWindowListener;
 import comp3170.InputManager;
@@ -59,6 +31,7 @@ import comp3170.demos.week6.camera3d.cameras.Camera;
 import comp3170.demos.week6.camera3d.cameras.PerspectiveCamera;
 import comp3170.demos.week6.camera3d.sceneobjects.Axes;
 import comp3170.demos.week6.camera3d.sceneobjects.Grid;
+import comp3170.demos.week6.shaders.ShaderLibrary;
 
 public class BackfaceCullingDemo implements IWindowListener {
 
@@ -69,11 +42,12 @@ public class BackfaceCullingDemo implements IWindowListener {
 
 	private Window window;
 	private Shader shader;
-	
-	final private File DIRECTORY = new File("src/comp3170/demos/week6"); 
+	 
 	final private String VERTEX_SHADER = "vertex.glsl";
 	final private String FRAGMENT_SHADER = "fragment.glsl";
-
+	
+	private int frameRate = 100;
+	
 	private long oldTime;
 	private InputManager input;
 
@@ -93,18 +67,15 @@ public class BackfaceCullingDemo implements IWindowListener {
 
 
 	public BackfaceCullingDemo() throws OpenGLException {
-		Window window = new Window("Week 6 Backface Culling Demo", width, height, this);
+		window = new Window("Week 6 Backface Culling Demo", width, height, this);
 		window.setResizable(true);
 		window.run();
-		
-		
 		
 		oldTime = System.currentTimeMillis();		
 	}
 
 	@Override
-	public void init() {
-		input = new InputManager(window);
+	public void init() {	
 		
 		if (isCulling) {
 			glEnable(GL_CULL_FACE);
@@ -118,39 +89,23 @@ public class BackfaceCullingDemo implements IWindowListener {
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);	
 		
 
-		shader = compileShader(VERTEX_SHADER, FRAGMENT_SHADER);
+		shader = ShaderLibrary.compileShader(VERTEX_SHADER, FRAGMENT_SHADER);
 		
 		// Set up the scene
 		root = new SceneObject();
 		grid = new Grid(shader, 11);
 		grid.setParent(root);
 		
-		axes = new Axes(shader);
+		axes = new Axes();
 		axes.setParent(root);
 		
 		triangle = new Triangle(shader, Color.YELLOW);
 		triangle.setParent(root);
 		
 		camera = new PerspectiveCamera(2, TAU/6, 1, 0.1f, 10f);		
+		
+		input = new InputManager(window);
 	}
-
-	private Shader compileShader(String vertex, String fragement) {
-		// Compile the shader
-		try {
-			File vertexShader = new File(DIRECTORY, vertex);
-			File fragementShader = new File(DIRECTORY, fragement);
-			return new Shader(vertexShader, fragementShader);
-		} catch (IOException e) {
-			e.printStackTrace();
-			System.exit(1);
-		} catch (GLException e) {
-			e.printStackTrace();
-			System.exit(1);
-		}
-		return null;
-
-	}
-
 	
 	private void update() {
 
@@ -158,8 +113,10 @@ public class BackfaceCullingDemo implements IWindowListener {
 		float deltaTime = (time-oldTime) / 1000f;
 		oldTime = time;
 		
+		System.out.println("update: dt = " + deltaTime + "s");
+		
 		// enable/disable face culling
-		if (input.wasKeyPressed(KeyEvent.VK_SPACE)) {
+		if (input.wasKeyPressed(GLFW_KEY_SPACE)) {
 			isCulling = !isCulling;
 			
 			if (isCulling) {
@@ -171,11 +128,11 @@ public class BackfaceCullingDemo implements IWindowListener {
 		}
 
 		// set which face to cull
-		if (input.wasKeyPressed(KeyEvent.VK_F)) {
+		if (input.wasKeyPressed(GLFW_KEY_F)) {
 			glCullFace(GL_FRONT);
 		}
 
-		if (input.wasKeyPressed(KeyEvent.VK_B)) {
+		if (input.wasKeyPressed(GLFW_KEY_B)) {
 			glCullFace(GL_BACK);
 		}
 
@@ -200,6 +157,12 @@ public class BackfaceCullingDemo implements IWindowListener {
 		// draw the scene
 		root.draw(mvpMatrix);
 		
+		// restrict the framerate by sleeping between frames
+		try {
+			TimeUnit.MILLISECONDS.sleep(1000 / frameRate);
+		} catch (InterruptedException e) {
+		}
+		
 	}
 
 	public void resize(int width, int height) {
@@ -216,12 +179,6 @@ public class BackfaceCullingDemo implements IWindowListener {
 	}
 	public static void main(String[] args) throws OpenGLException { 
 		new BackfaceCullingDemo();
-	}
-
-	@Override
-	public void draw() {
-		// TODO Auto-generated method stub
-		
 	}
 
 
