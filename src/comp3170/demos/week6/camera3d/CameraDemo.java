@@ -1,53 +1,48 @@
 package comp3170.demos.week6.camera3d;
 
-import static com.jogamp.opengl.GL.GL_COLOR_BUFFER_BIT;
+import static org.lwjgl.opengl.GL11.glClear;
+import static org.lwjgl.opengl.GL11.glClearColor;
+import static org.lwjgl.opengl.GL11.glCullFace;
+import static org.lwjgl.opengl.GL11.glDisable;
+import static org.lwjgl.opengl.GL11.glEnable;
+import static org.lwjgl.opengl.GL11.glViewport;
+
+import static org.lwjgl.opengl.GL14.GL_COLOR_BUFFER_BIT;
+
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_SPACE;
 
 import java.awt.Color;
-import java.awt.event.KeyEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.io.File;
-import java.io.IOException;
-
-import javax.swing.JFrame;
 
 import org.joml.Matrix4f;
+import org.joml.Vector4f;
 
-import com.jogamp.opengl.GL4;
-import com.jogamp.opengl.GLAutoDrawable;
-import com.jogamp.opengl.GLCapabilities;
-import com.jogamp.opengl.GLContext;
-import com.jogamp.opengl.GLEventListener;
-import com.jogamp.opengl.GLProfile;
-import com.jogamp.opengl.awt.GLCanvas;
-import com.jogamp.opengl.util.Animator;
-
-import comp3170.GLException;
+import comp3170.IWindowListener;
 import comp3170.InputManager;
+import comp3170.OpenGLException;
 import comp3170.Shader;
-import comp3170.demos.SceneObject;
+import comp3170.Window;
+import comp3170.SceneObject;
 import comp3170.demos.week6.camera3d.cameras.Camera;
 import comp3170.demos.week6.camera3d.cameras.OrthographicCamera;
 import comp3170.demos.week6.camera3d.cameras.PerspectiveCamera;
 import comp3170.demos.week6.camera3d.sceneobjects.Axes;
 import comp3170.demos.week6.camera3d.sceneobjects.Cube;
 import comp3170.demos.week6.camera3d.sceneobjects.Grid;
+import comp3170.demos.week6.shaders.ShaderLibrary;
 
-public class CameraDemo extends JFrame implements GLEventListener {
+public class CameraDemo implements IWindowListener {
 
 	public static final float TAU = (float) (2 * Math.PI);		// https://tauday.com/tau-manifesto
 	
 	private int width = 800;
 	private int height = 800;
 
-	private GLCanvas canvas;
+	private Window window;
 	private Shader shader;
-	
-	final private File DIRECTORY = new File("src/comp3170/demos/week6"); 
+
 	final private String VERTEX_SHADER = "vertex.glsl";
 	final private String FRAGMENT_SHADER = "fragment.glsl";
 
-	private Animator animator;
 	private long oldTime;
 	private InputManager input;
 
@@ -65,35 +60,14 @@ public class CameraDemo extends JFrame implements GLEventListener {
 
 	private SceneObject root;
 
-	public CameraDemo() {
-		super("Week 6 3D camera demo");
-
-		// set up a GL canvas
-		GLProfile profile = GLProfile.get(GLProfile.GL4);		 
-		GLCapabilities capabilities = new GLCapabilities(profile);
-		canvas = new GLCanvas(capabilities);
-		canvas.addGLEventListener(this);
-		add(canvas);
+	public CameraDemo() throws OpenGLException {
+		window = new Window("Week 6 Backface Culling Demo", width, height, this);
+		window.setResizable(true);
+		window.run();
 		
-		// set up Animator		
-
-		animator = new Animator(canvas);
-		animator.start();
 		oldTime = System.currentTimeMillis();		
 
-		// input
-		
-		input = new InputManager(canvas);
-		
-		// set up the JFrame
-		
-		setSize(width,height);
-		setVisible(true);
-		addWindowListener(new WindowAdapter() {
-			public void windowClosing(WindowEvent e) {
-				System.exit(0);
-			}
-		});
+
 	}
 
 	private static final float CAMERA_DISTANCE = 2f;
@@ -105,10 +79,11 @@ public class CameraDemo extends JFrame implements GLEventListener {
 	private static final float CAMERA_ASPECT = 1;
 	
 	@Override
-	public void init(GLAutoDrawable arg0) {
-		GL4 gl = (GL4) GLContext.getCurrentGL();
+	public void init() {
+		
+		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 				
-		shader = compileShader(VERTEX_SHADER, FRAGMENT_SHADER);
+		shader = ShaderLibrary.compileShader(VERTEX_SHADER, FRAGMENT_SHADER);
 
 		root = new SceneObject();
 		
@@ -116,13 +91,13 @@ public class CameraDemo extends JFrame implements GLEventListener {
 		grid = new Grid(shader, 11);
 		grid.setParent(root);
 		
-		axes = new Axes(shader);
+		axes = new Axes();
 		axes.setParent(root);
 		
 		cubes = new Cube[] {
-			new Cube(shader, Color.RED),
-			new Cube(shader, new Color(0.4f, 0.4f, 1.0f)),
-			new Cube(shader, Color.GREEN),
+			new Cube(shader, new Vector4f(0.9f,0.9f,0.5f, 1.0f)),   // YELLOW
+			new Cube(shader, new Vector4f(0.5f, 0.7f, 0.4f, 1.0f)), // GREEN
+			new Cube(shader, new Vector4f(0.8f, 0.4f, 0.7f, 1.0f)), // PINK
 		};
 		
 		for (int i = 0; i < cubes.length; i++) {
@@ -141,33 +116,17 @@ public class CameraDemo extends JFrame implements GLEventListener {
 			perspectiveCamera,
 		};
 		currentCamera = 0;
+		
+		input = new InputManager(window);
 	
 	}
-
-	private Shader compileShader(String vertex, String fragment) {
-		// Compile the shader
-		try {
-			File vertexShader = new File(DIRECTORY, vertex);
-			File fragementShader = new File(DIRECTORY, fragment);
-			return new Shader(vertexShader, fragementShader);
-		} catch (IOException e) {
-			e.printStackTrace();
-			System.exit(1);
-		} catch (GLException e) {
-			e.printStackTrace();
-			System.exit(1);
-		}
-		return null;
-
-	}
-
 	
 	private void update() {
 		long time = System.currentTimeMillis();
 		float deltaTime = (time-oldTime) / 1000f;
 		oldTime = time;
 		
-		if (input.wasKeyPressed(KeyEvent.VK_SPACE)) {
+		if (input.wasKeyPressed(GLFW_KEY_SPACE)) {
 			currentCamera = (currentCamera + 1) % cameras.length; 
 		}
 
@@ -179,14 +138,13 @@ public class CameraDemo extends JFrame implements GLEventListener {
 	}
 	
 	@Override
-	public void display(GLAutoDrawable arg0) {
-		GL4 gl = (GL4) GLContext.getCurrentGL();
+	public void draw() {
 		
 		update();
 		
         // clear the colour buffer
-		gl.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-		gl.glClear(GL_COLOR_BUFFER_BIT);		
+		
+		glClear(GL_COLOR_BUFFER_BIT);		
 		
 		cameras[currentCamera].getViewMatrix(viewMatrix);
 		cameras[currentCamera].getProjectionMatrix(projectionMatrix);
@@ -197,20 +155,22 @@ public class CameraDemo extends JFrame implements GLEventListener {
 		root.draw(mvpMatrix);		
 	}
 
-	@Override
-	public void reshape(GLAutoDrawable d, int x, int y, int width, int height) {
-		this.width = width;
-		this.height = height;		
+	
+	public static void main(String[] args) throws OpenGLException { 
+		new CameraDemo();
 	}
 
 	@Override
-	public void dispose(GLAutoDrawable arg0) {
+	public void resize(int width, int height) {
+		this.width = width;
+		this.height = height;
+		glViewport(0,0,width,height);
+	}
+
+	@Override
+	public void close() {
 		// TODO Auto-generated method stub
 		
-	}
-	
-	public static void main(String[] args) { 
-		new CameraDemo();
 	}
 
 

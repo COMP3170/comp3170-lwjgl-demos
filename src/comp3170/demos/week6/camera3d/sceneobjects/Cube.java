@@ -27,14 +27,14 @@ public class Cube extends SceneObject {
 	private int[] indices;
 	private int indexBuffer;
 	
-	private float[] colour = {1f, 1f, 1f}; 
+	private Vector4f colour = new Vector4f(1f, 1f, 1f, 1f); 
 	
 
-	public Cube(Shader shader, Color colour) {
+	public Cube(Shader shader, Vector4f colour) {
 		this.shader = shader;
+		
+		this.colour = colour;
 
-		// convert colour to RGB array of floats
-		colour.getRGBColorComponents(this.colour);
 		
 		//    6-----7
 		//   /|    /|
