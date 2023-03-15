@@ -48,8 +48,6 @@ public abstract class Camera {
 
 	public void update(InputManager input, float deltaTime) {
 		
-		System.out.println("update: dt = " + deltaTime + "s");
-		
 		// key controls to orbit camera around the origin
 		
 		if (input.isKeyDown(GLFW_KEY_UP)) {

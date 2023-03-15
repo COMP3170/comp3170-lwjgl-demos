@@ -112,9 +112,7 @@ public class BackfaceCullingDemo implements IWindowListener {
 		long time = System.currentTimeMillis();
 		float deltaTime = (time-oldTime) / 1000f;
 		oldTime = time;
-		
-		System.out.println("update: dt = " + deltaTime + "s");
-		
+				
 		// enable/disable face culling
 		if (input.wasKeyPressed(GLFW_KEY_SPACE)) {
 			isCulling = !isCulling;
