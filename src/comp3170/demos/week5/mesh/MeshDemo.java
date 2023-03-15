@@ -1,5 +1,9 @@
 package comp3170.demos.week5.mesh;
-import static org.lwjgl.glfw.GLFW.*;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_DOWN;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_LEFT;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_RIGHT;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_SPACE;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_UP;
 import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.glClear;
 import static org.lwjgl.opengl.GL11.glClearColor;
@@ -10,6 +14,7 @@ import comp3170.InputManager;
 import comp3170.OpenGLException;
 import comp3170.SceneObject;
 import comp3170.Window;
+import comp3170.demos.week5.mesh.sceneobjects.NormalisedCube;
 import comp3170.demos.week5.mesh.sceneobjects.SimpleCube;
 import comp3170.demos.week5.mesh.sceneobjects.UVSphere;
 
@@ -37,6 +42,8 @@ public class MeshDemo implements IWindowListener {
 		meshes = new SceneObject[] {
 			new SimpleCube(),
 			new UVSphere(),
+			new NormalisedCube(false),
+			new NormalisedCube(true),
 		};
 		currentMesh = 0;
 		
