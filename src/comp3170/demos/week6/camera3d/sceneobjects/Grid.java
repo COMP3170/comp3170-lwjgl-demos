@@ -20,7 +20,7 @@ public class Grid extends SceneObject {
 	private int vertexBuffer;
 	private int[] indices;
 	private int indexBuffer;
-	private float[] colour = {1f, 1f, 1f, 1f};
+	private Vector4f colour = new Vector4f(0.4f, 0.4f, 0.4f, 1f);
 
 	public Grid(Shader shader, int nLines) {
 		this.shader = shader;
