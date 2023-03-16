@@ -15,7 +15,7 @@ import org.joml.Vector4f;
 import comp3170.GLBuffers;
 import comp3170.SceneObject;
 import comp3170.Shader;
-import comp3170.demos.week5.mesh.shaders.ShaderLibrary;
+import comp3170.demos.week5.shaders.ShaderLibrary;
 
 public class SimpleCube extends SceneObject {
 	

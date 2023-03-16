@@ -1,4 +1,4 @@
-package comp3170.demos.week5.mesh.shaders;
+package comp3170.demos.week5.shaders;
 
 
 import java.io.File;
@@ -11,7 +11,7 @@ import comp3170.Shader;
 
 public class ShaderLibrary {
 
-	final private static File DIRECTORY = new File("src/comp3170/demos/week5/mesh/shaders"); 	
+	final private static File DIRECTORY = new File("src/comp3170/demos/week5/shaders"); 	
 	private static Map<Pair<String, String>, Shader> loadedShaders = new HashMap<Pair<String, String>, Shader>();
 	
 	/**
