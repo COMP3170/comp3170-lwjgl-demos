@@ -26,7 +26,7 @@ import comp3170.Window;
 
 public class Week2 implements IWindowListener {
 
-	public double TAU = 2 * Math.PI;		// https://tauday.com/tau-manifesto
+	public static final float TAU = (float) (2 * Math.PI);		// https://tauday.com/tau-manifesto
 	
 	private int width = 800;
 	private int height = 800;
