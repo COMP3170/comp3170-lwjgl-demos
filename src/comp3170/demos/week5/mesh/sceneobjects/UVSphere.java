@@ -51,7 +51,6 @@ public class UVSphere extends SceneObject {
 		
 		Matrix4f rotateY = new Matrix4f();
 		Matrix4f rotateX = new Matrix4f();
-		Matrix4f translateY = new Matrix4f();
 
 		int k = 0;
 		for (int i = 0; i <= width; i++) {
@@ -62,7 +61,6 @@ public class UVSphere extends SceneObject {
 				float t = j * 2f / height - 1;
 				float pitch = (TAU /4) * t; // from -TAU/4 to TAU/4
 				rotateX.rotationX(pitch);
-				translateY.translation(0, t, 0);
 				
 				vertices[k] = new Vector4f(0, 0, 1, 1);	// unit vector in z direction
 				vertices[k].mul(rotateX).mul(rotateY);  // vk = Ry * Rx * v;
