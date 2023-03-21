@@ -90,7 +90,7 @@ public class Extrusion extends SceneObject {
 			
 			Vector3f prev = (i > 0 ? curve[i-1] : curve[i]);
 			Vector3f next = (i < curve.length - 1 ? curve[i+1] : curve[i]);
-			next.sub(prev, kAxis);
+			next.sub(prev, kAxis);  	// vt = P_next - P_prev
 
 			// normalise this to the get k-axis
 			kAxis.normalize();
@@ -110,6 +110,11 @@ public class Extrusion extends SceneObject {
 			
 			matrix.set(iAxis4, jAxis4, kAxis4, curve4);
 
+			// shrink the curve from one end to the other
+			
+//			matrix.scale(1f - 1.0f * i / curve.length);
+//			matrix.rotateZ(TAU/4  * i / curve.length);
+			
 			// using this matrix to transform the cross-section points into 3D
 			
 			for (int j = 0; j < crossSection.length; j++) {
