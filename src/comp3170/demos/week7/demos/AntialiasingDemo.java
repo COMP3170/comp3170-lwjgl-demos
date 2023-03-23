@@ -31,7 +31,7 @@ public class AntialiasingDemo implements IWindowListener {
 
 	public AntialiasingDemo() throws OpenGLException {
 		window = new Window("Antialiasing demo", screenWidth, screenHeight, this);
-		window.setSamples(0);
+		window.setSamples(0);	// set the number of samples or 0 to disable
 		window.run();
 	}
 
@@ -42,6 +42,8 @@ public class AntialiasingDemo implements IWindowListener {
 
 		shader = ShaderLibrary.compileShader(VERTEX_SHADER, FRAGMENT_SHADER);
 
+		// draw a triangle
+		
 		vertices = new Vector4f[] {
 			new Vector4f(   0,   0.8f, 0, 1),
 			new Vector4f(-0.4f, -0.8f, 0, 1),
