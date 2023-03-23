@@ -31,6 +31,7 @@ public class AntialiasingDemo implements IWindowListener {
 
 	public AntialiasingDemo() throws OpenGLException {
 		window = new Window("Antialiasing demo", screenWidth, screenHeight, this);
+		window.setSamples(0);
 		window.run();
 	}
 
