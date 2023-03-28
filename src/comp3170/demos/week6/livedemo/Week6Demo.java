@@ -34,7 +34,7 @@ public class Week6Demo implements IWindowListener {
 		glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 
 		scene = new SceneObject();
-		Axes axes = new Axes();
+		Axes3D axes = new Axes3D();
 		axes.setParent(scene);
 		icosahedron = new Icosahedron();
 		icosahedron.setParent(scene);

@@ -23,7 +23,7 @@ import comp3170.SceneObject;
 import comp3170.demos.week6.camera3d.cameras.Camera;
 import comp3170.demos.week6.camera3d.cameras.OrthographicCamera;
 import comp3170.demos.week6.camera3d.cameras.PerspectiveCamera;
-import comp3170.demos.week6.camera3d.sceneobjects.Axes;
+import comp3170.demos.week6.camera3d.sceneobjects.Axes3D;
 import comp3170.demos.week6.camera3d.sceneobjects.Cube;
 import comp3170.demos.week6.camera3d.sceneobjects.Grid;
 import comp3170.demos.week6.shaders.ShaderLibrary;
@@ -54,7 +54,7 @@ public class CameraDemo implements IWindowListener {
 
 	private Cube[] cubes;
 
-	private Axes axes;
+	private Axes3D axes;
 
 	private SceneObject root;
 
@@ -89,7 +89,7 @@ public class CameraDemo implements IWindowListener {
 		grid = new Grid(shader, 11);
 		grid.setParent(root);
 		
-		axes = new Axes();
+		axes = new Axes3D();
 		axes.setParent(root);
 		
 		cubes = new Cube[] {
