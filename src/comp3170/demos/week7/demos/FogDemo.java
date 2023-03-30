@@ -15,7 +15,7 @@ import comp3170.IWindowListener;
 import comp3170.InputManager;
 import comp3170.OpenGLException;
 import comp3170.Window;
-import comp3170.demos.week7.cameras.PerspectiveCamera;
+import comp3170.demos.week7.cameras.OrthographicCamera;
 import comp3170.demos.week7.sceneobjects.FogScene;
 
 public class FogDemo implements IWindowListener {
@@ -68,7 +68,7 @@ public class FogDemo implements IWindowListener {
 		glClearDepth(1f);
 		glClear(GL_DEPTH_BUFFER_BIT);		
 		
-		PerspectiveCamera camera = scene.getCamera(); 
+		OrthographicCamera camera = scene.getCamera(); 
 		camera.getViewMatrix(viewMatrix);
 		camera.getProjectionMatrix(projectionMatrix);		
 		mvpMatrix.set(projectionMatrix).mul(viewMatrix);

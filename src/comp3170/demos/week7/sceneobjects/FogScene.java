@@ -4,11 +4,11 @@ import java.awt.Color;
 
 import comp3170.InputManager;
 import comp3170.SceneObject;
-import comp3170.demos.week7.cameras.PerspectiveCamera;
+import comp3170.demos.week7.cameras.OrthographicCamera;
 
 public class FogScene extends SceneObject {
 
-	private PerspectiveCamera camera;
+	private OrthographicCamera camera;
 
 	public FogScene() {
 		Grid grid = new Grid(10);
@@ -22,10 +22,10 @@ public class FogScene extends SceneObject {
 		redCube.setParent(this);
 		redCube.getMatrix().translate(2,0.1f,1).scale(0.1f);
 		
-		camera = new PerspectiveCamera();
+		camera = new OrthographicCamera();
 	}
 
-	public PerspectiveCamera getCamera() {
+	public OrthographicCamera getCamera() {
 		return camera;
 	}
 	
