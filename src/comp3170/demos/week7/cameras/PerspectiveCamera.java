@@ -12,19 +12,27 @@ import comp3170.InputManager;
 
 public class PerspectiveCamera implements Camera {
 
-	private static final float FOVY = TAU / 10;
-	private static final float ASPECT = 1;
-	private static final float NEAR = 0.1f;
-	private static final float FAR = 100f;
-	private static final float DISTANCE = 4f;
+	private float fovy = TAU / 10;
+	private float aspect = 1;
+	private float near = 0.1f;
+	private float far = 100f;
+	private float distance = 4f;
 	
 	private Matrix4f cameraRotation = new Matrix4f();
 	private Matrix4f cameraMatrix = new Matrix4f();
 	
 	public PerspectiveCamera() {
-		
+		// default settings
 	}
-		
+
+	public PerspectiveCamera(float fovy, float aspect, float near, float far, float distance) {
+		this.fovy = fovy;
+		this.aspect = aspect;
+		this.near = near;
+		this.far = far;
+		this.distance = distance;		
+	}
+
 	@Override
 	public Matrix4f getViewMatrix(Matrix4f dest) {
 		return cameraMatrix.invert(dest);
@@ -32,7 +40,7 @@ public class PerspectiveCamera implements Camera {
 
 	@Override
 	public Matrix4f getProjectionMatrix(Matrix4f dest) {
-		return dest.setPerspective(FOVY, ASPECT, NEAR, FAR);
+		return dest.setPerspective(fovy, aspect, near, far);
 	}
 
 	private static final float ROTATION_SPEED = TAU/6;
@@ -51,7 +59,7 @@ public class PerspectiveCamera implements Camera {
 			cameraRotation.rotateLocalX(-ROTATION_SPEED * deltaTime);
 		}
 		
-		cameraRotation.translate(0,0,DISTANCE, cameraMatrix);
+		cameraRotation.translate(0,0,distance, cameraMatrix);
 	}
 	
 }
