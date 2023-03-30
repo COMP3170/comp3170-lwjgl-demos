@@ -1,4 +1,4 @@
-package comp3170.demos.week7.cameras;
+package comp3170.demos.week8.cameras;
 
 import static comp3170.Math.TAU;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_DOWN;
@@ -9,6 +9,7 @@ import static org.lwjgl.glfw.GLFW.GLFW_KEY_UP;
 import org.joml.Matrix4f;
 
 import comp3170.InputManager;
+import comp3170.demos.week8.cameras.Camera;
 
 public class PerspectiveCamera implements Camera {
 
