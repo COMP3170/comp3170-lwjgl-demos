@@ -1,4 +1,4 @@
-package comp3170.demos.week7.sceneobjects;
+package comp3170.demos.week8.sceneobjects;
 
 import static org.lwjgl.opengl.GL11.GL_FRONT_AND_BACK;
 import static org.lwjgl.opengl.GL11.GL_FILL;
@@ -17,7 +17,7 @@ import org.joml.Vector4f;
 import comp3170.GLBuffers;
 import comp3170.SceneObject;
 import comp3170.Shader;
-import comp3170.demos.week7.shaders.ShaderLibrary;
+import comp3170.demos.week8.shaders.ShaderLibrary;
 
 public class Quad extends SceneObject {
 

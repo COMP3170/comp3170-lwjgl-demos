@@ -1,4 +1,4 @@
-package comp3170.demos.week7.demos;
+package comp3170.demos.week8.demos;
 
 import static comp3170.Math.TAU;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_A;
@@ -24,8 +24,8 @@ import comp3170.InputManager;
 import comp3170.OpenGLException;
 import comp3170.SceneObject;
 import comp3170.Window;
-import comp3170.demos.week7.cameras.PerspectiveCamera;
-import comp3170.demos.week7.sceneobjects.Quad;
+import comp3170.demos.week8.cameras.PerspectiveCamera;
+import comp3170.demos.week8.sceneobjects.Quad;
 
 public class ZFightingDemo implements IWindowListener {
 
