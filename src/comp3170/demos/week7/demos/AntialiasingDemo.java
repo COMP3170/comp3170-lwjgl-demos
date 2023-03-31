@@ -34,7 +34,7 @@ public class AntialiasingDemo implements IWindowListener {
 
 	public AntialiasingDemo() throws OpenGLException {
 		window = new Window("Antialiasing demo", screenWidth, screenHeight, this);
-		window.setSamples(1);	// set the number of samples or 0 to disable
+		window.setSamples(4);	// set the number of samples or 0 to disable
 		window.run();
 	}
 
@@ -42,7 +42,7 @@ public class AntialiasingDemo implements IWindowListener {
 	@Override
 	public void init() {
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-		glDisable(GL_MULTISAMPLE);  
+		glEnable(GL_MULTISAMPLE);  
 
 		shader = ShaderLibrary.compileShader(VERTEX_SHADER, FRAGMENT_SHADER);
 
