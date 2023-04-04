@@ -1,9 +1,17 @@
 package comp3170.demos.week6.livedemo;
 
-import static org.lwjgl.glfw.GLFW.*;
+import static comp3170.Math.TAU;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_DOWN;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_LEFT;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_RIGHT;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_UP;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_X;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_Z;
 import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
+import static org.lwjgl.opengl.GL11.GL_CULL_FACE;
 import static org.lwjgl.opengl.GL11.glClear;
 import static org.lwjgl.opengl.GL11.glClearColor;
+import static org.lwjgl.opengl.GL11.glEnable;
 
 import org.joml.Matrix4f;
 
@@ -12,7 +20,6 @@ import comp3170.InputManager;
 import comp3170.OpenGLException;
 import comp3170.SceneObject;
 import comp3170.Window;
-import static comp3170.Math.TAU;
 
 public class Week6Demo implements IWindowListener {
 
@@ -32,6 +39,7 @@ public class Week6Demo implements IWindowListener {
 	@Override
 	public void init() {
 		glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+		glEnable(GL_CULL_FACE);
 
 		scene = new SceneObject();
 		Axes3D axes = new Axes3D();
@@ -65,6 +73,13 @@ public class Week6Demo implements IWindowListener {
 		if (input.isKeyDown(GLFW_KEY_DOWN)) {
 			cameraRotation.rotateX(-ROTATION_SPEED * deltaTime);
 		}
+		
+		if (input.isKeyDown(GLFW_KEY_Z)) {
+			cameraFOVY += CAMERA_FOVY_RATE * deltaTime;
+		}
+		if (input.isKeyDown(GLFW_KEY_X)) {
+			cameraFOVY -= CAMERA_FOVY_RATE * deltaTime;
+		}
 	}
 	
 	private Matrix4f viewMatrix = new Matrix4f();
@@ -75,6 +90,8 @@ public class Week6Demo implements IWindowListener {
 	private static final float CAMERA_FAR = 3f;
 	private static final float CAMERA_WIDTH = 2f;
 	private static final float CAMERA_HEIGHT = 2f;
+	private float cameraFOVY = TAU / 4;	
+	private static final float CAMERA_FOVY_RATE = TAU / 6;	
 	
 	@Override
 	public void draw() {
@@ -84,8 +101,12 @@ public class Week6Demo implements IWindowListener {
 
 		viewMatrix.identity().mul(cameraRotation).translate(0,0,2);
 		viewMatrix.invert();
-		
+		viewMatrix.normalize3x3();
+
+		float aspect = (float)screenWidth / screenHeight;
 		projectionMatrix.setOrthoSymmetric(CAMERA_WIDTH, CAMERA_HEIGHT, CAMERA_NEAR, CAMERA_FAR);
+//		projectionMatrix.setPerspective(cameraFOVY, aspect, CAMERA_NEAR, CAMERA_FAR);
+		
 		projectionMatrix.mul(viewMatrix, mvpMatrix);
 		
 		scene.draw(mvpMatrix);

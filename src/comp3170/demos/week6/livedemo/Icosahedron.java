@@ -1,19 +1,19 @@
 package comp3170.demos.week6.livedemo;
 
 import static comp3170.Math.TAU;
+import static org.lwjgl.opengl.GL11.GL_FILL;
 import static org.lwjgl.opengl.GL11.GL_FRONT_AND_BACK;
-import static org.lwjgl.opengl.GL11.GL_LINE;
 import static org.lwjgl.opengl.GL11.GL_TRIANGLES;
-import static org.lwjgl.opengl.GL11.GL_POINTS;
 import static org.lwjgl.opengl.GL11.GL_UNSIGNED_INT;
-import static org.lwjgl.opengl.GL11.glDrawArrays;
 import static org.lwjgl.opengl.GL11.glDrawElements;
 import static org.lwjgl.opengl.GL11.glPolygonMode;
 import static org.lwjgl.opengl.GL15.GL_ELEMENT_ARRAY_BUFFER;
 import static org.lwjgl.opengl.GL15.glBindBuffer;
-import static org.lwjgl.opengl.GL15.*;
+
+import java.awt.Color;
 
 import org.joml.Matrix4f;
+import org.joml.Vector3f;
 import org.joml.Vector4f;
 
 import comp3170.GLBuffers;
@@ -23,17 +23,26 @@ import comp3170.demos.week6.shaders.ShaderLibrary;
 
 public class Icosahedron extends SceneObject {
 	
-	private static final String VERTEX_SHADER = "vertex.glsl";
-	private static final String FRAGMENT_SHADER = "fragment.glsl";
+	private static final String VERTEX_SHADER = "colourVertex.glsl";
+	private static final String FRAGMENT_SHADER = "colourFragment.glsl";
 	private Shader shader;
 	private Vector4f[] vertices;
 	private int vertexBuffer;
 	private int[] indices;
 	private int indexBuffer;
+	private Vector3f[] hsbColours;
+	private int hsbBuffer;
 
 	public Icosahedron() {
 		shader = ShaderLibrary.compileShader(VERTEX_SHADER , FRAGMENT_SHADER);
-		
+			
+		createVertexBuffer();		
+		createColourBuffer();		
+		createIndexBuffer();
+	}
+
+
+	private void createVertexBuffer() {
 		vertices = new Vector4f[12];
 		
 		vertices[0] = new Vector4f(0,1,0,1);
@@ -51,7 +60,24 @@ public class Icosahedron extends SceneObject {
 		}
 				
 		vertexBuffer = GLBuffers.createBuffer(vertices);
+	}
+	
+	private void createColourBuffer() {
+		hsbColours = new Vector3f[12];
 		
+		float hue = 1;
+		float sat = 1;
+		float bri = 1;
+		
+		for (int i = 0; i < hsbColours.length; i++) {
+			hue = (float) i / (hsbColours.length -1 ); // hue from 0 to 1 in 12 steps
+			hsbColours[i] = new Vector3f(hue, sat, bri);
+		}
+		
+		hsbBuffer = GLBuffers.createBuffer(hsbColours);
+	}
+
+	private void createIndexBuffer() {
 		indices = new int[] {
 			// top
 			0, 1, 3,
@@ -70,6 +96,7 @@ public class Icosahedron extends SceneObject {
 			7, 8, 9,
 			10, 9, 8,
 			1, 9, 10,
+			2, 1, 10,
 			
 			// bottom
 			11, 4, 2,
@@ -83,20 +110,18 @@ public class Icosahedron extends SceneObject {
 		indexBuffer = GLBuffers.createIndexBuffer(indices);
 	}
 
-	private float[] colour = new float[] {0,0,0,1};
-
 	@Override
 	protected void drawSelf(Matrix4f mvpMatrix) {
 		shader.enable();
 		
 		shader.setUniform("u_mvpMatrix", mvpMatrix);
 		shader.setAttribute("a_position", vertexBuffer);
-		shader.setUniform("u_colour", colour);
+		shader.setAttribute("a_hsb", hsbBuffer);
 
 //		glPointSize(5);
 //		glDrawArrays(GL_POINTS, 0, vertices.length);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
-		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 		glDrawElements(GL_TRIANGLES, indices.length, GL_UNSIGNED_INT, 0);
 	}
 
