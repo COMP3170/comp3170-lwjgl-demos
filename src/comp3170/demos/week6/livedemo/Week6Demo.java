@@ -71,6 +71,10 @@ public class Week6Demo implements IWindowListener {
 	private Matrix4f projectionMatrix = new Matrix4f();
 	private Matrix4f mvpMatrix = new Matrix4f();
 
+	private static final float CAMERA_NEAR = 0.5f;
+	private static final float CAMERA_FAR = 3f;
+	private static final float CAMERA_WIDTH = 2f;
+	private static final float CAMERA_HEIGHT = 2f;
 	
 	@Override
 	public void draw() {
@@ -81,7 +85,7 @@ public class Week6Demo implements IWindowListener {
 		viewMatrix.identity().mul(cameraRotation).translate(0,0,2);
 		viewMatrix.invert();
 		
-		projectionMatrix.setOrthoSymmetric(2, 2, 0.5f, 3f);
+		projectionMatrix.setOrthoSymmetric(CAMERA_WIDTH, CAMERA_HEIGHT, CAMERA_NEAR, CAMERA_FAR);
 		projectionMatrix.mul(viewMatrix, mvpMatrix);
 		
 		scene.draw(mvpMatrix);
