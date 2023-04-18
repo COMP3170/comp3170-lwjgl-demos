@@ -3,6 +3,8 @@ package comp3170.demos.week8.demos;
 import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.GL_DEPTH_TEST;
+import static org.lwjgl.opengl.GL11.GL_LEQUAL;
+import static org.lwjgl.opengl.GL11.glDepthFunc;
 import static org.lwjgl.opengl.GL11.glClear;
 import static org.lwjgl.opengl.GL11.glClearColor;
 import static org.lwjgl.opengl.GL11.glClearDepth;
@@ -49,6 +51,8 @@ public class DepthDemo implements IWindowListener {
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		glEnable(GL_DEPTH_TEST);
 		
+		glDepthFunc(GL_LEQUAL);
+		
 		// set up scene
 		scene = new SceneObject();
 		Axes3D axes = new Axes3D();
@@ -88,7 +92,7 @@ public class DepthDemo implements IWindowListener {
 		glClear(GL_COLOR_BUFFER_BIT);		
 		glViewport(0, 0, screenWidth, screenHeight);
 
-		glClearDepth(1f);
+		glClearDepth(1);
 		glClear(GL_DEPTH_BUFFER_BIT);		
 		
 		camera.getViewMatrix(viewMatrix);
