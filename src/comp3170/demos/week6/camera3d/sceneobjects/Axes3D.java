@@ -14,7 +14,7 @@ import comp3170.SceneObject;
 import comp3170.Shader;
 import comp3170.demos.week6.shaders.ShaderLibrary;
 
-public class Axes extends SceneObject {
+public class Axes3D extends SceneObject {
 
 	private Vector4f[] vertices;
 	private int vertexBuffer;
@@ -30,7 +30,7 @@ public class Axes extends SceneObject {
 	final private String FRAGMENT_SHADER = "fragment.glsl";
 	private Shader shader;
 
-	public Axes() {
+	public Axes3D() {
 		shader = ShaderLibrary.compileShader(VERTEX_SHADER, FRAGMENT_SHADER);
 		
 		//A set of i,j,k axes

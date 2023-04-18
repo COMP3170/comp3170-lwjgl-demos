@@ -34,7 +34,7 @@ import comp3170.Shader;
 import comp3170.Window;
 import comp3170.demos.week6.camera3d.cameras.Camera;
 import comp3170.demos.week6.camera3d.cameras.PerspectiveCamera;
-import comp3170.demos.week6.camera3d.sceneobjects.Axes;
+import comp3170.demos.week6.camera3d.sceneobjects.Axes3D;
 import comp3170.demos.week6.camera3d.sceneobjects.Grid;
 import comp3170.demos.week6.shaders.ShaderLibrary;
 
@@ -58,7 +58,7 @@ public class BackfaceCullingDemo implements IWindowListener {
 
 	private Grid grid;
 	private Triangle triangle;
-	private Axes axes;
+	private Axes3D axes;
 
 	private Camera camera;
 	private Matrix4f viewMatrix = new Matrix4f();
@@ -101,7 +101,7 @@ public class BackfaceCullingDemo implements IWindowListener {
 		grid = new Grid(shader, 11);
 		grid.setParent(root);
 		
-		axes = new Axes();
+		axes = new Axes3D();
 		axes.setParent(root);
 		
 		triangle = new Triangle(shader, Color.YELLOW);
