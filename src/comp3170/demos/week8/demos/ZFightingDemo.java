@@ -79,7 +79,7 @@ public class ZFightingDemo implements IWindowListener {
 
 	}
 	
-	private static final float ROTATION_SPEED = TAU/20;
+	private static final float ROTATION_SPEED = TAU/80;
 
 	private void update() {
 		long time = System.currentTimeMillis();
