@@ -4,8 +4,11 @@ import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.GL_DEPTH_TEST;
 import static org.lwjgl.opengl.GL11.GL_LEQUAL;
-import static org.lwjgl.opengl.GL11.GL_GEQUAL;
+import static org.lwjgl.opengl.GL11.GL_BLEND;
+import static org.lwjgl.opengl.GL11.GL_SRC_ALPHA;
+import static org.lwjgl.opengl.GL11.GL_ONE_MINUS_SRC_ALPHA;
 import static org.lwjgl.opengl.GL11.glDepthFunc;
+import static org.lwjgl.opengl.GL11.glBlendFunc;
 import static org.lwjgl.opengl.GL11.glClear;
 import static org.lwjgl.opengl.GL11.glClearColor;
 import static org.lwjgl.opengl.GL11.glClearDepth;
@@ -28,7 +31,7 @@ import comp3170.demos.week8.cameras.PerspectiveCamera;
 
 import static comp3170.Math.TAU;
 
-public class DepthDemo implements IWindowListener {
+public class TransparencyDemo implements IWindowListener {
 
 	private Window window;
 	private int screenWidth = 800;
@@ -39,29 +42,41 @@ public class DepthDemo implements IWindowListener {
 	private PerspectiveCamera camera;
 	private SceneObject scene;
 
-	public DepthDemo() throws OpenGLException {
-		window = new Window("Depth Demo", screenWidth, screenHeight, this);
+	public TransparencyDemo() throws OpenGLException {
+		window = new Window("Transparency Demo", screenWidth, screenHeight, this);
 		window.run();
 	}
 
 	@Override
 	public void init() {
-		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+
 		glEnable(GL_DEPTH_TEST);
 
 		glDepthFunc(GL_LEQUAL);
-
+		
+		// enable alpha blending
+		glEnable(GL_BLEND);
+		
+		// setting the blend function to c = a * c_new + (1-a) c_old
+		glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
+				
 		// set up scene
 		scene = new SceneObject();
 		Axes3D axes = new Axes3D();
 		axes.setParent(scene);
 		Grid grid = new Grid(10);
 		grid.setParent(scene);
+		
+		Color red = new Color(1f,0,0,0.5f);
+		Color blue = new Color(0,0,1f,0.5f);
+		Color green = new Color(0,1f,0,0.5f);
 
-		Triangle redTriangle = new Triangle(Color.red);
+		Triangle redTriangle = new Triangle(red);
 		redTriangle.setParent(scene);
-		Triangle blueTriangle = new Triangle(Color.blue);
+		Triangle blueTriangle = new Triangle(blue);
 		blueTriangle.setParent(scene); blueTriangle.getMatrix().rotateY(TAU/12);
+		Triangle greenTriangle = new Triangle(green);
+		greenTriangle.setParent(scene); greenTriangle.getMatrix().rotateY(TAU/6);
 
 		camera = new PerspectiveCamera();
 
@@ -113,7 +128,7 @@ public class DepthDemo implements IWindowListener {
 	}
 
 	public static void main(String[] args) throws OpenGLException {
-		new DepthDemo();
+		new TransparencyDemo();
 	}
 
 }
