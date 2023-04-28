@@ -170,10 +170,10 @@ public class Cylinder extends SceneObject {
 	
 	public void update(InputManager input, float dt) {
 		if (input.isKeyDown(GLFW_KEY_Z)) {
-			getMatrix().rotateY(-ROTATION_SPEED * dt);
+			getMatrix().rotateLocalY(-ROTATION_SPEED * dt);
 		}
 		if (input.isKeyDown(GLFW_KEY_X)) {
-			getMatrix().rotateY(ROTATION_SPEED * dt);
+			getMatrix().rotateLocalY(ROTATION_SPEED * dt);
 		}
 		
 		if (input.wasKeyPressed(GLFW_KEY_N)) {
