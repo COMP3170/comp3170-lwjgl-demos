@@ -21,6 +21,9 @@ public class Scene extends SceneObject {
 		
 		Grid grid = new Grid(10);
 		grid.setParent(this);
+		
+		Axes3D axes = new Axes3D();
+		axes.setParent(grid);
 
 		cylinder = new Cylinder();
 		cylinder.setParent(grid);

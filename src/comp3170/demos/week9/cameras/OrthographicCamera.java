@@ -40,7 +40,7 @@ public class OrthographicCamera implements Camera {
 	@Override
 	public Vector4f getViewVector(Vector4f dest) {
 		// the view vector is the k-axis of the cameraMatrix
-		return cameraMatrix.getColumn(3, dest);
+		return cameraMatrix.getColumn(2, dest);
 	}
 
 	private static final float ROTATION_SPEED = TAU/6;

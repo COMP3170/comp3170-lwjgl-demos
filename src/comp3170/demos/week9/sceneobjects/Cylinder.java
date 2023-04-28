@@ -207,7 +207,7 @@ public class Cylinder extends SceneObject {
 		// camera
 		Camera camera = Scene.theScene.getCamera();
 		shader.setUniform("u_viewDirection", camera.getViewVector(viewDirection));
-
+		
 		// light
 		Light light = Scene.theScene.getLight();
 		shader.setUniform("u_lightDirection", light.getSourceVector(lightDirection));
