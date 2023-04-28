@@ -7,6 +7,7 @@ import static org.lwjgl.glfw.GLFW.GLFW_KEY_RIGHT;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_UP;
 
 import org.joml.Matrix4f;
+import org.joml.Vector3f;
 
 import comp3170.InputManager;
 
@@ -17,8 +18,8 @@ public class OrthographicCamera implements Camera {
 	private static final float NEAR = 0.1f;
 	private static final float FAR = 10f;
 	private static final float DISTANCE = 5f;
+	private static final float ELEVATION = 0f;
 	
-	private Matrix4f cameraRotation = new Matrix4f();
 	private Matrix4f cameraMatrix = new Matrix4f();
 	
 	public OrthographicCamera() {
@@ -36,22 +37,28 @@ public class OrthographicCamera implements Camera {
 	}
 
 	private static final float ROTATION_SPEED = TAU/6;
+	private Vector3f angle = new Vector3f(0,0,0);
 
 	public void update(InputManager input, float deltaTime) {
 		if (input.isKeyDown(GLFW_KEY_LEFT)) {
-			cameraRotation.rotateY(ROTATION_SPEED * deltaTime);
+			angle.y += ROTATION_SPEED * deltaTime;
 		}
 		if (input.isKeyDown(GLFW_KEY_RIGHT)) {
-			cameraRotation.rotateY(-ROTATION_SPEED * deltaTime);
+			angle.y -= ROTATION_SPEED * deltaTime;
 		}
 		if (input.isKeyDown(GLFW_KEY_UP)) {
-			cameraRotation.rotateLocalX(ROTATION_SPEED * deltaTime);
+			angle.x += ROTATION_SPEED * deltaTime;
 		}
 		if (input.isKeyDown(GLFW_KEY_DOWN)) {
-			cameraRotation.rotateLocalX(-ROTATION_SPEED * deltaTime);
+			angle.x -= ROTATION_SPEED * deltaTime;
 		}
-		
-		cameraRotation.translate(0,0,DISTANCE, cameraMatrix);
+
+		cameraMatrix.identity();
+		cameraMatrix.translate(0, ELEVATION, 0);
+		cameraMatrix.rotateY(angle.y);
+		cameraMatrix.rotateX(angle.x);
+		cameraMatrix.rotateZ(angle.z);
+		cameraMatrix.translate(0, 0, DISTANCE);
 	}
 	
 }
