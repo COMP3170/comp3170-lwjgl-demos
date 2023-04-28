@@ -19,7 +19,7 @@ public class OrthographicCamera implements Camera {
 	private static final float NEAR = 0.1f;
 	private static final float FAR = 10f;
 	private static final float DISTANCE = 5f;
-	private static final float ELEVATION = 1f;
+	private static final float ELEVATION = 0.5f;
 	
 	private Matrix4f cameraMatrix = new Matrix4f();
 	
