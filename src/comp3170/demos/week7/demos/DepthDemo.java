@@ -29,8 +29,8 @@ public class DepthDemo implements IWindowListener {
 
 	private Window window;
 	private int screenWidth = 800;
-	private int screenHeight = 800
-			;
+	private int screenHeight = 800;
+
 	private InputManager input;
 	private long oldTime;
 	
