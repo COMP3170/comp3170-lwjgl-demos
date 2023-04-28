@@ -5,6 +5,8 @@ import static org.lwjgl.glfw.GLFW.GLFW_KEY_DOWN;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_LEFT;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_RIGHT;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_UP;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_S;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_W;
 
 import org.joml.Matrix4f;
 
@@ -45,19 +47,29 @@ public class PerspectiveCamera implements Camera {
 	}
 
 	private static final float ROTATION_SPEED = TAU/6;
+	private static final float MOVEMENT_SPEED = 5;
 
 	public void update(InputManager input, float deltaTime) {
-		if (input.isKeyDown(GLFW_KEY_LEFT)) {
-			cameraRotation.rotateY(ROTATION_SPEED * deltaTime);
-		}
 		if (input.isKeyDown(GLFW_KEY_RIGHT)) {
-			cameraRotation.rotateY(-ROTATION_SPEED * deltaTime);
+			cameraRotation.rotateLocalY(ROTATION_SPEED * deltaTime);
 		}
-		if (input.isKeyDown(GLFW_KEY_UP)) {
-			cameraRotation.rotateLocalX(ROTATION_SPEED * deltaTime);
+		if (input.isKeyDown(GLFW_KEY_LEFT)) {
+			cameraRotation.rotateLocalY(-ROTATION_SPEED * deltaTime);
 		}
 		if (input.isKeyDown(GLFW_KEY_DOWN)) {
-			cameraRotation.rotateLocalX(-ROTATION_SPEED * deltaTime);
+			cameraRotation.rotateX(ROTATION_SPEED * deltaTime);
+		}
+		if (input.isKeyDown(GLFW_KEY_UP)) {
+			cameraRotation.rotateX(-ROTATION_SPEED * deltaTime);
+		}
+		if (input.isKeyDown(GLFW_KEY_S))
+		{
+			distance = distance + MOVEMENT_SPEED * deltaTime;
+		}
+		
+		if (input.isKeyDown(GLFW_KEY_W))
+		{
+			distance = distance - MOVEMENT_SPEED * deltaTime;
 		}
 		
 		cameraRotation.translate(0,0,distance, cameraMatrix);
