@@ -1,9 +1,11 @@
 package comp3170.demos.week9.sceneobjects;
 
 import static comp3170.Math.TAU;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_C;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_N;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_V;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_X;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_Z;
+import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.GL_TRIANGLES;
 import static org.lwjgl.opengl.GL11.GL_UNSIGNED_INT;
 import static org.lwjgl.opengl.GL11.glDrawElements;
@@ -52,7 +54,7 @@ public class Cylinder extends SceneObject {
 	
 	private Vector3f diffuseMaterial = new Vector3f(1,0,0);		// default to red
 	private Vector3f specularMaterial = new Vector3f(1,1,1);	// default to white
-	
+	private float specularity = 10;
 
 	public Cylinder() {
 		normalShader = ShaderLibrary.compileShader(NORMAL_VERTEX, NORMAL_FRAGMENT);
@@ -167,6 +169,8 @@ public class Cylinder extends SceneObject {
 	}
 
 	private static final float ROTATION_SPEED = TAU/4;
+	private static final float SCALE_SPEED = 1.1f;
+	private static final float SPECULARITY_SPEED = 2f;
 	
 	public void update(InputManager input, float dt) {
 		if (input.isKeyDown(GLFW_KEY_Z)) {
@@ -175,6 +179,20 @@ public class Cylinder extends SceneObject {
 		if (input.isKeyDown(GLFW_KEY_X)) {
 			getMatrix().rotateLocalY(ROTATION_SPEED * dt);
 		}
+		float s = (float) Math.pow(SCALE_SPEED, dt);
+		if (input.isKeyDown(GLFW_KEY_C)) {
+			getMatrix().scale(s,1,1/s);
+		}
+		if (input.isKeyDown(GLFW_KEY_V)) {
+			getMatrix().scale(1/s,1,s);
+		}
+		if (input.isKeyDown(GLFW_KEY_COMMA)) {
+			specularity *= Math.pow(SPECULARITY_SPEED, dt);
+		}
+		if (input.isKeyDown(GLFW_KEY_PERIOD)) {
+			specularity /= Math.pow(SPECULARITY_SPEED, dt);
+		}
+		
 		
 		if (input.wasKeyPressed(GLFW_KEY_N)) {
 			showNormals = !showNormals;
@@ -217,6 +235,7 @@ public class Cylinder extends SceneObject {
 		// materials
 		shader.setUniform("u_diffuseMaterial", diffuseMaterial);
 		shader.setUniform("u_specularMaterial", specularMaterial);
+		shader.setUniform("u_specularity", specularity);
 		
 		// vertex attributes
 		shader.setAttribute("a_position", vertexBuffer);

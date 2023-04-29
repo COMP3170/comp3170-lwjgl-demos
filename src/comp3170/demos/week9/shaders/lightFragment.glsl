@@ -8,11 +8,11 @@ uniform vec4 u_viewDirection;  // view vector (WORLD)
 
 uniform vec3 u_diffuseMaterial;  // diffuse material cofficients (RGB)
 uniform vec3 u_specularMaterial;  // specular material cofficients (RGB)
+uniform float u_specularity; 	// specularity constant
 
 in vec4 v_normal;                // interpolated surface normal (WORLD)
 in vec4 v_position;              // interpolated fragment position (WORLD)
 
-const float SPECULARITY = 100.;
 
 layout(location = 0) out vec4 o_colour;
 
@@ -29,7 +29,7 @@ void main() {
 	
 	if (dot(s,n) > 0) {
 	    r = -reflect(s, n);
-		specular = u_intensity * u_specularMaterial * pow(max(0,dot(r,v)), SPECULARITY); 
+		specular = u_intensity * u_specularMaterial * pow(max(0,dot(r,v)), u_specularity); 
 	}
 
 	vec3 intensity = ambient + diffuse + specular;

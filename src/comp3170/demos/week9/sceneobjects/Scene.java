@@ -27,7 +27,7 @@ public class Scene extends SceneObject {
 
 		cylinder = new Cylinder();
 		cylinder.setParent(grid);
-		cylinder.getMatrix().scale(1f, 1f, 0.5f);
+		cylinder.getMatrix().scale(0.75f, 1f, 0.75f);
 		
 		camera = new OrthographicCamera();
 		light = new DirectionalLight();
