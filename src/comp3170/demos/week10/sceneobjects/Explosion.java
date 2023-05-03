@@ -7,6 +7,7 @@ import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
 import static org.lwjgl.opengl.GL11.GL_TRIANGLES;
 import static org.lwjgl.opengl.GL11.GL_UNSIGNED_INT;
 import static org.lwjgl.opengl.GL11.glBindTexture;
+import static org.lwjgl.opengl.GL11.glDepthMask;
 import static org.lwjgl.opengl.GL11.glPolygonMode;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
 import static org.lwjgl.opengl.GL13.glActiveTexture;
@@ -124,7 +125,6 @@ public class Explosion extends SceneObject {
 
 	private Matrix4f viewMatrix = new Matrix4f();
 	private Matrix4f cameraMatrix = new Matrix4f();
-	private Vector4f upVector = new Vector4f(0,1,0,0);
 
 	public void drawSelf(Matrix4f mvpMatrix) {
 		Camera camera = ParticleDemo.instance.getCamera();
@@ -143,7 +143,6 @@ public class Explosion extends SceneObject {
 
 		// camera
 		shader.setUniform("u_cameraMatrix", cameraMatrix);
-		shader.setUniform("u_upVector", upVector);
 
 		// texture
 		glActiveTexture(GL_TEXTURE0);
@@ -161,6 +160,7 @@ public class Explosion extends SceneObject {
 
 	    // clean up
 		glVertexAttribDivisor(shader.getAttribute("a_instance"), 0);
+		
 	}
 
 	private Vector4f pv1 = new Vector4f();
