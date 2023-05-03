@@ -1,23 +1,96 @@
 package comp3170.demos.week10.demos;
 
+import static org.lwjgl.opengl.GL11.GL_BLEND;
+import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
+import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
+import static org.lwjgl.opengl.GL11.GL_DEPTH_TEST;
+import static org.lwjgl.opengl.GL11.GL_ONE_MINUS_SRC_ALPHA;
+import static org.lwjgl.opengl.GL11.GL_SRC_ALPHA;
+import static org.lwjgl.opengl.GL11.glBlendFunc;
+import static org.lwjgl.opengl.GL11.glClear;
+import static org.lwjgl.opengl.GL11.glClearColor;
+import static org.lwjgl.opengl.GL11.glClearDepth;
+import static org.lwjgl.opengl.GL11.glEnable;
+import static org.lwjgl.opengl.GL11.glViewport;
+
+import org.joml.Matrix4f;
+
 import comp3170.IWindowListener;
+import comp3170.InputManager;
+import comp3170.OpenGLException;
+import comp3170.Window;
+import comp3170.demos.week10.cameras.Camera;
+import comp3170.demos.week10.cameras.ExplosionCamera;
+import comp3170.demos.week10.sceneobjects.Explosion;
+import comp3170.demos.week9.sceneobjects.Axes3D;
 
 public class ParticleDemo implements IWindowListener {
 
-	public ParticleDemo() {
-		
+	public static ParticleDemo instance;
+	
+	private Window window;
+	private int screenWidth = 1000;
+	private int screenHeight = 1000;
+	
+	private InputManager input;
+	private long oldTime;
+	private ExplosionCamera camera;
+	private Explosion explosion;
+
+	private Axes3D axes;
+
+	public ParticleDemo() throws OpenGLException {
+		// Simple singleton
+		instance = this;
+		window = new Window("Particle demo", screenWidth, screenHeight, this);
+		window.run();		
+	}
+	
+	public Camera getCamera() {
+		return camera;
 	}
 	
 	@Override
 	public void init() {
-		// TODO Auto-generated method stub
-		
+		glEnable(GL_DEPTH_TEST);
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+		glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+		glClearDepth(1f);
+
+		camera = new ExplosionCamera();
+		explosion = new Explosion();
+
+		input = new InputManager(window);
+	    oldTime = System.currentTimeMillis();		
 	}
+
+	private void update() {
+		long time = System.currentTimeMillis();
+		float deltaTime = (time - oldTime) / 1000f;
+		oldTime = time;
+		
+		camera.update(input, deltaTime);
+		input.clear();
+	}
+	
+	private Matrix4f viewMatrix = new Matrix4f();
+	private Matrix4f projectionMatrix = new Matrix4f();
+	private Matrix4f mvpMatrix = new Matrix4f();
 
 	@Override
 	public void draw() {
-		// TODO Auto-generated method stub
+		update();
 		
+		glClear(GL_COLOR_BUFFER_BIT);		
+		glClear(GL_DEPTH_BUFFER_BIT);		
+		
+		camera.getViewMatrix(viewMatrix);
+		camera.getProjectionMatrix(projectionMatrix);		
+		mvpMatrix.set(projectionMatrix).mul(viewMatrix);
+		
+		explosion.draw(mvpMatrix);
 	}
 
 	@Override
@@ -32,4 +105,7 @@ public class ParticleDemo implements IWindowListener {
 		
 	}
 
+	public static void main(String[] args) throws OpenGLException {
+		new ParticleDemo();
+	}
 }
