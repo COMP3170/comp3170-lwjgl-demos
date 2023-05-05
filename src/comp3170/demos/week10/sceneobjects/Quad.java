@@ -16,8 +16,16 @@ import static org.lwjgl.opengl.GL12.GL_CLAMP_TO_EDGE;
 import static org.lwjgl.opengl.GL13.GL_CLAMP_TO_BORDER;
 import static org.lwjgl.opengl.GL12.GL_REPEAT;
 import static org.lwjgl.opengl.GL14.GL_MIRRORED_REPEAT;
+import static org.lwjgl.opengl.GL14.GL_TEXTURE_MAG_FILTER;
+import static org.lwjgl.opengl.GL14.GL_TEXTURE_MIN_FILTER;
+import static org.lwjgl.opengl.GL14.GL_LINEAR;
+import static org.lwjgl.opengl.GL14.GL_NEAREST;
+import static org.lwjgl.opengl.GL13.GL_LINEAR_MIPMAP_LINEAR;
+import static org.lwjgl.opengl.GL13.GL_LINEAR_MIPMAP_NEAREST;
 import static org.lwjgl.opengl.GL14.GL_TEXTURE_BORDER_COLOR;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
+import static org.lwjgl.opengl.GL13.GL_TEXTURE1;
+import static org.lwjgl.opengl.GL40.glGenerateMipmap;
 import static org.lwjgl.opengl.GL13.glActiveTexture;
 import static org.lwjgl.opengl.GL15.GL_ELEMENT_ARRAY_BUFFER;
 import static org.lwjgl.opengl.GL15.glBindBuffer;
@@ -41,7 +49,7 @@ public class Quad extends SceneObject {
 
 	static final private String VERTEX_SHADER = "textureVertex.glsl";
 	static final private String FRAGMENT_SHADER = "textureFragment.glsl";
-	static final private String TEXTURE = "colours.png";
+	static final private String TEXTURE = "brick-diffuse.png";
 	
 	private Shader shader;
 	private Vector4f[] vertices;
@@ -69,15 +77,16 @@ public class Quad extends SceneObject {
 		};
 		
 		vertexBuffer = GLBuffers.createBuffer(vertices);
-
+		
 		uvs = new Vector2f[] {
-			new Vector2f(0, 1),
-			new Vector2f(0, 0),
-			new Vector2f(1, 1),
-			new Vector2f(1, 0),
-		};
-			
-		uvBuffer = GLBuffers.createBuffer(uvs);
+				new Vector2f(0, 0),
+				new Vector2f(0, 1),
+				new Vector2f(1, 0),
+				new Vector2f(1, 1),
+			};
+				
+			uvBuffer = GLBuffers.createBuffer(uvs);
+
 		
 		indices = new int[] {
 			0, 1, 3,
@@ -94,6 +103,22 @@ public class Quad extends SceneObject {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
+		
+		//Texture Settings
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D,textureID);
+		
+		//Wrap modes
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT); //S is U
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT); //T is V
+		
+		//Filtering
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		
+		//MipMaps
+		glGenerateMipmap(GL_TEXTURE_2D);
 	}
 	
 	@Override
@@ -103,7 +128,7 @@ public class Quad extends SceneObject {
 		shader.setUniform("u_mvpMatrix", mvpMatrix);
 		shader.setAttribute("a_position", vertexBuffer);
 		shader.setAttribute("a_texcoord", uvBuffer);
-		
+
 		shader.setUniform("u_texture", 0);
 
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
