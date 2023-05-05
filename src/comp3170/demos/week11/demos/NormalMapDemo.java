@@ -16,7 +16,7 @@ import comp3170.InputManager;
 import comp3170.OpenGLException;
 import comp3170.Window;
 import comp3170.demos.week11.cameras.Camera;
-import comp3170.demos.week11.sceneobjects.Scene;
+import comp3170.demos.week11.sceneobjects.NormalMapScene;
 
 public class NormalMapDemo implements IWindowListener {
 
@@ -27,7 +27,7 @@ public class NormalMapDemo implements IWindowListener {
 	private InputManager input;
 	private long oldTime;
 	
-	private Scene scene;
+	private NormalMapScene scene;
 
 	public NormalMapDemo() throws OpenGLException {
 		window = new Window("Texture demo", screenWidth, screenHeight, this);
@@ -39,7 +39,7 @@ public class NormalMapDemo implements IWindowListener {
 		glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 		glEnable(GL_DEPTH_TEST);	
 		
-		scene = new Scene();
+		scene = new NormalMapScene();
 		
 		input = new InputManager(window);
 		oldTime = System.currentTimeMillis();

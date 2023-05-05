@@ -274,7 +274,7 @@ public class NormalMapQuad extends SceneObject {
 		shader.setAttribute("a_texcoord", uvBuffer);
 	
 		// light
-		Light light = Scene.theScene.getLight();
+		Light light = NormalMapScene.theScene.getLight();
 		shader.setUniform("u_lightDirection", light.getSourceVector(lightDirection));
 		shader.setUniform("u_intensity", light.getIntensity(lightIntensity));
 		shader.setUniform("u_ambientIntensity", light.getAmbient(ambientIntensity));
