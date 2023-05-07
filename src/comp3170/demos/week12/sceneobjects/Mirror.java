@@ -20,8 +20,11 @@ import org.joml.Vector2f;
 import org.joml.Vector4f;
 
 import comp3170.GLBuffers;
+import comp3170.InputManager;
 import comp3170.SceneObject;
 import comp3170.Shader;
+import comp3170.demos.week10.sceneobjects.Scene;
+import comp3170.demos.week12.cameras.MirrorCamera;
 import comp3170.demos.week12.shaders.ShaderLibrary;
 import comp3170.demos.week12.textures.TextureLibrary;
 
@@ -41,11 +44,14 @@ public class Mirror extends SceneObject {
 	private int[] indices;
 	private int indexBuffer;
 	private int renderTexture;
+	private MirrorCamera camera;
 
 	public Mirror() {
 		shader = ShaderLibrary.compileShader(VERTEX_SHADER, FRAGMENT_SHADER);
 		createQuad();
 		createFrame();
+		
+		camera = new MirrorCamera(this, Scene.theScene.getCamera());
 		
 		renderTexture = TextureLibrary.createRenderTexture(TEXTURE_WIDTH, TEXTURE_HEIGHT, GL_RGB);
 	}
@@ -103,5 +109,10 @@ public class Mirror extends SceneObject {
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 		glDrawElements(GL_TRIANGLES, indices.length, GL_UNSIGNED_INT, 0);
 
+	}
+
+	public void update(InputManager input, float deltaTime) {
+		// TODO Auto-generated method stub
+		
 	}
 }

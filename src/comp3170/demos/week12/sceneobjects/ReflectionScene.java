@@ -20,7 +20,7 @@ public class ReflectionScene extends SceneObject {
 		camera = new OrbitingCamera();
 		Axes3D axes = new Axes3D();
 		axes.setParent(this);
-		
+				
 		mirror = new Mirror();
 		mirror.setParent(this);
 		
@@ -34,7 +34,8 @@ public class ReflectionScene extends SceneObject {
 	}
 
 	public void update(InputManager input, float deltaTime) {
-		camera.update(input, deltaTime);		
+		camera.update(input, deltaTime);
+		mirror.update(input, deltaTime);
 	}
 
 

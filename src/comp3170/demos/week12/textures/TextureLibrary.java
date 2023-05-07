@@ -15,6 +15,14 @@ import static org.lwjgl.opengl.GL11.glGenTextures;
 import static org.lwjgl.opengl.GL11.glTexImage2D;
 import static org.lwjgl.opengl.GL11.glTexParameteri;
 import static org.lwjgl.opengl.GL12.GL_CLAMP_TO_EDGE;
+import static org.lwjgl.opengl.GL12.GL_TEXTURE_WRAP_R;
+import static org.lwjgl.opengl.GL13.GL_TEXTURE_CUBE_MAP;
+import static org.lwjgl.opengl.GL13.GL_TEXTURE_CUBE_MAP_NEGATIVE_X;
+import static org.lwjgl.opengl.GL13.GL_TEXTURE_CUBE_MAP_NEGATIVE_Y;
+import static org.lwjgl.opengl.GL13.GL_TEXTURE_CUBE_MAP_NEGATIVE_Z;
+import static org.lwjgl.opengl.GL13.GL_TEXTURE_CUBE_MAP_POSITIVE_X;
+import static org.lwjgl.opengl.GL13.GL_TEXTURE_CUBE_MAP_POSITIVE_Y;
+import static org.lwjgl.opengl.GL13.GL_TEXTURE_CUBE_MAP_POSITIVE_Z;
 import static org.lwjgl.opengl.GL30.glGenerateMipmap;
 import static org.lwjgl.stb.STBImage.STBI_rgb_alpha;
 import static org.lwjgl.stb.STBImage.stbi_failure_reason;
@@ -122,5 +130,53 @@ public class TextureLibrary {
 		return renderTexture;
 	}
 
+	// Each of the sides of the cubemap
+	private static final int[] cubemapTargets = { GL_TEXTURE_CUBE_MAP_POSITIVE_X, GL_TEXTURE_CUBE_MAP_NEGATIVE_X,
+			GL_TEXTURE_CUBE_MAP_POSITIVE_Y, GL_TEXTURE_CUBE_MAP_NEGATIVE_Y, GL_TEXTURE_CUBE_MAP_POSITIVE_Z,
+			GL_TEXTURE_CUBE_MAP_NEGATIVE_Z };
+
+	/**
+	 * Create a cube map from six image files.
+	 * 
+	 * @param filename	An arrange containing six filenames in the order [+X, -X, +Y, -Y, +Z, -Z]
+	 * @return The OpenGL handle to the cubemap
+	 * @throws IOException
+	 * @throws OpenGLException
+	 */
+	public static int loadCubemap(String[] filename) throws IOException, OpenGLException {
+		// create a cubemap texture
+		int textureID = glGenTextures();
+		glBindTexture(GL_TEXTURE_CUBE_MAP, textureID);
+
+		// load the images for the six sides of the cube
+
+		stbi_set_flip_vertically_on_load(true);
+
+		for (int i = 0; i < filename.length; i++) {
+			File file = new File(DIRECTORY, filename[i]);
+			System.out.println(file);
+
+			IntBuffer x = BufferUtils.createIntBuffer(1);
+			IntBuffer y = BufferUtils.createIntBuffer(1);
+			IntBuffer channels = BufferUtils.createIntBuffer(1);
+
+			ByteBuffer image = stbi_load(file.getAbsolutePath(), x, y, channels, STBI_rgb_alpha);
+			glTexImage2D(cubemapTargets[i], 0, GL_RGBA, x.get(), y.get(), 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
+			OpenGLException.checkError();
+			
+			// Free the image file
+			stbi_image_free(image);
+		}
+
+		// configure the texture parameters
+
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+
+		return textureID;
+	}
 
 }
