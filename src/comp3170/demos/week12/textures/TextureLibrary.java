@@ -31,6 +31,7 @@ import static org.lwjgl.stb.STBImage.stbi_load;
 import static org.lwjgl.stb.STBImage.stbi_set_flip_vertically_on_load;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
@@ -69,6 +70,9 @@ public class TextureLibrary {
 
 		// Load the image file using STBI library
 		File textureFile = new File(DIRECTORY, filename);
+		if (!textureFile.exists()) {
+			throw new FileNotFoundException(filename);
+		}
 		
 		IntBuffer x = BufferUtils.createIntBuffer(1);
 		IntBuffer y = BufferUtils.createIntBuffer(1);
@@ -154,7 +158,9 @@ public class TextureLibrary {
 
 		for (int i = 0; i < filename.length; i++) {
 			File file = new File(DIRECTORY, filename[i]);
-			System.out.println(file);
+			if (!file.exists()) {
+				throw new FileNotFoundException(filename[i]);
+			}
 
 			IntBuffer x = BufferUtils.createIntBuffer(1);
 			IntBuffer y = BufferUtils.createIntBuffer(1);
