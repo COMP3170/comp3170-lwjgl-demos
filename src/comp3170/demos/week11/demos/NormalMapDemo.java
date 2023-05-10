@@ -30,7 +30,7 @@ public class NormalMapDemo implements IWindowListener {
 	private NormalMapScene scene;
 
 	public NormalMapDemo() throws OpenGLException {
-		window = new Window("Texture demo", screenWidth, screenHeight, this);
+		window = new Window("Normal amp demo", screenWidth, screenHeight, this);
 		window.run();		
 	}
 	
