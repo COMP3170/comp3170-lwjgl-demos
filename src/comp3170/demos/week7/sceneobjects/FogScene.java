@@ -4,6 +4,7 @@ import java.awt.Color;
 
 import comp3170.InputManager;
 import comp3170.SceneObject;
+import comp3170.demos.common.sceneobjects.Axes3D;
 import comp3170.demos.week7.cameras.OrthographicCamera;
 
 public class FogScene extends SceneObject {

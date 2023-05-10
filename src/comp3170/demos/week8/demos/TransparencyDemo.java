@@ -1,17 +1,17 @@
 package comp3170.demos.week8.demos;
 
+import static comp3170.Math.TAU;
+import static org.lwjgl.opengl.GL11.GL_BLEND;
 import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.GL_DEPTH_TEST;
 import static org.lwjgl.opengl.GL11.GL_LEQUAL;
-import static org.lwjgl.opengl.GL11.GL_BLEND;
-import static org.lwjgl.opengl.GL11.GL_SRC_ALPHA;
 import static org.lwjgl.opengl.GL11.GL_ONE_MINUS_SRC_ALPHA;
-import static org.lwjgl.opengl.GL11.glDepthFunc;
+import static org.lwjgl.opengl.GL11.GL_SRC_ALPHA;
 import static org.lwjgl.opengl.GL11.glBlendFunc;
 import static org.lwjgl.opengl.GL11.glClear;
-import static org.lwjgl.opengl.GL11.glClearColor;
 import static org.lwjgl.opengl.GL11.glClearDepth;
+import static org.lwjgl.opengl.GL11.glDepthFunc;
 import static org.lwjgl.opengl.GL11.glEnable;
 import static org.lwjgl.opengl.GL11.glViewport;
 
@@ -24,12 +24,10 @@ import comp3170.InputManager;
 import comp3170.OpenGLException;
 import comp3170.SceneObject;
 import comp3170.Window;
-import comp3170.demos.week8.sceneobjects.Axes3D;
-import comp3170.demos.week8.sceneobjects.Grid;
-import comp3170.demos.week8.sceneobjects.Triangle;
+import comp3170.demos.common.sceneobjects.Axes3D;
+import comp3170.demos.common.sceneobjects.Grid;
 import comp3170.demos.week8.cameras.PerspectiveCamera;
-
-import static comp3170.Math.TAU;
+import comp3170.demos.week8.sceneobjects.Triangle;
 
 public class TransparencyDemo implements IWindowListener {
 

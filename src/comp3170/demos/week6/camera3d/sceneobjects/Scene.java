@@ -8,6 +8,7 @@ import org.joml.Vector4f;
 import comp3170.InputManager;
 import comp3170.SceneObject;
 import comp3170.Shader;
+import comp3170.demos.common.sceneobjects.Axes3D;
 import comp3170.demos.week6.camera3d.cameras.Camera;
 import comp3170.demos.week6.camera3d.cameras.OrthographicCamera;
 import comp3170.demos.week6.camera3d.cameras.PerspectiveCamera;

@@ -1,4 +1,4 @@
-package comp3170.demos.week7.sceneobjects;
+package comp3170.demos.common.sceneobjects;
 
 import static org.lwjgl.opengl.GL11.GL_LINES;
 import static org.lwjgl.opengl.GL11.glDrawArrays;

@@ -4,9 +4,9 @@ import java.awt.Color;
 
 import comp3170.InputManager;
 import comp3170.SceneObject;
+import comp3170.demos.common.sceneobjects.Axes3D;
 import comp3170.demos.week12.cameras.Camera;
 import comp3170.demos.week12.cameras.OrbitingCamera;
-import comp3170.demos.week9.sceneobjects.Axes3D;
 
 public class ReflectionScene extends SceneObject {
 
