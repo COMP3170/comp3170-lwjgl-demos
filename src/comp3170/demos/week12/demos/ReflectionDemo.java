@@ -3,13 +3,16 @@ package comp3170.demos.week12.demos;
 import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.GL_DEPTH_TEST;
+import static org.lwjgl.opengl.GL11.GL_SCISSOR_TEST;
 import static org.lwjgl.opengl.GL11.glClear;
 import static org.lwjgl.opengl.GL11.glClearColor;
 import static org.lwjgl.opengl.GL11.glClearDepth;
 import static org.lwjgl.opengl.GL11.glEnable;
-import static org.lwjgl.opengl.GL41.*;
+import static org.lwjgl.opengl.GL11.glScissor;
+import static org.lwjgl.opengl.GL11.glViewport;
 
 import org.joml.Matrix4f;
+import org.joml.Vector4f;
 
 import comp3170.IWindowListener;
 import comp3170.InputManager;
@@ -21,7 +24,7 @@ import comp3170.demos.week12.sceneobjects.ReflectionScene;
 public class ReflectionDemo implements IWindowListener {
 
 	private Window window;
-	private int screenWidth = 2000;
+	private int screenWidth = 3000;
 	private int screenHeight = 1000;
 	
 	private InputManager input;
@@ -38,6 +41,8 @@ public class ReflectionDemo implements IWindowListener {
 	public void init() {
 		glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 		glEnable(GL_DEPTH_TEST);	
+		glEnable(GL_SCISSOR_TEST);
+
 		
 		scene = new ReflectionScene();
 		
@@ -62,19 +67,34 @@ public class ReflectionDemo implements IWindowListener {
 	@Override
 	public void draw() {
 		update();
-		glViewport(0, 0, screenWidth / 2, screenHeight);
-		glScissor(0, 0, screenWidth / 2, screenHeight);
+
+		draw(0, scene.getOverheadCamera());
+		draw(1, scene.getMainCamera());
+		draw(2, scene.getMirrorCamera());		
+	}
+
+	private Vector4f[] clearColours = new Vector4f[] {
+		new Vector4f(0.1f, 0, 0, 1),
+		new Vector4f(0, 0.1f, 0, 1),
+		new Vector4f(0, 0, 0.1f, 1),
+	};
+	
+	private void draw(int window, Camera camera) {
+		glViewport(window * screenWidth / 3, 0, screenWidth / 3, screenHeight);
+		glScissor(window * screenWidth / 3, 0, screenWidth / 3, screenHeight);
+		
+		Vector4f c = clearColours[window];
+		glClearColor(c.x, c.y, c.z, c.w);
 		glClear(GL_COLOR_BUFFER_BIT);		
 
 		glClearDepth(1f);
 		glClear(GL_DEPTH_BUFFER_BIT);		
 		
-		Camera camera = scene.getCamera();
 		camera.getViewMatrix(viewMatrix);
 		camera.getProjectionMatrix(projectionMatrix);		
 		mvpMatrix.set(projectionMatrix).mul(viewMatrix);
 		
-		scene.draw(mvpMatrix);
+		scene.draw(mvpMatrix);		
 	}
 
 	@Override

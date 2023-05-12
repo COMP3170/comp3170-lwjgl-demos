@@ -6,6 +6,7 @@ import static org.lwjgl.opengl.GL11.GL_FRONT_AND_BACK;
 import static org.lwjgl.opengl.GL11.GL_RGB;
 import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
 import static org.lwjgl.opengl.GL11.GL_TRIANGLES;
+import static org.lwjgl.opengl.GL11.GL_LINES;
 import static org.lwjgl.opengl.GL11.GL_UNSIGNED_INT;
 import static org.lwjgl.opengl.GL11.glBindTexture;
 import static org.lwjgl.opengl.GL11.glDrawElements;
@@ -23,7 +24,7 @@ import comp3170.GLBuffers;
 import comp3170.InputManager;
 import comp3170.SceneObject;
 import comp3170.Shader;
-import comp3170.demos.week10.sceneobjects.Scene;
+import comp3170.demos.week12.cameras.Camera;
 import comp3170.demos.week12.cameras.MirrorCamera;
 import comp3170.demos.week12.shaders.ShaderLibrary;
 import comp3170.demos.week12.textures.TextureLibrary;
@@ -32,7 +33,10 @@ public class Mirror extends SceneObject {
 
 	static final private String VERTEX_SHADER = "textureVertex.glsl";
 	static final private String FRAGMENT_SHADER = "textureFragment.glsl";
+	static final private String OUTLINE_VERTEX_SHADER = "simpleVertex.glsl";
+	static final private String OUTLINE_FRAGMENT_SHADER = "simpleFragment.glsl";
 	private Shader shader;
+	private Shader outlineShader;
 
 	static final private int TEXTURE_WIDTH = 1024;
 	static final private int TEXTURE_HEIGHT = 1024;
@@ -45,17 +49,26 @@ public class Mirror extends SceneObject {
 	private int indexBuffer;
 	private int renderTexture;
 	private MirrorCamera camera;
-
-	public Mirror() {
+	private int[] outline;
+	private int outlineBuffer;
+	private Vector4f outlineColour = new Vector4f(1,1,0,1); // yellow
+	
+	public Mirror(Camera mainCamera) {
 		shader = ShaderLibrary.compileShader(VERTEX_SHADER, FRAGMENT_SHADER);
+		outlineShader = ShaderLibrary.compileShader(OUTLINE_VERTEX_SHADER, OUTLINE_FRAGMENT_SHADER);
 		createQuad();
 		createFrame();
 		
-		camera = new MirrorCamera(this, Scene.theScene.getCamera());
+		camera = new MirrorCamera(this, mainCamera);
+		camera.setParent(this);
 		
 		renderTexture = TextureLibrary.createRenderTexture(TEXTURE_WIDTH, TEXTURE_HEIGHT, GL_RGB);
 	}
 
+	public MirrorCamera getCamera() {
+		return camera;
+	}
+	
 	private void createQuad() {
 		vertices = new Vector4f[] {
 			new Vector4f(-1, -1, 0, 1), 
@@ -81,6 +94,13 @@ public class Mirror extends SceneObject {
 		};
 		indexBuffer = GLBuffers.createIndexBuffer(indices);
 
+		outline = new int[] { 
+			0, 1, 
+			1, 3, 
+			3, 2, 
+			2, 0, 
+		};
+		outlineBuffer = GLBuffers.createIndexBuffer(outline);
 	}
 
 	private void createFrame() {
@@ -103,16 +123,23 @@ public class Mirror extends SceneObject {
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, renderTexture);
 		shader.setUniform("u_texture", 0);
-
 		
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 		glDrawElements(GL_TRIANGLES, indices.length, GL_UNSIGNED_INT, 0);
+		
+		outlineShader.enable();
+		outlineShader.setUniform("u_mvpMatrix", mvpMatrix);
+		outlineShader.setAttribute("a_position", vertexBuffer);
+		outlineShader.setUniform("u_colour", outlineColour);
+				
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, outlineBuffer);
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+		glDrawElements(GL_LINES, outline.length, GL_UNSIGNED_INT, 0);
 
 	}
 
 	public void update(InputManager input, float deltaTime) {
-		// TODO Auto-generated method stub
-		
+		camera.update();		
 	}
 }

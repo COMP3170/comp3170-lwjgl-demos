@@ -13,8 +13,9 @@ import org.joml.Vector3f;
 import org.joml.Vector4f;
 
 import comp3170.InputManager;
+import comp3170.SceneObject;
 
-public class OrbitingCamera implements Camera {
+public class OrbitingCamera extends SceneObject implements Camera {
 
 	private static final float ASPECT = 1;
 	private static final float FOVY = TAU / 4;
