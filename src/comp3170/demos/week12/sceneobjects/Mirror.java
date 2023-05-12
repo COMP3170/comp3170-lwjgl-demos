@@ -1,6 +1,7 @@
 package comp3170.demos.week12.sceneobjects;
 
 import static comp3170.Math.TAU;
+import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.GL_FILL;
 import static org.lwjgl.opengl.GL11.GL_FRONT_AND_BACK;
 import static org.lwjgl.opengl.GL11.GL_RGB;
@@ -16,12 +17,15 @@ import static org.lwjgl.opengl.GL13.glActiveTexture;
 import static org.lwjgl.opengl.GL15.GL_ELEMENT_ARRAY_BUFFER;
 import static org.lwjgl.opengl.GL15.glBindBuffer;
 
+import java.io.IOException;
+
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector4f;
 
 import comp3170.GLBuffers;
 import comp3170.InputManager;
+import comp3170.OpenGLException;
 import comp3170.SceneObject;
 import comp3170.Shader;
 import comp3170.demos.week12.cameras.Camera;
@@ -40,6 +44,10 @@ public class Mirror extends SceneObject {
 
 	static final private int TEXTURE_WIDTH = 1024;
 	static final private int TEXTURE_HEIGHT = 1024;
+	static final private String DEBUG_TEXTURE = "colours.png";
+	private int renderTexture;
+	private int debugTexture;
+	private boolean isDebugTexture = false;
 	
 	private Vector4f[] vertices;
 	private int vertexBuffer;
@@ -47,7 +55,7 @@ public class Mirror extends SceneObject {
 	private int uvBuffer;
 	private int[] indices;
 	private int indexBuffer;
-	private int renderTexture;
+
 	private MirrorCamera camera;
 	private int[] outline;
 	private int outlineBuffer;
@@ -57,12 +65,18 @@ public class Mirror extends SceneObject {
 		shader = ShaderLibrary.compileShader(VERTEX_SHADER, FRAGMENT_SHADER);
 		outlineShader = ShaderLibrary.compileShader(OUTLINE_VERTEX_SHADER, OUTLINE_FRAGMENT_SHADER);
 		createQuad();
-		createFrame();
 		
 		camera = new MirrorCamera(this, mainCamera);
 		camera.setParent(this);
 		
 		renderTexture = TextureLibrary.createRenderTexture(TEXTURE_WIDTH, TEXTURE_HEIGHT, GL_RGB);
+		
+		try {
+			debugTexture = TextureLibrary.loadTexture(DEBUG_TEXTURE);
+		} catch (IOException | OpenGLException e) {
+			e.printStackTrace();
+			System.exit(1);
+		}
 	}
 
 	public MirrorCamera getCamera() {
@@ -103,13 +117,40 @@ public class Mirror extends SceneObject {
 		outlineBuffer = GLBuffers.createIndexBuffer(outline);
 	}
 
-	private void createFrame() {
-		for (int i = 0; i < 4; i++) {
-			Frame frame = new Frame();
-			frame.setParent(this);
-			frame.getMatrix().rotationZ(TAU * i / 4);
-		}		
+	private static final float ROTATION_SPEED = TAU/4;
+	
+	private Matrix4f modelMatrix = new Matrix4f();
+	private Matrix4f viewMatrix = new Matrix4f();
+	private Matrix4f projectionMatrix = new Matrix4f();
+	private Vector4f position = new Vector4f();
+	
+	public void update(InputManager input, float deltaTime) {
+
+		if (input.isKeyDown(GLFW_KEY_A)) {
+			getMatrix().rotateY(ROTATION_SPEED * deltaTime);
+		}
+		if (input.isKeyDown(GLFW_KEY_D)) {
+			getMatrix().rotateY(-ROTATION_SPEED * deltaTime);
+		}
+		
+		if (input.wasKeyPressed(GLFW_KEY_SPACE)) {
+			isDebugTexture = !isDebugTexture;
+		}
+		
+		camera.update();		
+		getModelToWorldMatrix(modelMatrix);
+		camera.getViewMatrix(viewMatrix);
+		camera.getProjectionMatrix(projectionMatrix);
+
+		for (int i = 0; i < vertices.length; i++) {
+			position.set(vertices[i]).mul(modelMatrix).mul(viewMatrix).mul(projectionMatrix);
+			uvs[i].x = (position.x + 1) / 2;
+			uvs[i].y = (position.y + 1) / 2;
+		}	
+		
+		GLBuffers.updateBuffer(uvBuffer, uvs);
 	}
+
 	
 	@Override
 	protected void drawSelf(Matrix4f mvpMatrix) {
@@ -121,7 +162,7 @@ public class Mirror extends SceneObject {
 		
 		// textures
 		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, renderTexture);
+		glBindTexture(GL_TEXTURE_2D, isDebugTexture ? debugTexture : renderTexture);
 		shader.setUniform("u_texture", 0);
 		
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
@@ -139,7 +180,4 @@ public class Mirror extends SceneObject {
 
 	}
 
-	public void update(InputManager input, float deltaTime) {
-		camera.update();		
-	}
 }

@@ -24,8 +24,8 @@ import comp3170.demos.week12.sceneobjects.ReflectionScene;
 public class ReflectionDemo implements IWindowListener {
 
 	private Window window;
-	private int screenWidth = 3000;
-	private int screenHeight = 1000;
+	private int screenWidth = 2400;
+	private int screenHeight = 800;
 	
 	private InputManager input;
 	private long oldTime;
@@ -68,7 +68,10 @@ public class ReflectionDemo implements IWindowListener {
 	public void draw() {
 		update();
 
+		scene.setDrawVolumes(true);
 		draw(0, scene.getOverheadCamera());
+
+		scene.setDrawVolumes(false);
 		draw(1, scene.getMainCamera());
 		draw(2, scene.getMirrorCamera());		
 	}

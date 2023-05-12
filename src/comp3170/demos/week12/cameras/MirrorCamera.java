@@ -1,8 +1,10 @@
 package comp3170.demos.week12.cameras;
 
 import static comp3170.Math.TAU;
+import static comp3170.Math.cross;
 
 import org.joml.Matrix4f;
+import org.joml.Vector2f;
 import org.joml.Vector4f;
 
 import comp3170.SceneObject;
@@ -52,6 +54,10 @@ public class MirrorCamera extends SceneObject implements Camera {
 	private Matrix4f mirrorMatrix = new Matrix4f();
 	private Matrix4f inverseMirrorMatrix = new Matrix4f();
 	private Vector4f position = new Vector4f(); 
+	private Vector4f iVec = new Vector4f(); 
+	private Vector4f jVec = new Vector4f(); 
+	private Vector4f kVec = new Vector4f(); 
+	private Vector4f up = new Vector4f(); 
 
 	public void update() {
 		// the mirror camera sits in the mirror's model space
@@ -68,6 +74,21 @@ public class MirrorCamera extends SceneObject implements Camera {
 		
 		// reflect in the Z-axis
 		position.z *= -1;		
-		getMatrix().translation(position.x, position.y, position.z);
+		
+		// point k axis away from center of mirror
+		kVec.set(position);
+		kVec.w = 0;
+		kVec.normalize();
+		
+		// set up vector to mirror's j direction
+		mirrorMatrix.getColumn(1, up);
+		up.normalize();
+		cross(up, kVec, iVec);  // i = up x k
+		iVec.normalize();
+		cross(kVec, iVec, jVec); // j = k x i
+		jVec.normalize();
+				
+		getMatrix().set(iVec, jVec, kVec, position);
 	}
+
 }

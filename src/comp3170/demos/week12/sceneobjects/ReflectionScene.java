@@ -48,6 +48,17 @@ public class ReflectionScene extends SceneObject {
 		return mirror.getCamera();
 	}
 
+	public void setDrawVolumes(boolean draw) {
+		if (draw) {
+			mainView.setParent(this);
+			mirrorView.setParent(this);
+		}
+		else {
+			mainView.setParent(null);
+			mirrorView.setParent(null);			
+		}
+	}
+	
 	public void update(InputManager input, float deltaTime) {
 		mainCamera.update(input, deltaTime);
 		mainView.update(input, deltaTime);
