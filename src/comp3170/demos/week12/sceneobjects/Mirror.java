@@ -82,6 +82,10 @@ public class Mirror extends SceneObject {
 	public MirrorCamera getCamera() {
 		return camera;
 	}
+
+	public Vector4f getVertex(int i, Vector4f dest) {
+		return dest.set(vertices[i]);
+	}
 	
 	private void createQuad() {
 		vertices = new Vector4f[] {
@@ -179,5 +183,6 @@ public class Mirror extends SceneObject {
 		glDrawElements(GL_LINES, outline.length, GL_UNSIGNED_INT, 0);
 
 	}
+
 
 }

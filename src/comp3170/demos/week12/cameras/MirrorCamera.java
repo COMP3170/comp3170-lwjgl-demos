@@ -12,11 +12,8 @@ import comp3170.demos.week12.sceneobjects.Mirror;
 
 public class MirrorCamera extends SceneObject implements Camera {
 
-	private static final float ASPECT = 1;
-	private static final float NEAR = 0.1f;
-	private static final float FAR = 30f;
-	private float fovy = TAU/4;
 	private Matrix4f cameraMatrix = new Matrix4f();
+	private Matrix4f projectionMatrix = new Matrix4f();
 	
 	private Mirror mirror;
 	private Camera camera;
@@ -40,7 +37,7 @@ public class MirrorCamera extends SceneObject implements Camera {
 
 	@Override
 	public Matrix4f getProjectionMatrix(Matrix4f dest) {
-		return dest.setPerspective(fovy, ASPECT, NEAR, FAR);
+		return dest.set(projectionMatrix);
 	}
 	
 	@Override
@@ -51,15 +48,17 @@ public class MirrorCamera extends SceneObject implements Camera {
 	}
 
 	private Matrix4f modelMatrix = new Matrix4f();
+	private Matrix4f viewMatrix = new Matrix4f();
 	private Matrix4f mirrorMatrix = new Matrix4f();
 	private Matrix4f inverseMirrorMatrix = new Matrix4f();
 	private Vector4f position = new Vector4f(); 
-	private Vector4f iVec = new Vector4f(); 
-	private Vector4f jVec = new Vector4f(); 
-	private Vector4f kVec = new Vector4f(); 
-	private Vector4f up = new Vector4f(); 
 
 	public void update() {
+		setCameraPosition();		
+		setCameraPespective();
+	}
+
+	private void setCameraPosition() {
 		// the mirror camera sits in the mirror's model space
 		// as far behind the mirror as the main camera is in front
 		
@@ -74,21 +73,54 @@ public class MirrorCamera extends SceneObject implements Camera {
 		
 		// reflect in the Z-axis
 		position.z *= -1;		
-		
-		// point k axis away from center of mirror
-		kVec.set(position);
-		kVec.w = 0;
-		kVec.normalize();
-		
-		// set up vector to mirror's j direction
-		mirrorMatrix.getColumn(1, up);
-		up.normalize();
-		cross(up, kVec, iVec);  // i = up x k
-		iVec.normalize();
-		cross(kVec, iVec, jVec); // j = k x i
-		jVec.normalize();
-				
-		getMatrix().set(iVec, jVec, kVec, position);
+
+		// rotate so the Z axis faces away for the mirror plane		
+		getMatrix().translation(position.x, position.y, position.z).rotateY(TAU/2);
 	}
+
+	private static final float NEAR = 0.1f;
+	private static final float FAR = 10f;
+
+	private void setCameraPespective() {
+		// find the min and max view coordinates of the mirror corners
+		getViewMatrix(viewMatrix);
+
+		float minX = Float.POSITIVE_INFINITY;
+		float maxX = Float.NEGATIVE_INFINITY;
+		float minY = Float.POSITIVE_INFINITY;
+		float maxY = Float.NEGATIVE_INFINITY;
+		
+		for (int i = 0; i < 4; i++) {
+			mirror.getVertex(i, position);
+			position.mul(mirrorMatrix).mul(viewMatrix);
+			
+			minX = Math.min(minX, position.x);
+			maxX = Math.max(maxX, position.x);
+			minY = Math.min(minY, position.y);
+			maxY = Math.max(maxY, position.y);
+		}
+		float midX = (maxX + minX) / 2;
+		float midY = (maxY + minY) / 2;
+			
+		// distance from the mirror plane in the z direction
+		getMatrix().getColumn(3, position);
+		float z = -position.z;
+
+		float offAngleX = (float) Math.atan2(midX, z);
+		float offAngleY = (float) Math.atan2(midY, z);
+
+		float yAngleMin = (float) Math.atan2(minY, z); 
+		float yAngleMax = (float) Math.atan2(maxY, z);
+				
+		float fovy = yAngleMax - yAngleMin;
+		float aspect = (maxX - minX) / (maxY - minY);
+		
+		float near = Math.abs(z) + NEAR;
+		float far = near + FAR;
+		
+		projectionMatrix.setPerspectiveOffCenter(fovy, offAngleX, offAngleY, aspect, near, far);
+		
+	}
+
 
 }
