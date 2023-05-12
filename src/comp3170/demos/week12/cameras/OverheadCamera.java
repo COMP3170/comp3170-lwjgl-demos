@@ -23,9 +23,6 @@ public class OverheadCamera implements Camera {
 	private Matrix4f cameraMatrix = new Matrix4f();
 	
 	public OverheadCamera() {
-		cameraMatrix.identity();
-		cameraMatrix.rotateX(-TAU / 4);
-		cameraMatrix.translate(0, 0, ELEVATION);
 	}
 		
 	@Override

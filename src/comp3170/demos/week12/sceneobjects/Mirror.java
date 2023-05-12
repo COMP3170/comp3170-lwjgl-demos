@@ -153,6 +153,12 @@ public class Mirror extends SceneObject {
 		if (input.isKeyDown(GLFW_KEY_D)) {
 			getMatrix().rotateY(-ROTATION_SPEED * deltaTime);
 		}
+		if (input.isKeyDown(GLFW_KEY_W)) {
+			getMatrix().rotateX(ROTATION_SPEED * deltaTime);
+		}
+		if (input.isKeyDown(GLFW_KEY_S)) {
+			getMatrix().rotateX(-ROTATION_SPEED * deltaTime);
+		}
 		
 		if (input.wasKeyPressed(GLFW_KEY_SPACE)) {
 			isDebugTexture = !isDebugTexture;

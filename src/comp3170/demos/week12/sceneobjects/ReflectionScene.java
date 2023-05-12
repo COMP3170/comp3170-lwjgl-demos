@@ -34,6 +34,10 @@ public class ReflectionScene extends SceneObject {
 		Cube redCube = new Cube(Color.RED);
 		redCube.setParent(this);
 		redCube.getMatrix().translation(2, 1, 1).scale(0.5f);		
+
+		Cube blueCube = new Cube(Color.BLUE);
+		blueCube.setParent(this);
+		blueCube.getMatrix().translation(-2, -1, 2).scale(0.5f);		
 	}
 	
 	public Camera getMainCamera() {

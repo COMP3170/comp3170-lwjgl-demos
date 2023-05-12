@@ -73,12 +73,15 @@ public class MirrorCamera extends SceneObject implements Camera {
 		
 		// reflect in the Z-axis
 		position.z *= -1;		
-
+		getMatrix().translation(position.x, position.y, position.z);
+		
 		// rotate so the Z axis faces away for the mirror plane		
-		getMatrix().translation(position.x, position.y, position.z).rotateY(TAU/2);
+		if (position.z < 0) {
+			getMatrix().rotateY(TAU/2);
+		}
 	}
 
-	private static final float NEAR = 0f;
+	private static final float NEAR = -0.1f;
 	private static final float FAR = 10f;
 
 	private void setCameraPespective() {
@@ -104,15 +107,15 @@ public class MirrorCamera extends SceneObject implements Camera {
 			
 		// distance from the mirror plane in the z direction
 		getMatrix().getColumn(3, position);
-		float z = -position.z;
+		float z = Math.abs(position.z);
 
 		float offAngleX = (float) Math.atan2(midX, z);
 		float offAngleY = (float) Math.atan2(midY, z);
 
-		float yAngleMin = (float) Math.atan2(minY, z); 
-		float yAngleMax = (float) Math.atan2(maxY, z);
-				
-		float fovy = yAngleMax - yAngleMin;
+		float h = maxY - minY;
+		
+//		float fovy = yAngleMax - yAngleMin;
+		float fovy = (float) (Math.atan2(h / 2, z) * 2);
 		float aspect = (maxX - minX) / (maxY - minY);
 		
 		float near = Math.abs(z) + NEAR;
