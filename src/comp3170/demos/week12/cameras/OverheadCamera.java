@@ -1,10 +1,10 @@
 package comp3170.demos.week12.cameras;
 
 import static comp3170.Math.TAU;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_DOWN;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_LEFT;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_RIGHT;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_UP;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_KP_2;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_KP_4;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_KP_6;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_KP_8;
 
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
@@ -24,8 +24,8 @@ public class OverheadCamera implements Camera {
 	
 	public OverheadCamera() {
 		cameraMatrix.identity();
-		cameraMatrix.translate(0, ELEVATION, 0);
 		cameraMatrix.rotateX(-TAU / 4);
+		cameraMatrix.translate(0, 0, ELEVATION);
 	}
 		
 	@Override
@@ -48,4 +48,30 @@ public class OverheadCamera implements Camera {
 		// the view vector is the k-axis of the cameraMatrix
 		return cameraMatrix.getColumn(2, dest);
 	}
+	
+	
+	private static final float ROTATION_SPEED = TAU/6;
+	private Vector3f angle = new Vector3f(-TAU/4,0,0);
+
+	public void update(InputManager input, float deltaTime) {
+		if (input.isKeyDown(GLFW_KEY_KP_4)) {
+			angle.y = (angle.y + ROTATION_SPEED * deltaTime) % TAU;
+		}
+		if (input.isKeyDown(GLFW_KEY_KP_6)) {
+			angle.y = (angle.y - ROTATION_SPEED * deltaTime) % TAU;
+		}
+		if (input.isKeyDown(GLFW_KEY_KP_8)) {
+			angle.x = (angle.x + ROTATION_SPEED * deltaTime) % TAU;
+		}
+		if (input.isKeyDown(GLFW_KEY_KP_2)) {
+			angle.x = (angle.x - ROTATION_SPEED * deltaTime) % TAU;
+		}
+
+		cameraMatrix.identity();
+		cameraMatrix.rotateY(angle.y);
+		cameraMatrix.rotateX(angle.x);
+		cameraMatrix.rotateZ(angle.z);
+		cameraMatrix.translate(0, 0, ELEVATION);
+	}
+
 }

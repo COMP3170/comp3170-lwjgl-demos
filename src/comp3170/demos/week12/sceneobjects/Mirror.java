@@ -165,6 +165,7 @@ public class Mirror extends SceneObject {
 
 		for (int i = 0; i < vertices.length; i++) {
 			position.set(vertices[i]).mul(modelMatrix).mul(viewMatrix).mul(projectionMatrix);
+			position.mul(1/position.w);
 			uvs[i].x = (position.x + 1) / 2;
 			uvs[i].y = (position.y + 1) / 2;
 		}	
@@ -175,23 +176,22 @@ public class Mirror extends SceneObject {
 	
 	@Override
 	protected void drawSelf(Matrix4f mvpMatrix) {
-		if (!isDrawn) {
-			return;
+		if (isDrawn) {
+			shader.enable();
+			
+			shader.setUniform("u_mvpMatrix", mvpMatrix);
+			shader.setAttribute("a_position", vertexBuffer);
+			shader.setAttribute("a_texcoord", uvBuffer);
+			
+			// textures
+			glActiveTexture(GL_TEXTURE0);
+			glBindTexture(GL_TEXTURE_2D, isDebugTexture ? debugTexture : renderTexture);
+			shader.setUniform("u_texture", 0);
+			
+			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
+			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+			glDrawElements(GL_TRIANGLES, indices.length, GL_UNSIGNED_INT, 0);
 		}
-		shader.enable();
-		
-		shader.setUniform("u_mvpMatrix", mvpMatrix);
-		shader.setAttribute("a_position", vertexBuffer);
-		shader.setAttribute("a_texcoord", uvBuffer);
-		
-		// textures
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, isDebugTexture ? debugTexture : renderTexture);
-		shader.setUniform("u_texture", 0);
-		
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
-		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-		glDrawElements(GL_TRIANGLES, indices.length, GL_UNSIGNED_INT, 0);
 		
 		outlineShader.enable();
 		outlineShader.setUniform("u_mvpMatrix", mvpMatrix);

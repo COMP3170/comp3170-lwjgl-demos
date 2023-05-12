@@ -66,6 +66,7 @@ public class ReflectionDemo implements IWindowListener {
 	private Matrix4f viewMatrix = new Matrix4f();
 	private Matrix4f projectionMatrix = new Matrix4f();
 	private Matrix4f mvpMatrix = new Matrix4f();
+	private Vector4f black = new Vector4f(0,0,0,1);
 	
 	@Override
 	public void draw() {
@@ -78,25 +79,27 @@ public class ReflectionDemo implements IWindowListener {
 		glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);		
 		scene.setDrawVolumes(false);
 		mirror.setDrawn(false);
-		draw(2, scene.getMirrorCamera());		
+		glViewport(0, 0, 1024, 1024);
+		glScissor(0, 0, 1024, 1024);		
+		draw(scene.getMirrorCamera(), black);		
 
 		// render to window 0
 		scene.setDrawVolumes(true);
 		mirror.setDrawn(true);
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);		
-		draw(0, scene.getOverheadCamera());
+		drawWindow(0, scene.getOverheadCamera());
 
 		// render to window 1
 		scene.setDrawVolumes(false);
 		mirror.setDrawn(true);
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);		
-		draw(1, scene.getMainCamera());
+		drawWindow(1, scene.getMainCamera());
 		
 		// render to window 2 
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);		
 		scene.setDrawVolumes(false);
 		mirror.setDrawn(false);
-		draw(2, scene.getMirrorCamera());		
+		drawWindow(2, scene.getMirrorCamera());		
 
 
 	}
@@ -107,11 +110,15 @@ public class ReflectionDemo implements IWindowListener {
 		new Vector4f(0, 0, 0.1f, 1),
 	};
 	
-	private void draw(int window, Camera camera) {
+	private void drawWindow(int window, Camera camera) {
 		glViewport(window * screenWidth / 3, 0, screenWidth / 3, screenHeight);
 		glScissor(window * screenWidth / 3, 0, screenWidth / 3, screenHeight);
 		
 		Vector4f c = clearColours[window];
+		draw(camera, c);		
+	}
+
+	private void draw(Camera camera, Vector4f c) {
 		glClearColor(c.x, c.y, c.z, c.w);
 		glClear(GL_COLOR_BUFFER_BIT);		
 
@@ -122,8 +129,10 @@ public class ReflectionDemo implements IWindowListener {
 		camera.getProjectionMatrix(projectionMatrix);		
 		mvpMatrix.set(projectionMatrix).mul(viewMatrix);
 		
-		scene.draw(mvpMatrix);		
+		scene.draw(mvpMatrix);
 	}
+	
+	
 
 	@Override
 	public void resize(int width, int height) {

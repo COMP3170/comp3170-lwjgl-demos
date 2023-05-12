@@ -64,6 +64,7 @@ public class ReflectionScene extends SceneObject {
 	}
 
 	public void update(InputManager input, float deltaTime) {
+		overheadCamera.update(input, deltaTime);
 		mainCamera.update(input, deltaTime);
 		mainView.update(input, deltaTime);
 		mirror.update(input, deltaTime);
