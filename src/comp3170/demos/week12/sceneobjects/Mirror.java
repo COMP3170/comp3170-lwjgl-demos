@@ -4,7 +4,7 @@ import static comp3170.Math.TAU;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.GL_FILL;
 import static org.lwjgl.opengl.GL11.GL_FRONT_AND_BACK;
-import static org.lwjgl.opengl.GL11.GL_RGB;
+import static org.lwjgl.opengl.GL11.GL_RGBA;
 import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
 import static org.lwjgl.opengl.GL11.GL_TRIANGLES;
 import static org.lwjgl.opengl.GL11.GL_LINES;
@@ -60,6 +60,9 @@ public class Mirror extends SceneObject {
 	private int[] outline;
 	private int outlineBuffer;
 	private Vector4f outlineColour = new Vector4f(1,1,0,1); // yellow
+	private int frameBuffer;
+	
+	private boolean isDrawn = true;
 	
 	public Mirror(Camera mainCamera) {
 		shader = ShaderLibrary.compileShader(VERTEX_SHADER, FRAGMENT_SHADER);
@@ -69,7 +72,13 @@ public class Mirror extends SceneObject {
 		camera = new MirrorCamera(this, mainCamera);
 		camera.setParent(this);
 		
-		renderTexture = TextureLibrary.createRenderTexture(TEXTURE_WIDTH, TEXTURE_HEIGHT, GL_RGB);
+		renderTexture = TextureLibrary.createRenderTexture(TEXTURE_WIDTH, TEXTURE_HEIGHT, GL_RGBA);
+		try {
+			frameBuffer = GLBuffers.createFrameBuffer(renderTexture);
+		} catch (OpenGLException e) {
+			e.printStackTrace();
+			System.exit(1);
+		}
 		
 		try {
 			debugTexture = TextureLibrary.loadTexture(DEBUG_TEXTURE);
@@ -77,6 +86,14 @@ public class Mirror extends SceneObject {
 			e.printStackTrace();
 			System.exit(1);
 		}
+	}
+
+	public void setDrawn(boolean drawn) {
+		isDrawn = drawn;
+	}
+	
+	public int getFrameBuffer() {
+		return frameBuffer;
 	}
 
 	public MirrorCamera getCamera() {
@@ -158,6 +175,9 @@ public class Mirror extends SceneObject {
 	
 	@Override
 	protected void drawSelf(Matrix4f mvpMatrix) {
+		if (!isDrawn) {
+			return;
+		}
 		shader.enable();
 		
 		shader.setUniform("u_mvpMatrix", mvpMatrix);

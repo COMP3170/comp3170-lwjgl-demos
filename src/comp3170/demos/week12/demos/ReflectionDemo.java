@@ -10,6 +10,8 @@ import static org.lwjgl.opengl.GL11.glClearDepth;
 import static org.lwjgl.opengl.GL11.glEnable;
 import static org.lwjgl.opengl.GL11.glScissor;
 import static org.lwjgl.opengl.GL11.glViewport;
+import static org.lwjgl.opengl.GL30.GL_FRAMEBUFFER;
+import static org.lwjgl.opengl.GL30.glBindFramebuffer;
 
 import org.joml.Matrix4f;
 import org.joml.Vector4f;
@@ -19,6 +21,7 @@ import comp3170.InputManager;
 import comp3170.OpenGLException;
 import comp3170.Window;
 import comp3170.demos.week12.cameras.Camera;
+import comp3170.demos.week12.sceneobjects.Mirror;
 import comp3170.demos.week12.sceneobjects.ReflectionScene;
 
 public class ReflectionDemo implements IWindowListener {
@@ -68,12 +71,34 @@ public class ReflectionDemo implements IWindowListener {
 	public void draw() {
 		update();
 
+		Mirror mirror = scene.getMirror();
+
+		// render to texture
+		int frameBuffer = mirror.getFrameBuffer();		
+		glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);		
+		scene.setDrawVolumes(false);
+		mirror.setDrawn(false);
+		draw(2, scene.getMirrorCamera());		
+
+		// render to window 0
 		scene.setDrawVolumes(true);
+		mirror.setDrawn(true);
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);		
 		draw(0, scene.getOverheadCamera());
 
+		// render to window 1
 		scene.setDrawVolumes(false);
+		mirror.setDrawn(true);
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);		
 		draw(1, scene.getMainCamera());
+		
+		// render to window 2 
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);		
+		scene.setDrawVolumes(false);
+		mirror.setDrawn(false);
 		draw(2, scene.getMirrorCamera());		
+
+
 	}
 
 	private Vector4f[] clearColours = new Vector4f[] {

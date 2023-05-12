@@ -78,7 +78,7 @@ public class MirrorCamera extends SceneObject implements Camera {
 		getMatrix().translation(position.x, position.y, position.z).rotateY(TAU/2);
 	}
 
-	private static final float NEAR = 0.1f;
+	private static final float NEAR = 0f;
 	private static final float FAR = 10f;
 
 	private void setCameraPespective() {
