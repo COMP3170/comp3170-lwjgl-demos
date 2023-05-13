@@ -4,6 +4,7 @@ import java.awt.Color;
 
 import comp3170.InputManager;
 import comp3170.SceneObject;
+import comp3170.demos.common.sceneobjects.Axes3D;
 import comp3170.demos.week12.cameras.Camera;
 import comp3170.demos.week12.cameras.OrbitingCamera;
 import comp3170.demos.week12.cameras.OverheadCamera;
@@ -25,11 +26,15 @@ public class ReflectionScene extends SceneObject {
 		mainCamera = new OrbitingCamera();
 		mainView = new ViewVolume(mainCamera);
 		mainView.setParent(this);
+		Axes3D mainAxes = new Axes3D();
+		mainAxes.setParent(mainView);
 				
 		mirror = new Mirror(mainCamera);
 		mirror.setParent(this);
 		mirrorView = new ViewVolume(mirror.getCamera());
 		mirrorView.setParent(this);
+		Axes3D mirrorAxes = new Axes3D();
+		mirrorAxes.setParent(mirrorView);
 		
 		Cube redCube = new Cube(Color.RED);
 		redCube.setParent(this);
