@@ -6,16 +6,15 @@ import comp3170.demos.week11.cameras.Camera;
 import comp3170.demos.week11.cameras.OrbitingCamera;
 import comp3170.demos.week11.lights.DirectionalLight;
 import comp3170.demos.week11.lights.Light;
-import comp3170.demos.week9.sceneobjects.Axes3D;
 
-public class Scene extends SceneObject {
+public class NormalMapScene extends SceneObject {
 	
-	public static Scene theScene = null;
+	public static NormalMapScene theScene = null;
 	private OrbitingCamera camera;
 	private DirectionalLight light;
 	private NormalMapQuad quad;
 
-	public Scene() {
+	public NormalMapScene() {
 		theScene = this;
 		
 		camera = new OrbitingCamera();

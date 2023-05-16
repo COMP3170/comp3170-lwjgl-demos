@@ -19,10 +19,10 @@ import comp3170.IWindowListener;
 import comp3170.InputManager;
 import comp3170.OpenGLException;
 import comp3170.Window;
+import comp3170.demos.common.sceneobjects.Axes3D;
 import comp3170.demos.week10.cameras.Camera;
 import comp3170.demos.week10.cameras.ExplosionCamera;
 import comp3170.demos.week10.sceneobjects.Explosion;
-import comp3170.demos.week9.sceneobjects.Axes3D;
 
 public class ParticleDemo implements IWindowListener {
 

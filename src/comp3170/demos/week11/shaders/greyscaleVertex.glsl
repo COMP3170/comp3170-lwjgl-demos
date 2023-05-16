@@ -7,6 +7,7 @@ out vec2 v_texcoord;	// UV
 
 void main() {
 	v_texcoord = a_texcoord;
+	// no MVP matrix, as the quad is drawn directly in NDC space
     gl_Position = a_position;
 }
 

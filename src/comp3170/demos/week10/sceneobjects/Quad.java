@@ -105,9 +105,7 @@ public class Quad extends SceneObject {
 		}
 		
 		
-		//Texture Settings
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D,textureID);
+
 		
 		//Wrap modes
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT); //S is U
@@ -125,6 +123,10 @@ public class Quad extends SceneObject {
 	public void drawSelf(Matrix4f mvpMatrix) {
 		shader.enable();
 
+		//Texture Settings
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D,textureID);
+		
 		shader.setUniform("u_mvpMatrix", mvpMatrix);
 		shader.setAttribute("a_position", vertexBuffer);
 		shader.setAttribute("a_texcoord", uvBuffer);

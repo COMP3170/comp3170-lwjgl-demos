@@ -20,6 +20,7 @@ import comp3170.InputManager;
 import comp3170.OpenGLException;
 import comp3170.SceneObject;
 import comp3170.Window;
+import comp3170.demos.common.sceneobjects.Axes3D;
 
 public class Week6Demo implements IWindowListener {
 

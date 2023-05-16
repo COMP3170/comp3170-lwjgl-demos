@@ -1,25 +1,18 @@
 package comp3170.demos.week6.backface;
 
-import static org.lwjgl.opengl.GL11.glClear;
-import static org.lwjgl.opengl.GL11.glClearColor;
-import static org.lwjgl.opengl.GL11.glCullFace;
-import static org.lwjgl.opengl.GL11.glFrontFace;
-import static org.lwjgl.opengl.GL11.glDisable;
-import static org.lwjgl.opengl.GL11.glEnable;
-import static org.lwjgl.opengl.GL11.glViewport;
-
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_B;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_F;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_SPACE;
 import static org.lwjgl.opengl.GL11.GL_BACK;
-import static org.lwjgl.opengl.GL14.GL_CCW;
-import static org.lwjgl.opengl.GL14.GL_CW;
 import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.GL_CULL_FACE;
 import static org.lwjgl.opengl.GL11.GL_FRONT;
-
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_B;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_F;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_E;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_R;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_SPACE;
+import static org.lwjgl.opengl.GL11.glClear;
+import static org.lwjgl.opengl.GL11.glClearColor;
+import static org.lwjgl.opengl.GL11.glCullFace;
+import static org.lwjgl.opengl.GL11.glDisable;
+import static org.lwjgl.opengl.GL11.glEnable;
+import static org.lwjgl.opengl.GL11.glViewport;
 
 import java.awt.Color;
 import java.util.concurrent.TimeUnit;
@@ -32,9 +25,9 @@ import comp3170.OpenGLException;
 import comp3170.SceneObject;
 import comp3170.Shader;
 import comp3170.Window;
+import comp3170.demos.common.sceneobjects.Axes3D;
 import comp3170.demos.week6.camera3d.cameras.Camera;
 import comp3170.demos.week6.camera3d.cameras.PerspectiveCamera;
-import comp3170.demos.week6.camera3d.sceneobjects.Axes3D;
 import comp3170.demos.week6.camera3d.sceneobjects.Grid;
 import comp3170.demos.week6.shaders.ShaderLibrary;
 
