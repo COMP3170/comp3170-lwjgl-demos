@@ -1,4 +1,4 @@
-package comp3170.demos.week10.sceneobjects;
+package comp3170.demos.week10.livedemo;
 
 import static org.lwjgl.opengl.GL11.GL_FILL;
 import static org.lwjgl.opengl.GL11.GL_FRONT_AND_BACK;
@@ -39,17 +39,18 @@ import org.joml.Vector4f;
 
 
 import comp3170.GLBuffers;
+import comp3170.InputManager;
 import comp3170.OpenGLException;
 import comp3170.Shader;
 import comp3170.SceneObject;
 import comp3170.demos.week10.shaders.ShaderLibrary;
 import comp3170.demos.week10.textures.TextureLibrary;
 
-public class Quad extends SceneObject {
+public class AnimatedQuad extends SceneObject {
 
-	static final private String VERTEX_SHADER = "textureVertex.glsl";
-	static final private String FRAGMENT_SHADER = "textureFragment.glsl";
-	static final private String TEXTURE = "brick-diffuse.png";
+	static final private String VERTEX_SHADER = "animatedVertex.glsl";
+	static final private String FRAGMENT_SHADER = "animatedFragment.glsl";
+	static final private String TEXTURE = "colours.png";
 	
 	private Shader shader;
 	private Vector4f[] vertices;
@@ -59,10 +60,14 @@ public class Quad extends SceneObject {
 	private int[] indices;
 	private int indexBuffer;
 	private int textureID;
+	
+	private long startTime;
 
-	public Quad() {
+	public AnimatedQuad() {
 		shader = ShaderLibrary.compileShader(VERTEX_SHADER, FRAGMENT_SHADER);
 
+		startTime = System.currentTimeMillis(); 
+		
 		//  1---3
 		//  |\  |   y
 		//  | * |   |
@@ -79,14 +84,13 @@ public class Quad extends SceneObject {
 		vertexBuffer = GLBuffers.createBuffer(vertices);
 		
 		uvs = new Vector2f[] {
-				new Vector2f(0, 0),
-				new Vector2f(0, 1),
-				new Vector2f(1, 0),
-				new Vector2f(1, 1),
-			};
+			new Vector2f(0.1f, 0),
+			new Vector2f(0.1f, 1),
+			new Vector2f(1.1f, 0),
+			new Vector2f(1.1f, 1),
+		};
 				
-			uvBuffer = GLBuffers.createBuffer(uvs);
-
+		uvBuffer = GLBuffers.createBuffer(uvs);
 		
 		indices = new int[] {
 			0, 1, 3,
@@ -119,7 +123,7 @@ public class Quad extends SceneObject {
 		
 		//MipMaps
 		glGenerateMipmap(GL_TEXTURE_2D);
-	}
+	}	
 	
 	@Override
 	public void drawSelf(Matrix4f mvpMatrix) {
@@ -129,6 +133,9 @@ public class Quad extends SceneObject {
 		shader.setAttribute("a_position", vertexBuffer);
 		shader.setAttribute("a_texcoord", uvBuffer);
 
+		float time = (System.currentTimeMillis() - startTime) / 1000f; 
+		shader.setUniform("u_time", time);
+		
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D,textureID);
 		shader.setUniform("u_texture", 0);
@@ -137,6 +144,17 @@ public class Quad extends SceneObject {
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 		glDrawElements(GL_TRIANGLES, indices.length, GL_UNSIGNED_INT, 0);
 
+	}
+
+	private final static float SPEED = 0.1f;
+	
+	public void update(InputManager input, float deltaTime) {
+
+//		for (int i = 0; i < uvs.length; i++) {
+//			uvs[i].x += SPEED * deltaTime;
+//		}
+//					
+//		GLBuffers.updateBuffer(uvBuffer, uvs);
 	}
 
 }
