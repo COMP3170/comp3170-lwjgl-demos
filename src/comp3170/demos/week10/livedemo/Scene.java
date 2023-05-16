@@ -2,9 +2,9 @@ package comp3170.demos.week10.livedemo;
 
 import comp3170.InputManager;
 import comp3170.SceneObject;
+import comp3170.demos.common.sceneobjects.Axes3D;
 import comp3170.demos.week10.cameras.Camera;
 import comp3170.demos.week10.cameras.PerspectiveCamera;
-import comp3170.demos.week9.sceneobjects.Axes3D;
 
 public class Scene extends SceneObject {
 
