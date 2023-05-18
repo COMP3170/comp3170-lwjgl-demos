@@ -1,4 +1,4 @@
-package comp3170.demos.week12.demos;
+package comp3170.demos.week12.demos.skybox;
 
 import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.GL_CULL_FACE;
@@ -19,9 +19,8 @@ import comp3170.InputManager;
 import comp3170.OpenGLException;
 import comp3170.Window;
 import comp3170.demos.week12.cameras.Camera;
-import comp3170.demos.week12.sceneobjects.Scene;
 
-public class CubeMapDemo implements IWindowListener{
+public class SkyboxDemo implements IWindowListener{
 
 	private Window window;
 	private int screenWidth = 1000;
@@ -32,7 +31,7 @@ public class CubeMapDemo implements IWindowListener{
 	
 	private Scene scene;
 
-	public CubeMapDemo() throws OpenGLException {
+	public SkyboxDemo() throws OpenGLException {
 		window = new Window("Cubemap demo", screenWidth, screenHeight, this);
 		window.run();
 	}
@@ -94,6 +93,6 @@ public class CubeMapDemo implements IWindowListener{
 	}
 
 	public static void main(String[] args) throws OpenGLException {
-		new CubeMapDemo();
+		new SkyboxDemo();
 	}
 }

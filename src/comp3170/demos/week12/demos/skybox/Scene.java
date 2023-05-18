@@ -1,4 +1,4 @@
-package comp3170.demos.week12.sceneobjects;
+package comp3170.demos.week12.demos.skybox;
 
 import java.awt.Color;
 
@@ -10,16 +10,18 @@ import comp3170.SceneObject;
 import comp3170.demos.common.sceneobjects.Grid;
 import comp3170.demos.week12.cameras.Camera;
 import comp3170.demos.week12.cameras.PerspectiveCamera;
+import comp3170.demos.week12.sceneobjects.Cube;
+import comp3170.demos.week12.sceneobjects.Skybox;
 
 public class Scene extends SceneObject {
 
 	public static Scene theScene = null;
-	private CubeMap cubemap;
+	private Skybox cubemap;
 	private PerspectiveCamera camera;
 
 	public Scene() {
 		theScene = this;
-		cubemap = new CubeMap();
+		cubemap = new Skybox();
 		
 		Grid grid = new Grid(11);
 		grid.setParent(this);

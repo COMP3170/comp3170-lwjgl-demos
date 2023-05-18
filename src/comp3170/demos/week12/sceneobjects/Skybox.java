@@ -28,10 +28,10 @@ import comp3170.demos.week12.cameras.Camera;
 import comp3170.demos.week12.shaders.ShaderLibrary;
 import comp3170.demos.week12.textures.TextureLibrary;
 
-public class CubeMap extends SceneObject {
+public class Skybox extends SceneObject {
 	
-	static final private String VERTEX_SHADER = "cubemapVertex.glsl";
-	static final private String FRAGMENT_SHADER = "cubemapFragment.glsl";
+	static final private String VERTEX_SHADER = "skyboxVertex.glsl";
+	static final private String FRAGMENT_SHADER = "skyboxFragment.glsl";
 		
 	private static final String[] TEXTURE_FILES = new String[] { 
 		"X.png", "X.png", "Y.png", "Y.png", "Z.png", "Z.png", 
@@ -58,7 +58,7 @@ public class CubeMap extends SceneObject {
 	private boolean isSkyboxEnabled = false;
 
 	
-	public CubeMap() {
+	public Skybox() {
 		shader = ShaderLibrary.compileShader(VERTEX_SHADER, FRAGMENT_SHADER);
 		
 		createCube();
@@ -136,6 +136,10 @@ public class CubeMap extends SceneObject {
 		}		
 	}
 
+	public int getCubemap() {
+		return isSkyboxEnabled ? skyboxTexture : texture;
+	}
+	
 	public void update(InputManager input, float deltaTime) {
 		if (input.wasKeyPressed(GLFW_KEY_SPACE)) {
 			isSkyboxEnabled = !isSkyboxEnabled;

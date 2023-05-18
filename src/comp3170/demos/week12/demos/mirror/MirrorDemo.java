@@ -1,4 +1,4 @@
-package comp3170.demos.week12.demos;
+package comp3170.demos.week12.demos.mirror;
 
 import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
@@ -22,9 +22,8 @@ import comp3170.OpenGLException;
 import comp3170.Window;
 import comp3170.demos.week12.cameras.Camera;
 import comp3170.demos.week12.sceneobjects.Mirror;
-import comp3170.demos.week12.sceneobjects.ReflectionScene;
 
-public class ReflectionDemo implements IWindowListener {
+public class MirrorDemo implements IWindowListener {
 
 	private Window window;
 	private int screenWidth = 2400;
@@ -33,9 +32,9 @@ public class ReflectionDemo implements IWindowListener {
 	private InputManager input;
 	private long oldTime;
 	
-	private ReflectionScene scene;
+	private Scene scene;
 
-	public ReflectionDemo() throws OpenGLException {
+	public MirrorDemo() throws OpenGLException {
 		window = new Window("Reflection demo", screenWidth, screenHeight, this);
 		window.run();
 	}
@@ -47,7 +46,7 @@ public class ReflectionDemo implements IWindowListener {
 		glEnable(GL_SCISSOR_TEST);
 
 		
-		scene = new ReflectionScene();
+		scene = new Scene();
 		
 		input = new InputManager(window);
 		oldTime = System.currentTimeMillis();
@@ -147,6 +146,6 @@ public class ReflectionDemo implements IWindowListener {
 	}
 
 	public static void main(String[] args) throws OpenGLException {
-		new ReflectionDemo();
+		new MirrorDemo();
 	}
 }

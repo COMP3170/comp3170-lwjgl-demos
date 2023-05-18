@@ -1,4 +1,4 @@
-package comp3170.demos.week12.sceneobjects;
+package comp3170.demos.week12.demos.mirror;
 
 import java.awt.Color;
 
@@ -8,17 +8,20 @@ import comp3170.demos.common.sceneobjects.Axes3D;
 import comp3170.demos.week12.cameras.Camera;
 import comp3170.demos.week12.cameras.OrbitingCamera;
 import comp3170.demos.week12.cameras.OverheadCamera;
+import comp3170.demos.week12.sceneobjects.Cube;
+import comp3170.demos.week12.sceneobjects.Mirror;
+import comp3170.demos.week12.sceneobjects.ViewVolume;
 
-public class ReflectionScene extends SceneObject {
+public class Scene extends SceneObject {
 
-	public static ReflectionScene theScene = null;
+	public static Scene theScene = null;
 	private OverheadCamera overheadCamera;
 	private OrbitingCamera mainCamera;
 	private Mirror mirror;
 	private ViewVolume mainView;
 	private ViewVolume mirrorView;
 	
-	public ReflectionScene() {
+	public Scene() {
 		theScene = this;
 		
 		overheadCamera = new OverheadCamera();

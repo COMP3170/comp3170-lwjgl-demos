@@ -3,7 +3,7 @@
 in vec4 a_position;			// MODEL
 uniform mat4 u_mvpMatrix;	// MODEL -> NDC
 
-out vec4 v_position;		// WORLD
+out vec4 v_position;		// MODEL = WORLD
 
 void main() {
 	v_position = a_position;
