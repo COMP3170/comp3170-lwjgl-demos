@@ -27,8 +27,10 @@ public class Cylinder extends SceneObject {
 	private static final int NSIDES = 24;
 	private final static String LIGHT_VERTEX = "lightVertex.glsl";
 	private final static String LIGHT_FRAGMENT = "lightFragment.glsl";
+	private final static String DEPTH_VERTEX = "depthVertex.glsl";
+	private final static String DEPTH_FRAGMENT = "depthFragment.glsl";
 
-	private Shader shader;
+	private Shader[] shaders;
 	
 	private Vector4f[] vertices;
 	private int vertexBuffer;
@@ -48,7 +50,14 @@ public class Cylinder extends SceneObject {
 	private float specularity = 10;
 
 	public Cylinder() {
-		shader = ShaderLibrary.compileShader(LIGHT_VERTEX, LIGHT_FRAGMENT);
+		shaders = new Shader[] {
+			ShaderLibrary.compileShader(LIGHT_VERTEX, LIGHT_FRAGMENT),
+			ShaderLibrary.compileShader(DEPTH_VERTEX, DEPTH_FRAGMENT),
+		};
+
+		for (int i = 0; i < shaders.length; i++) {
+			shaders[i].setStrict(false);			
+		}
 		
 		createVertexBuffer();
 		createIndexBuffer();
@@ -77,7 +86,7 @@ public class Cylinder extends SceneObject {
 		Vector4f nUp = new Vector4f(0,1,0,0);
 		Vector4f nDown = new Vector4f(0,-1,0,0);
 		Vector3f cTop = new Vector3f(1,0,0);
-		Vector3f cBottom = new Vector3f(0,1,0);
+		Vector3f cBottom = new Vector3f(1,0,0);
 
 		vertices[k] = new Vector4f(0,0,0,1);
 		normals[k] = nDown;
@@ -182,33 +191,33 @@ public class Cylinder extends SceneObject {
 
 	
 	@Override
-	public void drawSelf(Matrix4f mvpMatrix) {
-		shader.enable();
+	public void drawSelf(Matrix4f mvpMatrix, int pass) {
+		shaders[pass].enable();
 		
 		// matrices
 		getModelToWorldMatrix(modelMatrix);
-		shader.setUniform("u_mvpMatrix", mvpMatrix);
-		shader.setUniform("u_modelMatrix", modelMatrix);
-		shader.setUniform("u_normalMatrix", modelMatrix.normal(normalMatrix));
+		shaders[pass].setUniform("u_mvpMatrix", mvpMatrix);
+		shaders[pass].setUniform("u_modelMatrix", modelMatrix);
+		shaders[pass].setUniform("u_normalMatrix", modelMatrix.normal(normalMatrix));
 		
 		// camera
 		Camera camera = Scene.theScene.getCamera();
-		shader.setUniform("u_viewPosition", camera.getViewVector(viewPosition));
+		shaders[pass].setUniform("u_viewPosition", camera.getViewVector(viewPosition));
 		
 		// light
 		Light light = Scene.theScene.getLight();
-		shader.setUniform("u_lightDirection", light.getSourceVector(lightDirection));
-		shader.setUniform("u_intensity", light.getIntensity(lightIntensity));
-		shader.setUniform("u_ambientIntensity", light.getAmbient(ambientIntensity));
+		shaders[pass].setUniform("u_lightDirection", light.getSourceVector(lightDirection));
+		shaders[pass].setUniform("u_intensity", light.getIntensity(lightIntensity));
+		shaders[pass].setUniform("u_ambientIntensity", light.getAmbient(ambientIntensity));
 
 		// materials
-		shader.setUniform("u_specularMaterial", specularMaterial);
-		shader.setUniform("u_specularity", specularity);
+		shaders[pass].setUniform("u_specularMaterial", specularMaterial);
+		shaders[pass].setUniform("u_specularity", specularity);
 		
 		// vertex attributes
-		shader.setAttribute("a_position", vertexBuffer);
-		shader.setAttribute("a_normal", normalBuffer);
-		shader.setAttribute("a_colour", colourBuffer);
+		shaders[pass].setAttribute("a_position", vertexBuffer);
+		shaders[pass].setAttribute("a_normal", normalBuffer);
+		shaders[pass].setAttribute("a_colour", colourBuffer);
 		
 		// draw call
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);

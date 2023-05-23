@@ -26,7 +26,7 @@ public class DirectionalLight extends SceneObject implements Light {
 
 	private Vector4f direction = new Vector4f(1,0,0,0);
 	private Vector3f intensity = new Vector3f(1,1,1);	// white
-	private Vector3f ambient = new Vector3f(0.2f,0.2f,0.3f); // dim white
+	private Vector3f ambient = new Vector3f(0.1f,0.1f,0.1f); // dim white
 	private Vector4f[] vertices;
 	private int vertexBuffer;
 	private Vector4f colour = new Vector4f(1,1,0,1); // yellow
