@@ -9,5 +9,5 @@ public interface Camera {
 	public Matrix4f getCameraMatrix(Matrix4f dest);
 	public Matrix4f getViewMatrix(Matrix4f dest);
 	public Matrix4f getProjectionMatrix(Matrix4f dest);
-	public Vector4f getViewVector(Vector4f dest);	
+	public Vector4f getViewVector(Vector4f dest);
 }

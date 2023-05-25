@@ -29,6 +29,8 @@ public class Cylinder extends SceneObject {
 	private final static String LIGHT_FRAGMENT = "lightFragment.glsl";
 	private final static String DEPTH_VERTEX = "depthVertex.glsl";
 	private final static String DEPTH_FRAGMENT = "depthFragment.glsl";
+	private final static String NORMAL_VERTEX = "normalVertex.glsl";
+	private final static String NORMAL_FRAGMENT = "normalFragment.glsl";
 
 	private Shader[] shaders;
 	
@@ -49,10 +51,14 @@ public class Cylinder extends SceneObject {
 	private Vector3f specularMaterial = new Vector3f(1,1,1);
 	private float specularity = 10;
 
+	Vector3f colourTop = new Vector3f(1,0,0);
+	Vector3f colourBottom = new Vector3f(1,0,0);
+
 	public Cylinder() {
 		shaders = new Shader[] {
 			ShaderLibrary.compileShader(LIGHT_VERTEX, LIGHT_FRAGMENT),
 			ShaderLibrary.compileShader(DEPTH_VERTEX, DEPTH_FRAGMENT),
+			ShaderLibrary.compileShader(NORMAL_VERTEX, NORMAL_FRAGMENT),
 		};
 
 		for (int i = 0; i < shaders.length; i++) {
@@ -85,17 +91,15 @@ public class Cylinder extends SceneObject {
 		
 		Vector4f nUp = new Vector4f(0,1,0,0);
 		Vector4f nDown = new Vector4f(0,-1,0,0);
-		Vector3f cTop = new Vector3f(1,0,0);
-		Vector3f cBottom = new Vector3f(1,0,0);
 
 		vertices[k] = new Vector4f(0,0,0,1);
 		normals[k] = nDown;
-		colours[k] = cTop;
+		colours[k] = colourTop;
 		k++;
 		
 		vertices[k] = new Vector4f(0,1,0,1);
 		normals[k] = nUp;
-		colours[k] = cTop;
+		colours[k] = colourTop;
 		k++;
 		
 		// form the bottom and top edges by rotating point P = (1,0,0) about the y axis
@@ -121,27 +125,27 @@ public class Cylinder extends SceneObject {
 			bottomIndices.add(k);
 			vertices[k] = vb;
 			normals[k] = nDown;
-			colours[k] = cBottom;
+			colours[k] = colourBottom;
 			k++;
 
 			// top
 			topIndices.add(k);
 			vertices[k] = vt;
 			normals[k] = nUp;
-			colours[k] = cTop;
+			colours[k] = colourTop;
 			k++;
 			
 			// side
 			sideIndices.add(k);
 			vertices[k] = vb; 			
 			normals[k] = ni;
-			colours[k] = cBottom;
+			colours[k] = colourBottom;
 			k++;
 			
 			sideIndices.add(k);
 			vertices[k] = vt; 			
 			normals[k] = ni;
-			colours[k] = cTop;
+			colours[k] = colourTop;
 			k++;
 		}
 		
@@ -189,7 +193,10 @@ public class Cylinder extends SceneObject {
 	private Vector3f lightIntensity = new Vector3f();
 	private Vector3f ambientIntensity = new Vector3f();
 
-	
+	// should get these values from the camera, but I don't want to change the code architecture
+	private float near = 0.1f;
+	private float far = 30;
+		
 	@Override
 	public void drawSelf(Matrix4f mvpMatrix, int pass) {
 		shaders[pass].enable();
@@ -203,6 +210,8 @@ public class Cylinder extends SceneObject {
 		// camera
 		Camera camera = Scene.theScene.getCamera();
 		shaders[pass].setUniform("u_viewPosition", camera.getViewVector(viewPosition));
+		shaders[pass].setUniform("u_near", near);
+		shaders[pass].setUniform("u_far", far);
 		
 		// light
 		Light light = Scene.theScene.getLight();

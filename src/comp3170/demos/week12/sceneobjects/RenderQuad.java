@@ -9,6 +9,7 @@ import static org.lwjgl.opengl.GL11.glBindTexture;
 import static org.lwjgl.opengl.GL11.glDrawElements;
 import static org.lwjgl.opengl.GL11.glPolygonMode;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
+import static org.lwjgl.opengl.GL13.GL_TEXTURE1;
 import static org.lwjgl.opengl.GL13.glActiveTexture;
 import static org.lwjgl.opengl.GL15.GL_ELEMENT_ARRAY_BUFFER;
 import static org.lwjgl.opengl.GL15.glBindBuffer;
@@ -31,7 +32,7 @@ public class RenderQuad extends SceneObject {
 	private int uvBuffer;
 	private int[] indices;
 	private int indexBuffer;
-	private int texture;
+	private int[] textures;
 	
 	public RenderQuad() {
 		//  2----3
@@ -63,15 +64,17 @@ public class RenderQuad extends SceneObject {
 			0,1,2,
 			3,2,1,
 		};
-		indexBuffer = GLBuffers.createIndexBuffer(indices);	
+		indexBuffer = GLBuffers.createIndexBuffer(indices);
+		
+		textures = new int[2];
 	}
 	
 	public void setShader(Shader shader) {
 		this.shader = shader;
 	}
 
-	public void setTexture(int texture)  {
-		this.texture = texture;
+	public void setTexture(int id, int texture)  {
+		textures[id] = texture;
 	}
 	
 	private int[] textureResolution = new int[] {100, 100};
@@ -86,14 +89,17 @@ public class RenderQuad extends SceneObject {
 		
 		// textures
 		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, texture);
-		shader.setUniform("u_texture", 0);
+		glBindTexture(GL_TEXTURE_2D, textures[0]);
+		shader.setUniform("u_texture0", 0);
+
+		glActiveTexture(GL_TEXTURE1);
+		glBindTexture(GL_TEXTURE_2D, textures[1]);
+		shader.setUniform("u_texture1", 1);
 
 		// toon shading
 		shader.setUniform("u_buckets", 4f);
 		shader.setUniform("u_textureResolution", textureResolution);
 				
-		
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
 		glDrawElements(GL_TRIANGLES, indices.length, GL_UNSIGNED_INT, 0);		

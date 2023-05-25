@@ -27,8 +27,8 @@ import comp3170.demos.week12.shaders.ShaderLibrary;
 
 public class Week12 implements IWindowListener{
 
-	public static final String VERTEX_SHADER = "postProcessingVertex.glsl";
-	public static final String FRAGMENT_SHADER = "postProcessingFragment.glsl";
+	public static final String DITHER_VERTEX_SHADER = "ditherVertex.glsl";
+	public static final String DITHER_FRAGMENT_SHADER = "ditherFragment.glsl";
 	public static final String OUTLINE_VERTEX_SHADER = "outlineVertex.glsl";
 	public static final String OUTLINE_FRAGMENT_SHADER = "outlineFragment.glsl";
 	
@@ -42,9 +42,14 @@ public class Week12 implements IWindowListener{
 	private long oldTime;
 	
 	private Scene scene;
-	private int renderTexture;
-	private int frameBuffer;
-	private Shader shader;
+	private int renderTextureColour;
+	private int renderTextureNormals;
+	private int renderTextureDithered;
+	private int frameBufferColour;
+	private int frameBufferNormals;
+	private int frameBufferDithered;
+	private Shader ditherShader;
+	private Shader outlineShader;
 	private RenderQuad quad;
 
 	public Week12() throws OpenGLException {
@@ -60,16 +65,22 @@ public class Week12 implements IWindowListener{
 		scene = new Scene();
 		
 		quad = new RenderQuad();
-		renderTexture = TextureLibrary.createRenderTexture(renderWidth, renderHeight, GL_RGBA);
+		renderTextureColour = TextureLibrary.createRenderTexture(renderWidth, renderHeight, GL_RGBA);
+		renderTextureNormals = TextureLibrary.createRenderTexture(renderWidth, renderHeight, GL_RGBA);
+		renderTextureDithered = TextureLibrary.createRenderTexture(renderWidth, renderHeight, GL_RGBA);
 		try {
-			frameBuffer = GLBuffers.createFrameBuffer(renderTexture);
+			frameBufferColour = GLBuffers.createFrameBuffer(renderTextureColour);
+			frameBufferNormals = GLBuffers.createFrameBuffer(renderTextureNormals);
+			frameBufferDithered = GLBuffers.createFrameBuffer(renderTextureDithered);
 		} catch (OpenGLException e) {
 			e.printStackTrace();
 			System.exit(1);
 		}
 		
-		shader = ShaderLibrary.compileShader(OUTLINE_VERTEX_SHADER, OUTLINE_FRAGMENT_SHADER);
-		shader.setStrict(false);
+		ditherShader = ShaderLibrary.compileShader(DITHER_VERTEX_SHADER, DITHER_FRAGMENT_SHADER);
+		ditherShader.setStrict(false);
+		outlineShader = ShaderLibrary.compileShader(OUTLINE_VERTEX_SHADER, OUTLINE_FRAGMENT_SHADER);
+		outlineShader.setStrict(false);
 		
 		input = new InputManager(window);
 		oldTime = System.currentTimeMillis();
@@ -91,25 +102,45 @@ public class Week12 implements IWindowListener{
 	@Override
 	public void draw() {
 		update();
-		
-		// Pass 1: Render scene to texture
-//		glBindFramebuffer(GL_FRAMEBUFFER, 0);		
-//		glViewport(0, 0, screenWidth, screenHeight);
-		glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);				
+
+		Camera camera = scene.getCamera();
+		camera.getViewMatrix(viewMatrix);
+		camera.getProjectionMatrix(projectionMatrix);		
+		mvpMatrix.set(projectionMatrix).mul(viewMatrix);
+
+		// Pass 1: Render scene colour to texture
+		glBindFramebuffer(GL_FRAMEBUFFER, frameBufferColour);				
 		glViewport(0, 0, renderWidth, renderHeight);
 		glClear(GL_COLOR_BUFFER_BIT);		
 
 		glClearDepth(1f);
 		glClear(GL_DEPTH_BUFFER_BIT);		
-		
-		Camera camera = scene.getCamera();
-		camera.getViewMatrix(viewMatrix);
-		camera.getProjectionMatrix(projectionMatrix);		
-		mvpMatrix.set(projectionMatrix).mul(viewMatrix);
-		
+				
 		scene.draw(mvpMatrix, 0);
+
+		// Pass 2: Render scene normals to texture
+		glBindFramebuffer(GL_FRAMEBUFFER, frameBufferNormals);				
+		glViewport(0, 0, renderWidth, renderHeight);
+		glClear(GL_COLOR_BUFFER_BIT);		
+
+		glClearDepth(1f);
+		glClear(GL_DEPTH_BUFFER_BIT);		
+				
+		scene.draw(mvpMatrix, 2);
 		
-		// Pass 2: Render texture to screen
+		// Pass 3: Blit colour buffer through dither effect shader
+		glBindFramebuffer(GL_FRAMEBUFFER, frameBufferDithered);				
+
+		glViewport(0, 0, renderWidth, renderHeight);
+		glClear(GL_COLOR_BUFFER_BIT);		
+		glClearDepth(1f);
+		glClear(GL_DEPTH_BUFFER_BIT);		
+		
+		quad.setShader(ditherShader);
+		quad.setTexture(0, renderTextureColour);
+		quad.draw();
+
+		// Pass 4: Add outlines and render to screen
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 		glViewport(0, 0, screenWidth, screenHeight);
@@ -117,9 +148,11 @@ public class Week12 implements IWindowListener{
 		glClearDepth(1f);
 		glClear(GL_DEPTH_BUFFER_BIT);		
 		
-		quad.setShader(shader);
-		quad.setTexture(renderTexture);
+		quad.setShader(outlineShader);
+		quad.setTexture(0, renderTextureNormals);
+		quad.setTexture(1, renderTextureDithered);
 		quad.draw();
+
 	}
 
 	@Override

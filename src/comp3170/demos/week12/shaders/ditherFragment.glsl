@@ -8,8 +8,11 @@ in vec2 v_texcoord;	// UV
 
 layout(location = 0) out vec4 o_colour;
 
+const vec3 gamma = vec3(2.2);
+
 void main() {
     vec3 c = texture(u_texture, v_texcoord).rgb;
+	c = pow(c,gamma);
 
     float b = u_buckets * 2;
     c = round(c * b);
@@ -25,6 +28,7 @@ void main() {
     }
 
     c = c / u_buckets;
+    c = pow(c, 1/gamma);
     o_colour = vec4(c,1);
 }
 
