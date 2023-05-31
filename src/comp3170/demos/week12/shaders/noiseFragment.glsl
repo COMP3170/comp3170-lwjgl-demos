@@ -45,10 +45,13 @@ float octaveNoise(vec2 p, int nOctaves) {
 }
 
 const float speed = 0.25;
+const float gamma = 2.2;
 
 void main() {
 	vec2 p = v_texcoord + vec2(u_time * speed);
 	float c = octaveNoise(p,10);
+	c = pow(c, gamma);	// gamma correction
+
 	o_colour = vec4(c,c,c,1);
 }
 
