@@ -33,11 +33,12 @@ void main() {
 
     float edge = max(max(total.r, total.g), total.b);
 	edge = smoothstep(0,0.2,edge);
+    edge = step(0.1,edge);
 
 	// blend outline into image
 	vec3 c = texture(u_texture1, v_texcoord).rgb;
 	c = pow(c, gamma);
-	c = c * (1-edge);	
+	c = c * (1-edge);
 	c = pow(c, 1./gamma);
 	
     o_colour = vec4(c,1);

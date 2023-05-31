@@ -1,4 +1,4 @@
-package comp3170.demos.week12.livedemo;
+package comp3170.demos.week12.livedemo.pixelart;
 
 import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
@@ -119,6 +119,7 @@ public class Week12 implements IWindowListener{
 		scene.draw(mvpMatrix, 0);
 
 		// Pass 2: Render scene normals to texture
+
 		glBindFramebuffer(GL_FRAMEBUFFER, frameBufferNormals);				
 		glViewport(0, 0, renderWidth, renderHeight);
 		glClear(GL_COLOR_BUFFER_BIT);		
@@ -130,7 +131,6 @@ public class Week12 implements IWindowListener{
 		
 		// Pass 3: Blit colour buffer through dither effect shader
 		glBindFramebuffer(GL_FRAMEBUFFER, frameBufferDithered);				
-
 		glViewport(0, 0, renderWidth, renderHeight);
 		glClear(GL_COLOR_BUFFER_BIT);		
 		glClearDepth(1f);

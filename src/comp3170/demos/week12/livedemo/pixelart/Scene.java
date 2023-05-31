@@ -1,4 +1,4 @@
-package comp3170.demos.week12.livedemo;
+package comp3170.demos.week12.livedemo.pixelart;
 
 import comp3170.InputManager;
 import comp3170.SceneObject;

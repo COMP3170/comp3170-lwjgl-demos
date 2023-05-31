@@ -15,7 +15,7 @@ import comp3170.SceneObject;
 import comp3170.Shader;
 import comp3170.demos.week12.cameras.Camera;
 import comp3170.demos.week12.lights.Light;
-import comp3170.demos.week12.livedemo.Scene;
+import comp3170.demos.week12.livedemo.pixelart.Scene;
 import comp3170.demos.week12.shaders.ShaderLibrary;
 
 public class Plane extends SceneObject {
