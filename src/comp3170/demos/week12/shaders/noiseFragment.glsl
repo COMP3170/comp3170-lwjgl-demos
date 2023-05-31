@@ -44,10 +44,10 @@ float octaveNoise(vec2 p, int nOctaves) {
 	return c;
 }
 
-const float speed = 4;
+const float speed = 0.25;
 
 void main() {
-	vec2 p = v_texcoord + vec2(u_time / speed);
+	vec2 p = v_texcoord + vec2(u_time * speed);
 	float c = octaveNoise(p,10);
 	o_colour = vec4(c,c,c,1);
 }
