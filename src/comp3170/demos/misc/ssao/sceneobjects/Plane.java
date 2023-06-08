@@ -30,19 +30,17 @@ public class Plane extends SceneObject {
 	private int vertexBuffer;
 	private Vector4f[] normals;
 	private int normalBuffer;	
-	private Vector3f[] colours;
-	private int colourBuffer;	
 	private int[] indices;
 	private int indexBuffer;
 
-	private Vector3f colour = new Vector3f();
+	private Vector4f colour;
 	private Matrix4f normalMatrix = new Matrix4f();
 	
-	public Plane(Color colour) {
+	public Plane(Color c) {
 		shader = ShaderLibrary.instance.compileShader(VERTEX_SHADER, FRAGMENT_SHADER);
 		shader.setStrict(false);
 
-		this.colour.set(colour.getComponents(null));
+		colour = new Vector4f(c.getComponents(null));
 		createVertexBuffer();
 		createIndexBuffer();
 	}

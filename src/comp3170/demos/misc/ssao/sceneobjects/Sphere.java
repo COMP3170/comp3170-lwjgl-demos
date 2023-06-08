@@ -35,7 +35,7 @@ public class Sphere extends SceneObject {
 	private int normalBuffer;
 	private int[] indices;
 	private int indexBuffer;
-	private Vector3f colour = new Vector3f();
+	private Vector4f colour;
 
 	public Sphere(Color c) {
 		shader = ShaderLibrary.instance.compileShader(VERTEX_SHADER, FRAGMENT_SHADER);
@@ -44,7 +44,7 @@ public class Sphere extends SceneObject {
 		Vector4f[] grid = createGrid();
 		createVertexBuffer(grid);
 		createIndexBuffer();
-		colour.set(c.getColorComponents(null));
+		colour = new Vector4f(c.getComponents(null));
 	}
 
 	private Vector4f[] createGrid() {

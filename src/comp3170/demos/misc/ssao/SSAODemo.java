@@ -9,11 +9,14 @@ import static org.lwjgl.opengl.GL11.glClearDepth;
 import static org.lwjgl.opengl.GL11.glEnable;
 import static org.lwjgl.opengl.GL11.glViewport;
 
+import org.joml.Matrix4f;
+
 import comp3170.IWindowListener;
 import comp3170.InputManager;
 import comp3170.OpenGLException;
 import comp3170.ShaderLibrary;
 import comp3170.Window;
+import comp3170.demos.common.cameras.Camera;
 
 public class SSAODemo implements IWindowListener {
 
@@ -24,6 +27,7 @@ public class SSAODemo implements IWindowListener {
 	
 	private InputManager input;
 	private long oldTime;
+	private Scene scene;
 
 	public SSAODemo() throws OpenGLException {
 		window = new Window("SSAO demo", screenWidth, screenHeight, this);
@@ -38,6 +42,8 @@ public class SSAODemo implements IWindowListener {
 
 		ShaderLibrary shaderLibrary = new ShaderLibrary(COMMON_SHADERS_DIR);
 		
+		scene = new Scene();
+		
 		input = new InputManager(window);
 		oldTime = System.currentTimeMillis();
 	}
@@ -47,8 +53,14 @@ public class SSAODemo implements IWindowListener {
 		float deltaTime = (time - oldTime) / 1000.0f;
 		oldTime = time;
 		
+		scene.update(input, deltaTime);
+		
 		input.clear();
 	}
+
+	private Matrix4f viewMatrix = new Matrix4f();
+	private Matrix4f projectionMatrix = new Matrix4f();
+	private Matrix4f mvpMatrix = new Matrix4f();
 
 	@Override
 	public void draw() {
@@ -58,6 +70,12 @@ public class SSAODemo implements IWindowListener {
 		glClear(GL_COLOR_BUFFER_BIT);		
 		glClear(GL_DEPTH_BUFFER_BIT);		
 		
+		Camera camera = scene.getCamera();
+		camera.getViewMatrix(viewMatrix);
+		camera.getProjectionMatrix(projectionMatrix);
+		projectionMatrix.mul(viewMatrix, mvpMatrix);
+		
+		scene.draw(mvpMatrix);
 	}
 
 	@Override
@@ -72,4 +90,7 @@ public class SSAODemo implements IWindowListener {
 
 	}
 
+	public static void main(String[] args) throws OpenGLException {
+		new SSAODemo();
+	}
 }
