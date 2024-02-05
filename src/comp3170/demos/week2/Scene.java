@@ -1,5 +1,6 @@
 package comp3170.demos.week2;
 
+import static comp3170.Math.TAU;
 import static org.lwjgl.opengl.GL11.GL_FILL;
 import static org.lwjgl.opengl.GL11.GL_FRONT_AND_BACK;
 import static org.lwjgl.opengl.GL11.GL_TRIANGLES;
@@ -8,22 +9,22 @@ import static org.lwjgl.opengl.GL11.glDrawElements;
 import static org.lwjgl.opengl.GL11.glPolygonMode;
 import static org.lwjgl.opengl.GL15.GL_ELEMENT_ARRAY_BUFFER;
 import static org.lwjgl.opengl.GL15.glBindBuffer;
-import static org.lwjgl.opengl.GL20.GL_FLOAT_VEC2;
-import static org.lwjgl.opengl.GL20.GL_FLOAT_VEC3;
+
+import org.joml.Vector3f;
+import org.joml.Vector4f;
 
 import comp3170.GLBuffers;
 import comp3170.Shader;
 import comp3170.ShaderLibrary;
-import static comp3170.Math.TAU;
 
 public class Scene {
 	
 	final private String VERTEX_SHADER = "colour_vertex.glsl";
 	final private String FRAGMENT_SHADER = "colour_fragment.glsl";
 
-	private float[] vertices;
+	private Vector4f[] vertices;
 	private int vertexBuffer;
-	private float[] colours;
+	private Vector3f[] colours;
 	private int colourBuffer;
 	private int[] indices;
 	private int indexBuffer;
@@ -35,13 +36,12 @@ public class Scene {
 
 		// calculate the vertices of a hexagon as (x,y) pairs
 
-		vertices = new float[7 * 2];
+		vertices = new Vector4f[7];
 		
 		// the centre
 
 		int n = 0;
-		vertices[n++] = 0;	// x
-		vertices[n++] = 0;	// y
+		vertices[n++] = new Vector4f(0,0,0,1);	// x
 		
 		// the outer ring
 		
@@ -49,27 +49,28 @@ public class Scene {
 		
 		for (int i = 1; i <= 6; i++) {
 			double angle = i * TAU / 6;
-			vertices[n++] = (float) (radius * Math.cos(angle));	// x 
-			vertices[n++] = (float) (radius * Math.sin(angle)); // y
+			float x = (float) (radius * Math.cos(angle));	// x
+			float y = (float) (radius * Math.sin(angle)); // y
+			vertices[n++] = new Vector4f(x, y, 0 , 1); 
 		}
 				
 		// copy the data into a Vertex Buffer Object in graphics memory		
-	    vertexBuffer = GLBuffers.createBuffer(vertices, GL_FLOAT_VEC2);
+	    vertexBuffer = GLBuffers.createBuffer(vertices);
 
 	    // @formatter: off
-		colours = new float[] {
-			 1.0f, 1.0f, 1.0f,  // WHITE
-			 1.0f, 0.0f, 0.0f,  // RED
-			 1.0f, 1.0f, 0.0f,  // YELLOW
-			 0.0f, 1.0f, 0.0f,  // GREEN
-			 0.0f, 1.0f, 1.0f,  // CYAN
-			 0.0f, 0.0f, 1.0f,  // BLUE
-			 1.0f, 0.0f, 1.0f,  // MAGENTA
+		colours = new Vector3f[] {
+			 new Vector3f(1.0f, 1.0f, 1.0f),  // WHITE
+			 new Vector3f(1.0f, 0.0f, 0.0f),  // RED
+			 new Vector3f(1.0f, 1.0f, 0.0f),  // YELLOW
+			 new Vector3f(0.0f, 1.0f, 0.0f),  // GREEN
+			 new Vector3f(0.0f, 1.0f, 1.0f),  // CYAN
+			 new Vector3f(0.0f, 0.0f, 1.0f),  // BLUE
+			 new Vector3f(1.0f, 0.0f, 1.0f),  // MAGENTA
 		};
 	    // @formatter: on
 
 		// copy the data into a Vertex Buffer Object in graphics memory		
-	    colourBuffer = GLBuffers.createBuffer(colours, GL_FLOAT_VEC3);
+	    colourBuffer = GLBuffers.createBuffer(colours);
 	    
 	    // @formatter: off
 	    indices = new int[] {
