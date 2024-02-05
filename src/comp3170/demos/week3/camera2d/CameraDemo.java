@@ -82,6 +82,8 @@ public class CameraDemo implements IWindowListener {
 
 		new ShaderLibrary(DIRECTORY);
 		
+		// Note: I didn't use a Scene class here, as it would make the draw code below more complicated.
+		
 		// Compile the shader
 		shader = ShaderLibrary.instance.compileShader(VERTEX_SHADER, FRAGMENT_SHADER);
 
