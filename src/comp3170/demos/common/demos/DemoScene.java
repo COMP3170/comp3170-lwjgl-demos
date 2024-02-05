@@ -7,13 +7,20 @@ import comp3170.demos.common.lights.Light;
 import comp3170.demos.common.sceneobjects.Axes3D;
 import comp3170.demos.misc.ssao.cameras.OrbitingCamera;
 
-public class Scene extends SceneObject {
+/**
+ * Template code for a Scene. 
+ * 
+ * @author malcolmryan
+ *
+ */
 
-	public static Scene theScene;
-	private OrbitingCamera camera;
+public class DemoScene extends SceneObject {
+
+	public static DemoScene theScene;
+	private Camera camera;
 	private Light light;  
 	
-	public Scene() {
+	public DemoScene() {
 		if (theScene != null) {
 			throw new IllegalStateException("Two instances of the Scene singleton have been created");
 		}

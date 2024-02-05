@@ -15,6 +15,12 @@ import comp3170.OpenGLException;
 import comp3170.ShaderLibrary;
 import comp3170.Window;
 
+/**
+ * Tempate code for a demo main class
+ * 
+ * @author malcolmryan
+ */
+
 public class DemoFramework implements IWindowListener {
 
 	private static final String COMMON_SHADERS_DIR = "src/comp3170/demos/common/shaders";
@@ -24,7 +30,7 @@ public class DemoFramework implements IWindowListener {
 	
 	private InputManager input;
 	private long oldTime;
-	private Scene scene;
+	private DemoScene scene;
 
 	public DemoFramework() throws OpenGLException {
 		window = new Window("Demo", screenWidth, screenHeight, this);
@@ -40,7 +46,7 @@ public class DemoFramework implements IWindowListener {
 		// set up shader library instance
 		ShaderLibrary shaderLibrary = new ShaderLibrary(COMMON_SHADERS_DIR);
 
-		scene = new Scene();
+		scene = new DemoScene();
 		
 		input = new InputManager(window);
 		oldTime = System.currentTimeMillis();
@@ -61,7 +67,8 @@ public class DemoFramework implements IWindowListener {
 		
 		glViewport(0, 0, screenWidth, screenHeight);
 		glClear(GL_COLOR_BUFFER_BIT);		
-		glClear(GL_DEPTH_BUFFER_BIT);		
+		glClear(GL_DEPTH_BUFFER_BIT);	
+		scene.draw();
 		
 	}
 
