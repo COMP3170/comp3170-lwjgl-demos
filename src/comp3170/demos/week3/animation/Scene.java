@@ -51,35 +51,11 @@ public class Scene {
 
 	}
 	
-	private static final Vector3f MOVEMENT_SPEED = new Vector3f(1.0f, 0, 0);
-	private static final float ROTATION_SPEED = TAU / 6;
-	private static final float SCALE_SPEED = 1.0f;
-
-	private Vector3f movement = new Vector3f();
 
 	public void update(float deltaTime) {
+		// update each square
 		for (Square sq : squares) {
-
-			// access the model matrix for the square
-			Matrix4f matrix = sq.getMatrix();
-
-			// translate
-			// M = M * T
-			MOVEMENT_SPEED.mul(deltaTime, movement);  // movement = speed * dt;
-			matrix.translate(movement);
-
-			// rotate
-			// M = M * R
-			matrix.rotateZ(ROTATION_SPEED * deltaTime);			
-
-			// scale
-			// M = M * S
-			float s = (float) Math.pow(SCALE_SPEED, deltaTime);
-			matrix.scale(s,s,1); 
-			
-			// combined effect is in TRS order
-			// M = M * (T * R * S)
-
+			sq.update(deltaTime);
 		}	
 	}
 

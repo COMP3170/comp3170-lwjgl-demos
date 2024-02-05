@@ -1,5 +1,6 @@
 package comp3170.demos.week3.animation;
 
+import static comp3170.Math.TAU;
 import static org.lwjgl.opengl.GL11.GL_TRIANGLES;
 import static org.lwjgl.opengl.GL11.GL_UNSIGNED_INT;
 import static org.lwjgl.opengl.GL11.glDrawElements;
@@ -94,6 +95,35 @@ public class Square {
 	    // draw using an index buffer
 	    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
 	    glDrawElements(GL_TRIANGLES, indices.length, GL_UNSIGNED_INT, 0);		
+	}
+
+	private static final Vector3f MOVEMENT_SPEED = new Vector3f(1.0f, 0, 0);
+	private static final float ROTATION_SPEED = TAU / 6;
+	private static final float SCALE_SPEED = 1.0f;
+
+	private Vector3f movement = new Vector3f();
+
+	public void update(float deltaTime) {
+		
+		// FIXME: Is this the behaviour we want?
+		
+		// translate
+		// M = M * T
+		MOVEMENT_SPEED.mul(deltaTime, movement);  // movement = speed * dt;
+		modelMatrix.translate(movement);
+
+		// rotate
+		// M = M * R
+		modelMatrix.rotateZ(ROTATION_SPEED * deltaTime);			
+
+		// scale
+		// M = M * S
+		float s = (float) Math.pow(SCALE_SPEED, deltaTime);
+		modelMatrix.scale(s,s,1); 
+		
+		// combined effect is in TRS order
+		// M = M * (T * R * S)
+		
 	}
 
 	
