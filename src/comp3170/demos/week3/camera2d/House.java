@@ -13,6 +13,7 @@ import static org.lwjgl.opengl.GL11.glDrawArrays;
 import static org.lwjgl.opengl.GL20.GL_FLOAT_VEC2;
 
 import org.joml.Matrix4f;
+import org.joml.Vector4f;
 
 import comp3170.GLBuffers;
 import comp3170.InputManager;
@@ -22,7 +23,7 @@ import static comp3170.demos.week3.camera2d.CameraDemo.TAU;
 
 public class House {
 
-	private float[] vertices;
+	private Vector4f[] vertices;
 	private int vertexBuffer;
 	
 	private float[] colour = new float[] {1, 1, 0}; // YELLOW
@@ -30,30 +31,30 @@ public class House {
 	private Matrix4f modelMatrix = new Matrix4f();
 
 	public House() {
-		vertices = new float[] {
+		vertices = new Vector4f[] {
 			// sides
-			-0.375f, 0, 
-			-0.375f, 0.5f,
+			new Vector4f(-0.375f, 0,    0, 1), 
+			new Vector4f(-0.375f, 0.5f, 0, 1),
 			
-			 0.375f, 0,
-			 0.375f, 0.5f,
+			new Vector4f( 0.375f, 0,    0, 1),
+			new Vector4f( 0.375f, 0.5f, 0, 1),
 			 
-			-0.375f, 0f,
-			 0.375f, 0f,
+			new Vector4f(-0.375f, 0f,   0, 1),
+			new Vector4f( 0.375f, 0f,   0, 1),
 			 
 			// roof
-			-0.5f,0.5f,
-			 0.5f,0.5f,
+			new Vector4f(-0.5f, 0.5f,   0, 1),
+			new Vector4f( 0.5f, 0.5f,   0, 1),
 			 
-			-0.5f,0.5f,
-			 0,1,
+			new Vector4f(-0.5f, 0.5f,   0, 1),
+			new Vector4f( 0,    1,      0, 1),
 			 
-			 0.5f,0.5f,
-			 0,1,			
+			new Vector4f( 0.5f, 0.5f,   0, 1),
+			new Vector4f( 0,    1,      0, 1),			
 		};
 
 		
-		vertexBuffer = GLBuffers.createBuffer(vertices, GL_FLOAT_VEC2);
+		vertexBuffer = GLBuffers.createBuffer(vertices);
 	}
 
 	public Matrix4f getMatrix() {
@@ -64,7 +65,7 @@ public class House {
 	
 	    shader.setAttribute("a_position", vertexBuffer);
 	    shader.setUniform("u_colour", colour);	   	    
-		glDrawArrays(GL_LINES, 0, vertices.length / 2);           	
+		glDrawArrays(GL_LINES, 0, vertices.length);           	
 
 	}
 

@@ -4,13 +4,17 @@ import static org.lwjgl.opengl.GL11.GL_LINES;
 import static org.lwjgl.opengl.GL11.glDrawArrays;
 import static org.lwjgl.opengl.GL20.GL_FLOAT_VEC2;
 
+import org.joml.Vector4f;
+
+import org.joml.Vector4f;
+
 import comp3170.GLBuffers;
 import comp3170.Shader;
 
-public class Axes {
+public class Axes2D {
 
-	private float[] xAxis;
-	private float[] yAxis;
+	private Vector4f[] xAxis;
+	private Vector4f[] yAxis;
 	private int xVertexBuffer;
 	private int yVertexBuffer;
 	
@@ -18,19 +22,19 @@ public class Axes {
 	private float[] yColour = new float[] {0, 1, 0}; // GREEN
 	
 
-	public Axes() {
-		xAxis = new float[] {
-			0, 0,
-			1, 0,
+	public Axes2D() {
+		xAxis = new Vector4f[] {
+			new Vector4f(0, 0, 0, 1),
+			new Vector4f(1, 0, 0, 1),
 		};
 
-		yAxis = new float[] {
-			0, 0,
-			0, 1,
+		yAxis = new Vector4f[] {
+			new Vector4f(0, 0, 0, 1),
+			new Vector4f(0, 1, 0, 1),
 		};
 		
-		xVertexBuffer = GLBuffers.createBuffer(xAxis, GL_FLOAT_VEC2);
-		yVertexBuffer = GLBuffers.createBuffer(yAxis, GL_FLOAT_VEC2);
+		xVertexBuffer = GLBuffers.createBuffer(xAxis);
+		yVertexBuffer = GLBuffers.createBuffer(yAxis);
 	}
 	
 	public void draw(Shader shader) {
@@ -39,13 +43,13 @@ public class Axes {
 		
 	    shader.setAttribute("a_position", xVertexBuffer);
 	    shader.setUniform("u_colour", xColour);	   	    
-		glDrawArrays(GL_LINES, 0, xAxis.length / 2);           	
+		glDrawArrays(GL_LINES, 0, xAxis.length);           	
 
 		// Y axis
 		
 	    shader.setAttribute("a_position", yVertexBuffer);
 	    shader.setUniform("u_colour", yColour);	   	    
-		glDrawArrays(GL_LINES, 0, yAxis.length / 2);           	
+		glDrawArrays(GL_LINES, 0, yAxis.length);           	
 
 	}
 }
