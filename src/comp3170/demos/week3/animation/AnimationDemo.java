@@ -16,6 +16,7 @@ import org.joml.Vector2f;
 import comp3170.IWindowListener;
 import comp3170.OpenGLException;
 import comp3170.Shader;
+import comp3170.ShaderLibrary;
 import comp3170.Window;
 
 /**
@@ -25,24 +26,20 @@ import comp3170.Window;
 
 public class AnimationDemo implements IWindowListener {
 
-	public static final float TAU = (float) (2 * Math.PI);		// https://tauday.com/tau-manifesto
-
 	final private File DIRECTORY = new File("src/comp3170/demos/week3/animation");
-	final private String VERTEX_SHADER = "vertex.glsl";
-	final private String FRAGMENT_SHADER = "fragment.glsl";
 
-	final private int NSQUARES = 100;
 	
-	private Shader shader;
 	private Window window;
 
 	private int screenWidth = 800;
 	private int screenHeight = 800;
-	private ArrayList<Square> squares;
 	
 	private int frameRate = 100;
 	
 	private long oldTime;
+
+
+	private Scene scene;
 	
 	public AnimationDemo() throws OpenGLException {
 		window = new Window("Week 3", screenWidth, screenHeight, this);
@@ -58,60 +55,21 @@ public class AnimationDemo implements IWindowListener {
 	@Override
 	public void init() {
 				
-		// Compile the shader
-		shader = compileShader(VERTEX_SHADER, FRAGMENT_SHADER);
-
-	    squares = new ArrayList<Square>();
-	    
-	    for (int i = 0; i < NSQUARES; i++) {
-			Square square = new Square();
-			float x = (float) Math.random() * 2 - 1;
-			float y = (float) Math.random() * 2 - 1;
-			square.setPosition(x, y);
-			Color colour = Color.getHSBColor((float) Math.random(), 1, 1);
-			square.setColour(colour);
-			square.setAngle(0);
-			square.setScale(0.1f, 0.1f);
-			squares.add(square);
-	    }
-	    
+		new ShaderLibrary(DIRECTORY);
+		scene = new Scene();
+		
 	    // initialise oldTime
 	    oldTime = System.currentTimeMillis();
 	}
 
-	private Shader compileShader(String vertexShader, String fragmentShader) {
-		try {
-			File vs = new File(DIRECTORY, vertexShader);
-			File fs = new File(DIRECTORY, fragmentShader);
-			shader = new Shader(vs, fs);
-		} catch (IOException e) {
-			e.printStackTrace();
-			System.exit(1);
-		} catch (OpenGLException e) {
-			e.printStackTrace();
-			System.exit(1);
-		}
-		return shader;
-	}
-
-	private static final Vector2f MOVEMENT_SPEED = new Vector2f(0.0f, 0);
-	private static final float ROTATION_SPEED = TAU / 6;
-	private static final float SCALE_SPEED = 1.0f;
-
-	private Vector2f movement = new Vector2f();
 
 	private void update() {
 		long time = System.currentTimeMillis();
 		float deltaTime = (time - oldTime) / 1000f;
 		oldTime = time;
 		System.out.println("update: dt = " + deltaTime + "s");
-				
-		for (Square sq : squares) {
-			MOVEMENT_SPEED.mul(deltaTime, movement);  // movement = speed * dt;
-			sq.translate(movement);
-			sq.rotate(ROTATION_SPEED * deltaTime); 
-			sq.scale((float) Math.pow(SCALE_SPEED, deltaTime)); 
-		}	
+
+		scene.update(deltaTime);
 	}
 	
 	@Override
@@ -126,13 +84,8 @@ public class AnimationDemo implements IWindowListener {
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 		
-		// activate the shader
-		shader.enable();
-
-		for (Square square : squares) {
-			square.draw(shader);
-		}		
-
+		scene.draw();
+		
 		// restrict the framerate by sleeping between frames
 		try {
 			TimeUnit.MILLISECONDS.sleep(1000 / frameRate);
