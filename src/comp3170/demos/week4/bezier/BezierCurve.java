@@ -6,42 +6,48 @@ import static org.lwjgl.opengl.GL11.glDrawArrays;
 import static org.lwjgl.opengl.GL11.glPointSize;
 
 import org.joml.Vector3f;
+import org.joml.Vector4f;
 
 import comp3170.GLBuffers;
 import comp3170.Shader;
+import comp3170.ShaderLibrary;
 
 
 
 public class BezierCurve {
 
+	final private String VERTEX_SHADER = "vertex.glsl";
+	final private String FRAGMENT_SHADER = "fragment.glsl";
+
 	private Shader shader;    
-	private Vector3f[] vertices;
+	private Vector4f[] vertices;
 	private int vertexBuffer;
 	
 	private final int NPOINTS = 20;
 	
-	public BezierCurve(Shader shader, Vector3f[] points) {
-		this.shader = shader;
+	public BezierCurve(Vector3f[] points) {
+		shader = ShaderLibrary.instance.compileShader(VERTEX_SHADER, FRAGMENT_SHADER);
 				
-		this.vertices = new Vector3f[NPOINTS];
+		vertices = new Vector4f[NPOINTS];
 
+		Vector3f p = new Vector3f();
 		Vector3f q = new Vector3f();
 
 		for (int n = 0; n < NPOINTS; n++)  {
 			float t = 1f * n / (NPOINTS-1);
 			
-			Vector3f p = new Vector3f();
-
+			p.set(0,0,0);
+			
 			for (int i = 0; i < 4; i++) {
 				points[i].mul(b(i,t), q);	// q = b(i,t) * points[i] 
 				p.add(q);					// p += b(i,t) * points[i]
 			}
 			
-			vertices[n] = p;
+			vertices[n] = new Vector4f(p.x,p.y,p.z,1);
 		}
 			
 		// copy the data into a Vertex Buffer Object in graphics memory		
-	    this.vertexBuffer = GLBuffers.createBuffer(vertices);	    
+	    vertexBuffer = GLBuffers.createBuffer(vertices);	    
     }
 	
 	private float b(int i, float t) {
@@ -61,6 +67,7 @@ public class BezierCurve {
 	}
 	
 	public void draw() {
+		shader.enable();
 		
         // connect the vertex buffer to the a_position attribute		   
 	    shader.setAttribute("a_position", vertexBuffer);

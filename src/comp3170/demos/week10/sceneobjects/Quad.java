@@ -70,14 +70,10 @@ public class Quad extends SceneObject {
 		//  0---2
 		
 		vertices = new Vector4f[] {
-			new Vector4f(0, 0, 0, 1),
-			new Vector4f(1,  0, 0, 1),
-			new Vector4f(1, 0, 1, 1),
-			new Vector4f(0,  0, 1, 1),
-			new Vector4f(0,  1, 0, 1),
-			new Vector4f(1,  1, 0, 1),
-			new Vector4f(0,  1, 1, 1),
-			new Vector4f(1,  1, 1, 1),
+			new Vector4f(-1, -1, 0, 1),
+			new Vector4f(-1,  1, 0, 1),
+			new Vector4f( 1, -1, 0, 1),
+			new Vector4f( 1,  1, 0, 1),
 		};
 		
 		vertexBuffer = GLBuffers.createBuffer(vertices);
@@ -93,19 +89,8 @@ public class Quad extends SceneObject {
 
 		
 		indices = new int[] {
-			0, 1, 2,
-			4, 6, 5,
-			0, 4, 3,
-			7, 5, 2,
-			3, 6, 7,
-			0, 1, 4,
-			
-			3, 2, 1,
-			7, 5, 6,
-			6, 3, 4,
-			1, 2, 5,
-			2, 7, 6,
-			5, 4, 1,
+			0, 1, 3,
+			3, 2, 0,
 		};
 		indexBuffer = GLBuffers.createIndexBuffer(indices);
 		
@@ -146,12 +131,14 @@ public class Quad extends SceneObject {
 		shader.setAttribute("a_position", vertexBuffer);
 		shader.setAttribute("a_texcoord", uvBuffer);
 
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D,textureID);
 		shader.setUniform("u_texture", 0);
 
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 		glDrawElements(GL_TRIANGLES, indices.length, GL_UNSIGNED_INT, 0);
 
-		}
+	}
 
 }

@@ -1,6 +1,7 @@
 
 package comp3170.demos.week3.instancing;
 
+import static comp3170.Math.TAU;
 import static org.lwjgl.opengl.GL11.GL_FLOAT;
 import static org.lwjgl.opengl.GL11.GL_TRIANGLES;
 import static org.lwjgl.opengl.GL11.GL_UNSIGNED_INT;
@@ -11,25 +12,21 @@ import static org.lwjgl.opengl.GL31.glDrawElementsInstanced;
 import static org.lwjgl.opengl.GL33.glVertexAttribDivisor;
 
 import java.awt.Color;
-import java.io.File;
-import java.io.IOException;
 
 import org.joml.Vector2f;
 import org.joml.Vector3f;
+import org.joml.Vector4f;
 
 import comp3170.GLBuffers;
-import comp3170.OpenGLException;
 import comp3170.Shader;
+import comp3170.ShaderLibrary;
 
 public class Squares {
 
-	public static final float TAU = (float) (2 * Math.PI);		// https://tauday.com/tau-manifesto
-
-	final private File DIRECTORY = new File("src/comp3170/demos/week3/instancing");
 	final private String VERTEX_SHADER = "vertex.glsl";
 	final private String FRAGMENT_SHADER = "fragment.glsl";
 
-	private float[] vertices;
+	private Vector4f[] vertices;
 	private int vertexBuffer;
 	private int[] indices;
 	private int indexBuffer;
@@ -50,7 +47,7 @@ public class Squares {
 		this.nSquares = nSquares;
 		
 		// Compile the shader
-		shader = compileShader(VERTEX_SHADER, FRAGMENT_SHADER);
+		shader = ShaderLibrary.instance.compileShader(VERTEX_SHADER, FRAGMENT_SHADER);
 
 		// Make one copy of the mesh
 		makeMesh();
@@ -80,33 +77,17 @@ public class Squares {
 
 	}
 
-	private Shader compileShader(String vertexShader, String fragmentShader) {
-		Shader shader = null;
-		try {
-			File vs = new File(DIRECTORY, vertexShader);
-			File fs = new File(DIRECTORY, fragmentShader);
-			shader = new Shader(vs, fs);
-		} catch (IOException e) {
-			e.printStackTrace();
-			System.exit(1);
-		} catch (OpenGLException e) {
-			e.printStackTrace();
-			System.exit(1);
-		}
-		return shader;
-	}
-
 	private void makeMesh() {
 
-		vertices = new float[] { 
-			-0.5f, -0.5f,     
-			 0.5f, -0.5f, 
-			-0.5f,  0.5f, 
-			 0.5f,  0.5f, 
+		vertices = new Vector4f[] { 
+			new Vector4f(-0.5f, -0.5f, 0, 1),     
+			new Vector4f( 0.5f, -0.5f, 0, 1),     
+			new Vector4f(-0.5f,  0.5f, 0, 1),     
+			new Vector4f( 0.5f,  0.5f, 0, 1),     
 		};
 
 		// copy the data into a Vertex Buffer Object in graphics memory
-		vertexBuffer = GLBuffers.createBuffer(vertices, GL_FLOAT_VEC2);
+		vertexBuffer = GLBuffers.createBuffer(vertices);
 
 		indices = new int[] { 
 			0, 1, 2, 

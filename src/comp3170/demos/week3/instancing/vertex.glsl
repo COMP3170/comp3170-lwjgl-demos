@@ -1,7 +1,7 @@
 #version 410
 
 // per vertex 
-in vec2 a_position;	// vertex position as a 2D vector in MODEL
+in vec4 a_position;	// vertex position as a 4D vector (x, y, 0, 1) in MODEL
 
 // per instance
 in vec2 a_worldPos;   // instance position in 2D world space  
@@ -14,17 +14,16 @@ out vec3 v_colour; 	  // vertex colour (r,g,b)
 void main() {
 
 	// calculate model matrix as TRS
-	mat3 translation = mat3(1,0,0, 0,1,0, a_worldPos, 1); 
+	mat4 translation = mat4(1,0,0,0, 0,1,0,0, 0,0,1,0, a_worldPos.x,a_worldPos.y,0,1); 
 	float s = sin(a_rotation);
 	float c = cos(a_rotation);
-	mat3 rotation = mat3(c,s,0, -s,c,0, 0,0,1);
-	mat3 scale = mat3(a_scale, 0, 0,  0, a_scale, 0, 0, 0, 1);
+	mat4 rotation = mat4(c,s,0,0, -s,c,0,0, 0,0,1,0, 0,0,0,1);
+	mat4 scale = mat4(a_scale,0,0,0,  0,a_scale,0,0, 0,0,1,0, 0,0,0,1);
 
-	mat3 modelMatrix = translation * rotation * scale;
-	vec3 p = modelMatrix * vec3(a_position, 1);
+	mat4 modelMatrix = translation * rotation * scale;
 	
 	// pad to a homogeneous 3D point
-    gl_Position = vec4(p.xy,0,1);
+    gl_Position = modelMatrix * a_position;
     
 	v_colour = a_colour;
 }

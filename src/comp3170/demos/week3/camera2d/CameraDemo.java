@@ -33,6 +33,7 @@ import comp3170.IWindowListener;
 import comp3170.InputManager;
 import comp3170.OpenGLException;
 import comp3170.Shader;
+import comp3170.ShaderLibrary;
 import comp3170.Window;
 
 /**
@@ -57,11 +58,11 @@ public class CameraDemo implements IWindowListener {
 	private long oldTime;
 	private InputManager input;
 
-	private Axes worldAxes;
-	private Axes modelAxes;
-	private Axes cameraAxes;
+	private Axes2D worldAxes;
+	private Axes2D modelAxes;
+	private Axes2D cameraAxes;
 	private House house;
-	private Camera camera;
+	private CameraView camera;
 	
 	public CameraDemo() throws OpenGLException {
 		window = new Window("Model / World / View / NDC", width, height, this);
@@ -79,35 +80,24 @@ public class CameraDemo implements IWindowListener {
 	public void init() {
 		glEnable(GL_SCISSOR_TEST);
 
+		new ShaderLibrary(DIRECTORY);
+		
+		// Note: I didn't use a Scene class here, as it would make the draw code below more complicated.
+		
 		// Compile the shader
-		shader = compileShader(VERTEX_SHADER, FRAGMENT_SHADER);
+		shader = ShaderLibrary.instance.compileShader(VERTEX_SHADER, FRAGMENT_SHADER);
 
-		worldAxes = new Axes();
-		modelAxes = new Axes();
-		cameraAxes = new Axes();
+		worldAxes = new Axes2D();
+		modelAxes = new Axes2D();
+		cameraAxes = new Axes2D();
 		house = new House();
-		camera = new Camera();
+		camera = new CameraView();
 				
 	    // initialise oldTime
 	    oldTime = System.currentTimeMillis();
 		// add an input manager 
 		input = new InputManager(window);
 
-	}
-
-	private Shader compileShader(String vertexShader, String fragmentShader) {
-		try {
-			File vs = new File(DIRECTORY, vertexShader);
-			File fs = new File(DIRECTORY, fragmentShader);
-			shader = new Shader(vs, fs);
-		} catch (IOException e) {
-			e.printStackTrace();
-			System.exit(1);
-		} catch (OpenGLException e) {
-			e.printStackTrace();
-			System.exit(1);
-		}
-		return shader;
 	}
 
 	private Matrix4f identity = new Matrix4f().identity();

@@ -1,5 +1,6 @@
 package comp3170.demos.week7.demos;
 
+import static comp3170.Math.TAU;
 import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.GL_DEPTH_TEST;
@@ -18,19 +19,18 @@ import comp3170.InputManager;
 import comp3170.OpenGLException;
 import comp3170.SceneObject;
 import comp3170.Window;
+import comp3170.demos.common.sceneobjects.Axes3D;
 import comp3170.demos.week7.cameras.Camera;
 import comp3170.demos.week7.cameras.OrthographicCamera;
-import comp3170.demos.week7.sceneobjects.Axes3D;
 import comp3170.demos.week7.sceneobjects.Grid;
 import comp3170.demos.week7.sceneobjects.Triangle;
-import static comp3170.Math.TAU;
 
 public class DepthDemo implements IWindowListener {
 
 	private Window window;
 	private int screenWidth = 800;
-	private int screenHeight = 800
-			;
+	private int screenHeight = 800;
+
 	private InputManager input;
 	private long oldTime;
 	

@@ -5,10 +5,12 @@ import static org.lwjgl.opengl.GL11.glClear;
 import static org.lwjgl.opengl.GL11.glClearColor;
 import static org.lwjgl.opengl.GL11.glViewport;
 
+import java.io.File;
 import java.io.IOException;
 
 import comp3170.IWindowListener;
 import comp3170.OpenGLException;
+import comp3170.ShaderLibrary;
 import comp3170.Window;
 
 /**
@@ -18,7 +20,7 @@ import comp3170.Window;
 
 public class InstancingDemo implements IWindowListener {
 
-	public static final float TAU = (float) (2 * Math.PI);		// https://tauday.com/tau-manifesto
+	final private File DIRECTORY = new File("src/comp3170/demos/week3/instancing");
 
 	final private int NSQUARES = 100;
 	
@@ -43,7 +45,9 @@ public class InstancingDemo implements IWindowListener {
 	 */
 	@Override
 	public void init() {
-				
+		
+		new ShaderLibrary(DIRECTORY);
+		
 	    squares = new Squares(NSQUARES);
 	    
 	    // initialise oldTime
