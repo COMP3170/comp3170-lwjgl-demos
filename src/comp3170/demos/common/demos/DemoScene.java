@@ -5,7 +5,6 @@ import comp3170.SceneObject;
 import comp3170.demos.common.cameras.Camera;
 import comp3170.demos.common.lights.Light;
 import comp3170.demos.common.sceneobjects.Axes3D;
-import comp3170.demos.misc.ssao.cameras.OrbitingCamera;
 
 /**
  * Template code for a Scene. 
