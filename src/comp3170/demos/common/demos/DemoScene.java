@@ -39,6 +39,6 @@ public class DemoScene extends SceneObject {
 	}
 
 	public void update(InputManager input, float deltaTime) {
-		camera.update(input, deltaTime);	
+		camera.update(deltaTime, input);	
 	}	
 }
