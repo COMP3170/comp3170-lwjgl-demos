@@ -2,7 +2,10 @@ package comp3170.demos.week1;
 
 import static org.lwjgl.opengl.GL11.GL_TRIANGLES;
 import static org.lwjgl.opengl.GL11.glDrawArrays;
-import static org.lwjgl.opengl.GL20.GL_FLOAT_VEC2;
+
+import org.joml.Vector2f;
+import org.joml.Vector3f;
+import org.joml.Vector4f;
 
 import comp3170.GLBuffers;
 import comp3170.Shader;
@@ -13,7 +16,7 @@ public class Scene {
 	final private String VERTEX_SHADER = "vertex.glsl";
 	final private String FRAGMENT_SHADER = "fragment.glsl";
 
-	private float[] vertices;
+	private Vector4f[] vertices;
 	private int vertexBuffer;
 	private Shader shader;
 	private int screenWidth;
@@ -32,19 +35,19 @@ public class Scene {
 		// vertices of a square as (x,y) pairs
 		// @formatter:off
 
-		vertices = new float[] {
-			 1.0f,  1.0f, 
-			-1.0f,  1.0f, 
-			-1.0f, -1.0f,
-
-			-1.0f, -1.0f, 
-			 1.0f, -1.0f, 
-			 1.0f,  1.0f, 
+		vertices = new Vector4f[] {
+			new Vector4f(1.0f, 1.0f, 0.0f, 1.0f),
+			new Vector4f(-1.0f, 1.0f, 0.0f, 1.0f),
+			new Vector4f(-1.0f, -1.0f, 0.0f, 1.0f),
+			
+			new Vector4f(-1.0f, -1.0f, 0.0f, 1.0f),
+			new Vector4f(1.0f, -1.0f, 0.0f, 1.0f),
+			new Vector4f(1.0f, 1.0f, 0.0f, 1.0f),
 		};
 		// @formatter:on
 
 		// copy the data into a Vertex Buffer Object in graphics memory
-		vertexBuffer = GLBuffers.createBuffer(vertices, GL_FLOAT_VEC2);
+		vertexBuffer = GLBuffers.createBuffer(vertices);
 
 	}
 
@@ -57,16 +60,16 @@ public class Scene {
 		shader.setAttribute("a_position", vertexBuffer);
 
 	    // write the colour value into the u_colour uniform 
-	    float[] colour = {1.0f, 0.0f, 0.0f};	    
+	    Vector3f colour = new Vector3f(1.0f, 0.0f, 0.0f);	    
         shader.setUniform("u_colour", colour);
         
-        float[] screenSize = new float[] { screenWidth, screenHeight };
+        Vector2f screenSize = new Vector2f(screenWidth, screenHeight);
         shader.setUniform("u_screenSize", screenSize);	
 
 		// mode = GL_TRIANGLES
 		// starting offset = 0
 		// number of elements = 6
-		glDrawArrays(GL_TRIANGLES, 0, vertices.length / 2);
+		glDrawArrays(GL_TRIANGLES, 0, vertices.length);
 	}
 	
 }
