@@ -1,6 +1,6 @@
 package comp3170.demos.week12.sceneobjects;
 
-import static comp3170.demos.week5.mesh.MeshDemo.TAU;
+import static comp3170.Math.TAU;
 import static org.lwjgl.opengl.GL11.GL_FILL;
 import static org.lwjgl.opengl.GL11.GL_FRONT_AND_BACK;
 import static org.lwjgl.opengl.GL11.GL_TRIANGLES;

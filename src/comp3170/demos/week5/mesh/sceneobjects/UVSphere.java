@@ -1,5 +1,6 @@
 package comp3170.demos.week5.mesh.sceneobjects;
 
+import static comp3170.Math.TAU;
 import static org.lwjgl.opengl.GL11.GL_FRONT_AND_BACK;
 import static org.lwjgl.opengl.GL11.GL_LINE;
 import static org.lwjgl.opengl.GL11.GL_TRIANGLES;
@@ -15,9 +16,7 @@ import org.joml.Vector4f;
 import comp3170.GLBuffers;
 import comp3170.SceneObject;
 import comp3170.Shader;
-import comp3170.demos.week5.shaders.ShaderLibrary;
-
-import static comp3170.demos.week5.mesh.MeshDemo.TAU;
+import comp3170.ShaderLibrary;
 
 public class UVSphere extends SceneObject {
 
@@ -33,7 +32,7 @@ public class UVSphere extends SceneObject {
 	private float[] colour = {1f, 1f, 1f, 1f};
 
 	public UVSphere() {
-		shader = ShaderLibrary.compileShader(VERTEX_SHADER, FRAGMENT_SHADER);
+		shader = ShaderLibrary.instance.compileShader(VERTEX_SHADER, FRAGMENT_SHADER);
 		int width = 2 * NSEGMENTS;
 		int height = NSEGMENTS;
 		

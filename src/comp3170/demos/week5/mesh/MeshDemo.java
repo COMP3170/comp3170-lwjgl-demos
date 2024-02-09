@@ -9,10 +9,13 @@ import static org.lwjgl.opengl.GL11.glClear;
 import static org.lwjgl.opengl.GL11.glClearColor;
 import static org.lwjgl.opengl.GL11.glViewport;
 
+import java.io.File;
+
 import comp3170.IWindowListener;
 import comp3170.InputManager;
 import comp3170.OpenGLException;
 import comp3170.SceneObject;
+import comp3170.ShaderLibrary;
 import comp3170.Window;
 import comp3170.demos.week5.mesh.sceneobjects.NormalisedCube;
 import comp3170.demos.week5.mesh.sceneobjects.SimpleCube;
@@ -20,7 +23,7 @@ import comp3170.demos.week5.mesh.sceneobjects.UVSphere;
 
 public class MeshDemo implements IWindowListener {
 
-	public static final float TAU = (float) (2 * Math.PI);		// https://tauday.com/tau-manifesto
+	private static final File COMMON_DIR = new File("src/comp3170/demos/common/shaders"); 
 
 	private Window window;
 	private int screenWidth = 800;
@@ -30,6 +33,8 @@ public class MeshDemo implements IWindowListener {
 	private SceneObject[] meshes;
 	private int currentMesh;
 
+	private Scene scene;
+
 	public MeshDemo() throws OpenGLException {
 		window = new Window("Week 5 mesh demo", screenWidth, screenHeight, this);
 		window.run();
@@ -38,18 +43,11 @@ public class MeshDemo implements IWindowListener {
 	@Override
 	public void init() {
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+
+		// using the common shaders
+		new ShaderLibrary(COMMON_DIR);
 		
-		meshes = new SceneObject[] {
-			new SimpleCube(),
-			new UVSphere(),
-			new NormalisedCube(false),
-			new NormalisedCube(true),
-		};
-		currentMesh = 0;
-		
-		for (int i = 0; i < meshes.length; i++) {
-			meshes[i].getMatrix().rotateX(TAU/8).rotateZ(TAU/8);			
-		}
+		scene = new Scene();
 		
 	    // initialise oldTime
 		input = new InputManager(window);
@@ -57,30 +55,13 @@ public class MeshDemo implements IWindowListener {
 
 	}
 
-	private final float ROTATION_SPEED = TAU / 8;
-
 	private void update() {
 		long time = System.currentTimeMillis();
 		float deltaTime = (time - oldTime) / 1000f;
 		oldTime = time;
 
-		if (input.isKeyDown(GLFW_KEY_LEFT)) {
-			meshes[currentMesh].getMatrix().rotateY(ROTATION_SPEED * deltaTime);			
-		}
-		if (input.isKeyDown(GLFW_KEY_RIGHT)) {
-			meshes[currentMesh].getMatrix().rotateY(-ROTATION_SPEED * deltaTime);			
-		}
-		if (input.isKeyDown(GLFW_KEY_UP)) {
-			meshes[currentMesh].getMatrix().rotateX(ROTATION_SPEED * deltaTime);			
-		}
-		if (input.isKeyDown(GLFW_KEY_DOWN)) {
-			meshes[currentMesh].getMatrix().rotateX(-ROTATION_SPEED * deltaTime);			
-		}
+		scene.update(deltaTime, input);
 		
-		if (input.wasKeyPressed(GLFW_KEY_SPACE)) {
-			currentMesh = (currentMesh + 1) % meshes.length;
-		}
-
 		input.clear();
 	}
 
@@ -88,8 +69,8 @@ public class MeshDemo implements IWindowListener {
 	public void draw() {
 		update();
 
-		glClear(GL_COLOR_BUFFER_BIT);		
-		meshes[currentMesh].draw();
+		glClear(GL_COLOR_BUFFER_BIT);
+		scene.draw();
 	}
 
 	@Override
