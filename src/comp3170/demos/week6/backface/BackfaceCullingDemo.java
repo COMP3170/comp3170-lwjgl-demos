@@ -14,7 +14,7 @@ import static org.lwjgl.opengl.GL11.glDisable;
 import static org.lwjgl.opengl.GL11.glEnable;
 import static org.lwjgl.opengl.GL11.glViewport;
 
-import java.awt.Color;
+import java.io.File;
 import java.util.concurrent.TimeUnit;
 
 import org.joml.Matrix4f;
@@ -22,38 +22,24 @@ import org.joml.Matrix4f;
 import comp3170.IWindowListener;
 import comp3170.InputManager;
 import comp3170.OpenGLException;
-import comp3170.SceneObject;
-import comp3170.Shader;
+import comp3170.ShaderLibrary;
 import comp3170.Window;
-import comp3170.demos.common.sceneobjects.Axes3D;
-import comp3170.demos.week6.camera3d.cameras.Camera;
-import comp3170.demos.week6.camera3d.cameras.PerspectiveCamera;
-import comp3170.demos.week6.camera3d.sceneobjects.Grid;
-import comp3170.demos.week6.shaders.ShaderLibrary;
+import comp3170.demos.common.cameras.Camera;
 
 public class BackfaceCullingDemo implements IWindowListener {
 
-	public static final float TAU = (float) (2 * Math.PI);		// https://tauday.com/tau-manifesto
-	
+	private static final File COMMON_DIR = new File("src/comp3170/demos/common/shaders"); 
+
 	private int width = 800;
 	private int height = 800;
 
 	private Window window;
-	private Shader shader;
-	 
-	final private String VERTEX_SHADER = "vertex.glsl";
-	final private String FRAGMENT_SHADER = "fragment.glsl";
 	
 	private int frameRate = 100;
 	
 	private long oldTime;
 	private InputManager input;
 
-	private Grid grid;
-	private Triangle triangle;
-	private Axes3D axes;
-
-	private Camera camera;
 	private Matrix4f viewMatrix = new Matrix4f();
 	private Matrix4f projectionMatrix = new Matrix4f();
 	private Matrix4f mvpMatrix = new Matrix4f();
@@ -61,7 +47,7 @@ public class BackfaceCullingDemo implements IWindowListener {
 	private boolean isCulling = false;
 	private int cullFace = GL_BACK;
 
-	private SceneObject root;
+	private Scene scene;
 
 
 	public BackfaceCullingDemo() throws OpenGLException {
@@ -86,23 +72,10 @@ public class BackfaceCullingDemo implements IWindowListener {
 				
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);	
 		
-
-		shader = ShaderLibrary.compileShader(VERTEX_SHADER, FRAGMENT_SHADER);
+		new ShaderLibrary(COMMON_DIR);
 		
-		// Set up the scene
-		root = new SceneObject();
-		grid = new Grid(shader, 11);
-		grid.setParent(root);
+		scene = new Scene();
 		
-		axes = new Axes3D();
-		axes.setParent(root);
-		
-		triangle = new Triangle(shader, Color.YELLOW);
-		triangle.setParent(root);
-		
-		camera = new PerspectiveCamera(2, TAU/6, 1, 0.1f, 10f);	
-		camera.setParent(root);
-				
 		input = new InputManager(window);
 	}
 	
@@ -132,16 +105,8 @@ public class BackfaceCullingDemo implements IWindowListener {
 		if (input.wasKeyPressed(GLFW_KEY_B)) {
 			glCullFace(GL_BACK);
 		}
-		
-		// Change winding order, so switching what is "front" and what is "back"
-		// This can get confusing, so make sure you understand switching cullFaces a bit first.
-		/*
-		 * if (input.wasKeyPressed(GLFW_KEY_E)) { glFrontFace(GL_CW); }
-		 * 
-		 * if (input.wasKeyPressed(GLFW_KEY_R)) { glFrontFace(GL_CCW); }
-		 */
-
-		camera.update(input, deltaTime);
+	
+		scene.update(deltaTime, input);
 		
 		input.clear();
 	}
@@ -154,13 +119,14 @@ public class BackfaceCullingDemo implements IWindowListener {
         // clear the colour buffer	
 		glClear(GL_COLOR_BUFFER_BIT);		
 		
+		Camera camera = scene.getCamera();
 		// pre-multiply projetion and view matrices
 		camera.getViewMatrix(viewMatrix);
 		camera.getProjectionMatrix(projectionMatrix);		
 		mvpMatrix.set(projectionMatrix).mul(viewMatrix);
 		
 		// draw the scene
-		root.draw(mvpMatrix);
+		scene.draw(mvpMatrix);
 		
 		// restrict the framerate by sleeping between frames
 		try {
