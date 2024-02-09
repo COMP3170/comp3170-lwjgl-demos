@@ -1,5 +1,9 @@
 package comp3170.demos.week5.extrusion;
 
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_DOWN;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_LEFT;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_RIGHT;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_UP;
 import static org.lwjgl.opengl.GL11.GL_FRONT_AND_BACK;
 import static org.lwjgl.opengl.GL11.GL_LINE;
 import static org.lwjgl.opengl.GL11.GL_TRIANGLES;
@@ -16,10 +20,12 @@ import org.joml.Vector3f;
 import org.joml.Vector4f;
 
 import comp3170.GLBuffers;
+import comp3170.InputManager;
 import comp3170.SceneObject;
 import comp3170.Shader;
-import comp3170.demos.week5.shaders.ShaderLibrary;
-import static comp3170.demos.week5.extrusion.ExtrusionDemo.TAU;
+import comp3170.ShaderLibrary;
+
+import static comp3170.Math.TAU;
 
 public class Extrusion extends SceneObject {
 
@@ -46,7 +52,7 @@ public class Extrusion extends SceneObject {
 	};
 
 	public Extrusion() {
-		shader = ShaderLibrary.compileShader(VERTEX_SHADER, FRAGMENT_SHADER);
+		shader = ShaderLibrary.instance.compileShader(VERTEX_SHADER, FRAGMENT_SHADER);
 		createCurve();
 		createVertexBuffer();
 		createIndexBuffer();
@@ -159,6 +165,25 @@ public class Extrusion extends SceneObject {
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 		glDrawElements(GL_TRIANGLES, indices.length, GL_UNSIGNED_INT, 0);
+	}
+
+	private final float ROTATION_SPEED = TAU / 8;
+
+	
+	public void update(float deltaTime, InputManager input) {
+		if (input.isKeyDown(GLFW_KEY_LEFT)) {
+			getMatrix().rotateY(ROTATION_SPEED * deltaTime);			
+		}
+		if (input.isKeyDown(GLFW_KEY_RIGHT)) {
+			getMatrix().rotateY(-ROTATION_SPEED * deltaTime);			
+		}
+		if (input.isKeyDown(GLFW_KEY_UP)) {
+			getMatrix().rotateX(ROTATION_SPEED * deltaTime);			
+		}
+		if (input.isKeyDown(GLFW_KEY_DOWN)) {
+			getMatrix().rotateX(-ROTATION_SPEED * deltaTime);			
+		}
+			
 	}
 
 }
