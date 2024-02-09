@@ -3,6 +3,7 @@ package comp3170.demos.week6.camera3d.cameras;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_Q;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_A;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_Z;
+import static comp3170.Math.TAU;
 
 import org.joml.Matrix4f;
 
@@ -33,9 +34,9 @@ public class PerspectiveCamera extends Camera {
 	private float FOV_CHANGE = TAU / 6;
 	
 	@Override
-	public void update(InputManager input, float deltaTime) {
+	public void update(float deltaTime, InputManager input) {
 		
-		super.update(input, deltaTime);	
+		super.update(deltaTime, input);	
 		if (input.isKeyDown(GLFW_KEY_Z)) {
 			fovy += FOV_CHANGE * deltaTime;
 		}

@@ -1,16 +1,13 @@
 package comp3170.demos.week6.camera3d.sceneobjects;
 
-import static org.lwjgl.opengl.GL11.GL_TRIANGLES;
 import static org.lwjgl.opengl.GL11.GL_FRONT_AND_BACK;
-import static org.lwjgl.opengl.GL41.GL_ELEMENT_ARRAY_BUFFER;
 import static org.lwjgl.opengl.GL11.GL_LINE;
+import static org.lwjgl.opengl.GL11.GL_TRIANGLES;
 import static org.lwjgl.opengl.GL11.GL_UNSIGNED_INT;
-
-import static org.lwjgl.opengl.GL11.glPolygonMode;
 import static org.lwjgl.opengl.GL11.glDrawElements;
-import static org.lwjgl.opengl.GL41.glBindBuffer;
-
-import java.awt.Color;
+import static org.lwjgl.opengl.GL11.glPolygonMode;
+import static org.lwjgl.opengl.GL15.GL_ELEMENT_ARRAY_BUFFER;
+import static org.lwjgl.opengl.GL15.glBindBuffer;
 
 import org.joml.Matrix4f;
 import org.joml.Vector4f;
@@ -18,9 +15,13 @@ import org.joml.Vector4f;
 import comp3170.GLBuffers;
 import comp3170.SceneObject;
 import comp3170.Shader;
-import comp3170.demos.week6.shaders.ShaderLibrary;
+import comp3170.ShaderLibrary;
 
 public class Cube extends SceneObject {
+	
+	final private String VERTEX_SHADER = "simpleVertex.glsl";
+	final private String FRAGMENT_SHADER = "simpleFragment.glsl";
+
 	private Shader shader;
 	private Vector4f[] vertices;
 	private int vertexBuffer;
@@ -30,8 +31,8 @@ public class Cube extends SceneObject {
 	private Vector4f colour = new Vector4f(1f, 1f, 1f, 1f); 
 	
 
-	public Cube(Shader shader, Vector4f colour) {
-		this.shader = shader;
+	public Cube(Vector4f colour) {
+		shader = ShaderLibrary.instance.compileShader(VERTEX_SHADER, FRAGMENT_SHADER);
 		
 		this.colour = colour;
 

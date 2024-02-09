@@ -8,19 +8,14 @@ import org.joml.Vector4f;
 import comp3170.InputManager;
 import comp3170.SceneObject;
 import comp3170.Shader;
+import comp3170.demos.common.cameras.OrbittingCamera;
 import comp3170.demos.common.sceneobjects.Axes3D;
+import comp3170.demos.common.sceneobjects.Grid;
 import comp3170.demos.week6.camera3d.cameras.Camera;
 import comp3170.demos.week6.camera3d.cameras.OrthographicCamera;
 import comp3170.demos.week6.camera3d.cameras.PerspectiveCamera;
-import comp3170.demos.week6.shaders.ShaderLibrary;
 
 public class Scene extends SceneObject {
-
-	final private String VERTEX_SHADER = "vertex.glsl";
-	final private String FRAGMENT_SHADER = "fragment.glsl";
-
-	private Shader shader;
-
 	private Grid grid;
 	private Cube[] cubes;
 	private Axes3D axes;
@@ -36,19 +31,17 @@ public class Scene extends SceneObject {
 	private static final float CAMERA_ASPECT = 1;
 	
 	public Scene() {
-		shader = ShaderLibrary.compileShader(VERTEX_SHADER, FRAGMENT_SHADER);
-
 		// Set up the scene
-		grid = new Grid(shader, 11);
+		grid = new Grid(11);
 		grid.setParent(this);
 		
 		axes = new Axes3D();
 		axes.setParent(this);
 		
 		cubes = new Cube[] {
-			new Cube(shader, new Vector4f(0.9f,0.9f,0.5f, 1.0f)),   // YELLOW
-			new Cube(shader, new Vector4f(0.5f, 0.7f, 0.4f, 1.0f)), // GREEN
-			new Cube(shader, new Vector4f(0.8f, 0.4f, 0.7f, 1.0f)), // PINK
+			new Cube(new Vector4f(0.9f,0.9f,0.5f, 1.0f)),   // YELLOW
+			new Cube(new Vector4f(0.5f, 0.7f, 0.4f, 1.0f)), // GREEN
+			new Cube(new Vector4f(0.8f, 0.4f, 0.7f, 1.0f)), // PINK
 		};
 		
 		for (int i = 0; i < cubes.length; i++) {
@@ -67,9 +60,6 @@ public class Scene extends SceneObject {
 			perspectiveCamera,
 		};
 		currentCamera = 0;
-		cameras[0].setParent(this);
-		cameras[1].setParent(this);
-		
 
 	}
 
@@ -78,13 +68,13 @@ public class Scene extends SceneObject {
 	}
 
 	
-	public void update(InputManager input, float deltaTime) {
+	public void update(float deltaTime, InputManager input) {
 		if (input.wasKeyPressed(GLFW_KEY_SPACE)) {
 			currentCamera = (currentCamera + 1) % cameras.length; 
 		}
 
 		for (int i = 0; i < cameras.length; i++) {
-			cameras[i].update(input, deltaTime);
+			cameras[i].update(deltaTime, input);
 		}		
 	}
 

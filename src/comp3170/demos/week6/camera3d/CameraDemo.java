@@ -5,18 +5,23 @@ import static org.lwjgl.opengl.GL11.glClear;
 import static org.lwjgl.opengl.GL11.glClearColor;
 import static org.lwjgl.opengl.GL11.glViewport;
 
+import java.io.File;
+
 import org.joml.Matrix4f;
 
 import comp3170.IWindowListener;
 import comp3170.InputManager;
 import comp3170.OpenGLException;
+import comp3170.ShaderLibrary;
 import comp3170.Window;
 import comp3170.demos.week6.camera3d.cameras.Camera;
 import comp3170.demos.week6.camera3d.sceneobjects.Scene;
 
 public class CameraDemo implements IWindowListener {
 
-	private int screenWidth = 1600;
+	private static final File COMMON_DIR = new File("src/comp3170/demos/common/shaders"); 
+
+	private int screenWidth = 800;
 	private int screenHeight = 800;
 
 	private Window window;
@@ -37,6 +42,7 @@ public class CameraDemo implements IWindowListener {
 	public void init() {
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
+		new ShaderLibrary(COMMON_DIR);
 		scene = new Scene();
 		
 		input = new InputManager(window);
@@ -48,7 +54,7 @@ public class CameraDemo implements IWindowListener {
 		float deltaTime = (time-oldTime) / 1000f;
 		oldTime = time;
 		
-		scene.update(input, deltaTime);		
+		scene.update(deltaTime, input);		
 		input.clear();
 	}
 	

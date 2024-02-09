@@ -36,7 +36,7 @@ public class OrthographicCamera extends Camera {
 
 	public void update(InputManager input, float deltaTime) {
 
-		super.update(input, deltaTime);
+		super.update(deltaTime, input);
 		if (input.isKeyDown(GLFW_KEY_Z)) {
 			width += ZOOM_CHANGE * deltaTime;
 			height += ZOOM_CHANGE * deltaTime;
@@ -52,5 +52,4 @@ public class OrthographicCamera extends Camera {
 			height -= ZOOM_CHANGE * deltaTime;
 		}
 	}
-
 }
