@@ -13,8 +13,10 @@ import java.io.File;
 import org.joml.Matrix4f;
 import org.joml.Vector4f;
 
+import comp3170.GLBuffers;
 import comp3170.IWindowListener;
 import comp3170.OpenGLException;
+import comp3170.Shader;
 import comp3170.ShaderLibrary;
 import comp3170.Window;
 
@@ -25,10 +27,13 @@ public class AntialiasingDemo implements IWindowListener {
 	private Window window;
 	private int screenWidth = 800;
 	private int screenHeight = 800;
+
+	private static final String VERTEX_SHADER = "simpleVertex.glsl";
+	private static final String FRAGMENT_SHADER = "simpleFragment.glsl";
+	private Shader shader;
 	private Vector4f[] vertices;
 	private int vertexBuffer;
-
-	private AntialiasingScene scene;
+	private static final Vector4f colour = new Vector4f(1,0,0,1);
 
 	public AntialiasingDemo() throws OpenGLException {
 		window = new Window("Antialiasing demo", screenWidth, screenHeight, this);
@@ -44,8 +49,17 @@ public class AntialiasingDemo implements IWindowListener {
 
 		new ShaderLibrary(COMMON_DIR);
 
-		scene = new AntialiasingScene();
+		shader = ShaderLibrary.instance.compileShader(VERTEX_SHADER, FRAGMENT_SHADER);
+
+		// draw a triangle
 		
+		vertices = new Vector4f[] {
+			new Vector4f(   0,   0.8f, 0, 1),
+			new Vector4f(-0.4f, -0.8f, 0, 1),
+			new Vector4f( 0.5f, -0.7f, 0, 1),
+		};
+
+		vertexBuffer = GLBuffers.createBuffer(vertices);
 
 	}
 
@@ -55,7 +69,12 @@ public class AntialiasingDemo implements IWindowListener {
 	public void draw() {
 		glClear(GL_COLOR_BUFFER_BIT);		
 
-		scene.draw(mvpMatrix);
+		shader.enable();
+		shader.setAttribute("a_position", vertexBuffer);
+		shader.setUniform("u_mvpMatrix", mvpMatrix);
+		shader.setUniform("u_colour", colour);
+		
+		glDrawArrays(GL_TRIANGLES, 0, vertices.length);
 	}
 
 	@Override
