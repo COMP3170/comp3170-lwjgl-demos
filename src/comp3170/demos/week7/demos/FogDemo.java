@@ -9,16 +9,28 @@ import static org.lwjgl.opengl.GL11.glClearDepth;
 import static org.lwjgl.opengl.GL11.glEnable;
 import static org.lwjgl.opengl.GL11.glViewport;
 
+import java.io.File;
+
 import org.joml.Matrix4f;
 
 import comp3170.IWindowListener;
 import comp3170.InputManager;
 import comp3170.OpenGLException;
+import comp3170.ShaderLibrary;
 import comp3170.Window;
-import comp3170.demos.week7.cameras.OrthographicCamera;
+import comp3170.demos.week7.cameras.DepthSceneCamera;
 import comp3170.demos.week7.sceneobjects.FogScene;
 
+/**
+ * It looks like this demo was never completed. 
+ * 
+ * @author malcolmryan
+ *
+ */
+
 public class FogDemo implements IWindowListener {
+
+	private static final File COMMON_DIR = new File("src/comp3170/demos/common/shaders");
 
 	private Window window;
 	private int screenWidth = 800;
@@ -37,6 +49,8 @@ public class FogDemo implements IWindowListener {
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		glEnable(GL_DEPTH_TEST);
 
+		new ShaderLibrary(COMMON_DIR);
+		
 	    // initialise oldTime
 		input = new InputManager(window);
 	    oldTime = System.currentTimeMillis();
@@ -49,7 +63,7 @@ public class FogDemo implements IWindowListener {
 		float deltaTime = (time - oldTime) / 1000f;
 		oldTime = time;
 
-		scene.update(input, deltaTime);	
+		scene.update(deltaTime, input);	
 		input.clear();
 	}
 
@@ -68,7 +82,7 @@ public class FogDemo implements IWindowListener {
 		glClearDepth(1f);
 		glClear(GL_DEPTH_BUFFER_BIT);		
 		
-		OrthographicCamera camera = scene.getCamera(); 
+		DepthSceneCamera camera = scene.getCamera(); 
 		camera.getViewMatrix(viewMatrix);
 		camera.getProjectionMatrix(projectionMatrix);		
 		mvpMatrix.set(projectionMatrix).mul(viewMatrix);
