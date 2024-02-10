@@ -1,6 +1,5 @@
 package comp3170.demos.week7.demos;
 
-import static comp3170.Math.TAU;
 import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.GL_DEPTH_TEST;
@@ -10,7 +9,7 @@ import static org.lwjgl.opengl.GL11.glClearDepth;
 import static org.lwjgl.opengl.GL11.glEnable;
 import static org.lwjgl.opengl.GL11.glViewport;
 
-import java.awt.Color;
+import java.io.File;
 
 import org.joml.Matrix4f;
 
@@ -18,14 +17,14 @@ import comp3170.IWindowListener;
 import comp3170.InputManager;
 import comp3170.OpenGLException;
 import comp3170.SceneObject;
+import comp3170.ShaderLibrary;
 import comp3170.Window;
-import comp3170.demos.common.sceneobjects.Axes3D;
-import comp3170.demos.week7.cameras.Camera;
-import comp3170.demos.week7.cameras.OrthographicCamera;
-import comp3170.demos.week7.sceneobjects.Grid;
-import comp3170.demos.week7.sceneobjects.Triangle;
+import comp3170.demos.common.cameras.Camera;
+import comp3170.demos.week7.sceneobjects.DepthScene;
 
 public class DepthDemo implements IWindowListener {
+
+	private static final File COMMON_DIR = new File("src/comp3170/demos/common/shaders");
 
 	private Window window;
 	private int screenWidth = 800;
@@ -34,8 +33,7 @@ public class DepthDemo implements IWindowListener {
 	private InputManager input;
 	private long oldTime;
 	
-	private Camera camera;
-	private SceneObject scene;
+	private DepthScene scene;
 
 	public DepthDemo() throws OpenGLException {
 		window = new Window("Antialiasing demo", screenWidth, screenHeight, this);
@@ -46,21 +44,11 @@ public class DepthDemo implements IWindowListener {
 	public void init() {
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		glEnable(GL_DEPTH_TEST);
+
+		new ShaderLibrary(COMMON_DIR);
 		
 		// set up scene
-		scene = new SceneObject();
-		Axes3D axes = new Axes3D();
-		axes.setParent(scene);
-		Grid grid = new Grid(10);
-		grid.setParent(scene);
-		
-		Triangle redTriangle = new Triangle(Color.red);
-		redTriangle.setParent(scene);
-		Triangle blueTriangle = new Triangle(Color.blue);
-		blueTriangle.setParent(scene);
-		blueTriangle.getMatrix().rotateY(TAU/12);
-		
-		camera = new OrthographicCamera();
+		scene = new DepthScene();
 		
 	    // initialise oldTime
 		input = new InputManager(window);
@@ -72,7 +60,7 @@ public class DepthDemo implements IWindowListener {
 		float deltaTime = (time - oldTime) / 1000f;
 		oldTime = time;
 		
-		camera.update(input, deltaTime);
+		scene.update(deltaTime, input);
 	}
 	
 	private Matrix4f viewMatrix = new Matrix4f();
@@ -88,13 +76,13 @@ public class DepthDemo implements IWindowListener {
 
 		glClearDepth(1f);
 		glClear(GL_DEPTH_BUFFER_BIT);		
-		
+
+		Camera camera = scene.getCamera();
 		camera.getViewMatrix(viewMatrix);
 		camera.getProjectionMatrix(projectionMatrix);		
 		mvpMatrix.set(projectionMatrix).mul(viewMatrix);
 		
 		scene.draw(mvpMatrix);
-
 	}
 
 	@Override
