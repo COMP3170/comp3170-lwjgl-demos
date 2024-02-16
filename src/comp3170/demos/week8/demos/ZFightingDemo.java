@@ -1,19 +1,20 @@
 package comp3170.demos.week8.demos;
 
-import static comp3170.Math.TAU;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_A;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_D;
 import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
+import static org.lwjgl.opengl.GL11.GL_DEPTH;
 import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
-import static org.lwjgl.opengl.GL41.*;
+import static org.lwjgl.opengl.GL11.GL_DEPTH_TEST;
 import static org.lwjgl.opengl.GL11.glClear;
 import static org.lwjgl.opengl.GL11.glClearColor;
 import static org.lwjgl.opengl.GL11.glClearDepth;
 import static org.lwjgl.opengl.GL11.glEnable;
 import static org.lwjgl.opengl.GL11.glViewport;
+import static org.lwjgl.opengl.GL30.GL_DRAW_FRAMEBUFFER;
+import static org.lwjgl.opengl.GL30.GL_FRAMEBUFFER_ATTACHMENT_DEPTH_SIZE;
+import static org.lwjgl.opengl.GL30.glGetFramebufferAttachmentParameteriv;
 import static org.lwjgl.system.MemoryStack.stackPush;
 
-import java.awt.Color;
+import java.io.File;
 import java.nio.IntBuffer;
 
 import org.joml.Matrix4f;
@@ -22,21 +23,22 @@ import org.lwjgl.system.MemoryStack;
 import comp3170.IWindowListener;
 import comp3170.InputManager;
 import comp3170.OpenGLException;
-import comp3170.SceneObject;
+import comp3170.ShaderLibrary;
 import comp3170.Window;
-import comp3170.demos.week8.cameras.PerspectiveCamera;
-import comp3170.demos.week8.sceneobjects.Quad;
+import comp3170.demos.common.cameras.Camera;
+import comp3170.demos.week8.sceneobjects.ZFightingScene;
 
 public class ZFightingDemo implements IWindowListener {
+
+	private static final File COMMON_DIR = new File("src/comp3170/demos/common/shaders"); 
 
 	private Window window;
 	private int screenWidth = 800;
 	private int screenHeight = 800;
 	private InputManager input;
 	private long oldTime;
-	private SceneObject scene;
-	private PerspectiveCamera camera;
-	private Quad blueQuad;
+	private ZFightingScene scene;
+//	private DepthScene scene;
 
 	public ZFightingDemo() throws OpenGLException {
 		window = new Window("Z-Fighting demo", screenWidth, screenHeight, this);
@@ -49,18 +51,12 @@ public class ZFightingDemo implements IWindowListener {
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		glEnable(GL_DEPTH_TEST);
 		
+		new ShaderLibrary(COMMON_DIR);
+		
 		// set up scene
-		scene = new SceneObject();
-	
-		Quad redQuad = new Quad(Color.red);
-		redQuad.setParent(scene);
-
-		blueQuad = new Quad(Color.blue);
-		blueQuad.setParent(scene);
-		blueQuad.getMatrix().rotateY(0.0001f);
-		
-		camera = new PerspectiveCamera();
-		
+		scene = new ZFightingScene();
+//		scene = new DepthScene();
+			
 	    // initialise oldTime
 		input = new InputManager(window);
 	    oldTime = System.currentTimeMillis();
@@ -79,21 +75,13 @@ public class ZFightingDemo implements IWindowListener {
 
 	}
 	
-	private static final float ROTATION_SPEED = TAU/80;
-
 	private void update() {
 		long time = System.currentTimeMillis();
 		float deltaTime = (time - oldTime) / 1000f;
 		oldTime = time;
 		
-		camera.update(input, deltaTime);
-		
-		if (input.isKeyDown(GLFW_KEY_A)) {
-			blueQuad.getMatrix().rotateY(ROTATION_SPEED * deltaTime);
-		}
-		if (input.isKeyDown(GLFW_KEY_D)) {
-			blueQuad.getMatrix().rotateY(-ROTATION_SPEED * deltaTime);
-		}
+		scene.update(deltaTime, input);
+		input.clear();
 	}
 
 	private Matrix4f viewMatrix = new Matrix4f();
@@ -110,6 +98,7 @@ public class ZFightingDemo implements IWindowListener {
 		glClearDepth(1f);
 		glClear(GL_DEPTH_BUFFER_BIT);		
 		
+		Camera camera = scene.getCamera();
 		camera.getViewMatrix(viewMatrix);
 		camera.getProjectionMatrix(projectionMatrix);		
 		mvpMatrix.set(projectionMatrix).mul(viewMatrix);

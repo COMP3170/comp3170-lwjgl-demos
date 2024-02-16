@@ -1,6 +1,5 @@
 package comp3170.demos.week8.demos;
 
-import static comp3170.Math.TAU;
 import static org.lwjgl.opengl.GL11.GL_BLEND;
 import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
@@ -15,21 +14,21 @@ import static org.lwjgl.opengl.GL11.glDepthFunc;
 import static org.lwjgl.opengl.GL11.glEnable;
 import static org.lwjgl.opengl.GL11.glViewport;
 
-import java.awt.Color;
+import java.io.File;
 
 import org.joml.Matrix4f;
 
 import comp3170.IWindowListener;
 import comp3170.InputManager;
 import comp3170.OpenGLException;
-import comp3170.SceneObject;
+import comp3170.ShaderLibrary;
 import comp3170.Window;
-import comp3170.demos.common.sceneobjects.Axes3D;
-import comp3170.demos.common.sceneobjects.Grid;
-import comp3170.demos.week8.cameras.PerspectiveCamera;
-import comp3170.demos.week8.sceneobjects.Triangle;
+import comp3170.demos.common.cameras.Camera;
+import comp3170.demos.week8.sceneobjects.TransparencyScene;
 
 public class TransparencyDemo implements IWindowListener {
+
+	private static final File COMMON_DIR = new File("src/comp3170/demos/common/shaders"); 
 
 	private Window window;
 	private int screenWidth = 800;
@@ -37,8 +36,7 @@ public class TransparencyDemo implements IWindowListener {
 	private InputManager input;
 	private long oldTime;
 
-	private PerspectiveCamera camera;
-	private SceneObject scene;
+	private TransparencyScene scene;
 
 	public TransparencyDemo() throws OpenGLException {
 		window = new Window("Transparency Demo", screenWidth, screenHeight, this);
@@ -49,7 +47,6 @@ public class TransparencyDemo implements IWindowListener {
 	public void init() {
 
 		glEnable(GL_DEPTH_TEST);
-
 		glDepthFunc(GL_LEQUAL);
 		
 		// enable alpha blending
@@ -58,25 +55,10 @@ public class TransparencyDemo implements IWindowListener {
 		// setting the blend function to c = a * c_new + (1-a) c_old
 		glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
 				
-		// set up scene
-		scene = new SceneObject();
-		Axes3D axes = new Axes3D();
-		axes.setParent(scene);
-		Grid grid = new Grid(10);
-		grid.setParent(scene);
 		
-		Color red = new Color(1f,0,0,0.5f);
-		Color blue = new Color(0,0,1f,0.5f);
-		Color green = new Color(0,1f,0,0.5f);
-
-		Triangle redTriangle = new Triangle(red);
-		redTriangle.setParent(scene);
-		Triangle blueTriangle = new Triangle(blue);
-		blueTriangle.setParent(scene); blueTriangle.getMatrix().rotateY(TAU/12);
-		Triangle greenTriangle = new Triangle(green);
-		greenTriangle.setParent(scene); greenTriangle.getMatrix().rotateY(TAU/6);
-
-		camera = new PerspectiveCamera();
+		new ShaderLibrary(COMMON_DIR);
+		// set up scene
+		scene = new TransparencyScene();
 
 		// initialise oldTime
 		input = new InputManager(window);
@@ -88,7 +70,7 @@ public class TransparencyDemo implements IWindowListener {
 		float deltaTime = (time - oldTime) / 1000f;
 		oldTime = time;
 
-		camera.update(input, deltaTime);
+		scene.update(deltaTime, input);
 	}
 
 	private Matrix4f viewMatrix = new Matrix4f();
@@ -105,6 +87,7 @@ public class TransparencyDemo implements IWindowListener {
 		glClearDepth(1);
 		glClear(GL_DEPTH_BUFFER_BIT);
 
+		Camera camera = scene.getCamera();
 		camera.getViewMatrix(viewMatrix);
 		camera.getProjectionMatrix(projectionMatrix);
 		mvpMatrix.set(projectionMatrix).mul(viewMatrix);
