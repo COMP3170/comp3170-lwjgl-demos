@@ -1,12 +1,9 @@
 package comp3170.demos.week10.sceneobjects;
 
 import comp3170.InputManager;
-import comp3170.OpenGLException;
 import comp3170.SceneObject;
-import comp3170.demos.week10.cameras.PerspectiveCamera;
 import comp3170.demos.week10.cameras.Camera;
-import comp3170.demos.week10.sceneobjects.Quad;
-import comp3170.demos.week7.sceneobjects.Grid;
+import comp3170.demos.week10.cameras.PerspectiveCamera;
 
 public class Scene extends SceneObject {
 

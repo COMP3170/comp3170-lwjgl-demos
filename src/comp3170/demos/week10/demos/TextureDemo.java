@@ -10,19 +10,24 @@ import static org.lwjgl.opengl.GL11.glClearDepth;
 import static org.lwjgl.opengl.GL11.glEnable;
 import static org.lwjgl.opengl.GL11.glViewport;
 
+import java.io.File;
+
 import org.joml.Matrix4f;
 
 import comp3170.IWindowListener;
 import comp3170.InputManager;
 import comp3170.OpenGLException;
+import comp3170.ShaderLibrary;
+import comp3170.TextureLibrary;
 import comp3170.Window;
 import comp3170.demos.week10.cameras.Camera;
 import comp3170.demos.week10.sceneobjects.Scene;
 
 public class TextureDemo implements IWindowListener {
 
-	final private static float TAU = (float) (Math.PI * 2);
-	
+	private static final File COMMON_DIR = new File("src/comp3170/demos/common/shaders"); 
+	private static final File TEXTURE_DIR = new File("src/comp3170/demos/week10/textures"); 
+
 	// screen size in pixels
 	
 	private Window window;
@@ -46,6 +51,8 @@ public class TextureDemo implements IWindowListener {
 		glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 		glEnable(GL_DEPTH_TEST);	
 		
+		new ShaderLibrary(COMMON_DIR);
+		new TextureLibrary(TEXTURE_DIR);
 		scene = new Scene();
 		
 		input = new InputManager(window);

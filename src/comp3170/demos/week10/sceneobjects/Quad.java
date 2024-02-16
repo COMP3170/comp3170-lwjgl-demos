@@ -2,7 +2,12 @@ package comp3170.demos.week10.sceneobjects;
 
 import static org.lwjgl.opengl.GL11.GL_FILL;
 import static org.lwjgl.opengl.GL11.GL_FRONT_AND_BACK;
+import static org.lwjgl.opengl.GL11.GL_LINEAR;
+import static org.lwjgl.opengl.GL11.GL_LINEAR_MIPMAP_LINEAR;
+import static org.lwjgl.opengl.GL11.GL_REPEAT;
 import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
+import static org.lwjgl.opengl.GL11.GL_TEXTURE_MAG_FILTER;
+import static org.lwjgl.opengl.GL11.GL_TEXTURE_MIN_FILTER;
 import static org.lwjgl.opengl.GL11.GL_TEXTURE_WRAP_S;
 import static org.lwjgl.opengl.GL11.GL_TEXTURE_WRAP_T;
 import static org.lwjgl.opengl.GL11.GL_TRIANGLES;
@@ -11,24 +16,11 @@ import static org.lwjgl.opengl.GL11.glBindTexture;
 import static org.lwjgl.opengl.GL11.glDrawElements;
 import static org.lwjgl.opengl.GL11.glPolygonMode;
 import static org.lwjgl.opengl.GL11.glTexParameteri;
-import static org.lwjgl.opengl.GL11.glTexParameterfv;
-import static org.lwjgl.opengl.GL12.GL_CLAMP_TO_EDGE;
-import static org.lwjgl.opengl.GL13.GL_CLAMP_TO_BORDER;
-import static org.lwjgl.opengl.GL12.GL_REPEAT;
-import static org.lwjgl.opengl.GL14.GL_MIRRORED_REPEAT;
-import static org.lwjgl.opengl.GL14.GL_TEXTURE_MAG_FILTER;
-import static org.lwjgl.opengl.GL14.GL_TEXTURE_MIN_FILTER;
-import static org.lwjgl.opengl.GL14.GL_LINEAR;
-import static org.lwjgl.opengl.GL14.GL_NEAREST;
-import static org.lwjgl.opengl.GL13.GL_LINEAR_MIPMAP_LINEAR;
-import static org.lwjgl.opengl.GL13.GL_LINEAR_MIPMAP_NEAREST;
-import static org.lwjgl.opengl.GL14.GL_TEXTURE_BORDER_COLOR;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
-import static org.lwjgl.opengl.GL13.GL_TEXTURE1;
-import static org.lwjgl.opengl.GL40.glGenerateMipmap;
 import static org.lwjgl.opengl.GL13.glActiveTexture;
 import static org.lwjgl.opengl.GL15.GL_ELEMENT_ARRAY_BUFFER;
 import static org.lwjgl.opengl.GL15.glBindBuffer;
+import static org.lwjgl.opengl.GL30.glGenerateMipmap;
 
 import java.io.IOException;
 
@@ -36,14 +28,12 @@ import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector4f;
 
-
-
 import comp3170.GLBuffers;
 import comp3170.OpenGLException;
-import comp3170.Shader;
 import comp3170.SceneObject;
-import comp3170.demos.week10.shaders.ShaderLibrary;
-import comp3170.demos.week10.textures.TextureLibrary;
+import comp3170.Shader;
+import comp3170.ShaderLibrary;
+import comp3170.TextureLibrary;
 
 public class Quad extends SceneObject {
 
@@ -61,7 +51,7 @@ public class Quad extends SceneObject {
 	private int textureID;
 
 	public Quad() {
-		shader = ShaderLibrary.compileShader(VERTEX_SHADER, FRAGMENT_SHADER);
+		shader = ShaderLibrary.instance.compileShader(VERTEX_SHADER, FRAGMENT_SHADER);
 
 		//  1---3
 		//  |\  |   y
@@ -85,7 +75,7 @@ public class Quad extends SceneObject {
 				new Vector2f(1, 1),
 			};
 				
-			uvBuffer = GLBuffers.createBuffer(uvs);
+		uvBuffer = GLBuffers.createBuffer(uvs);
 
 		
 		indices = new int[] {
@@ -95,7 +85,7 @@ public class Quad extends SceneObject {
 		indexBuffer = GLBuffers.createIndexBuffer(indices);
 		
 		try {
-			textureID = TextureLibrary.loadTexture(TEXTURE);
+			textureID = TextureLibrary.instance.loadTexture(TEXTURE);
 		} catch (IOException e) {
 			e.printStackTrace();
 			System.exit(1);
@@ -103,9 +93,6 @@ public class Quad extends SceneObject {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		
-
 		
 		//Wrap modes
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT); //S is U

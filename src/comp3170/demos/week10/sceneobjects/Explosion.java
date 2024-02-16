@@ -7,7 +7,6 @@ import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
 import static org.lwjgl.opengl.GL11.GL_TRIANGLES;
 import static org.lwjgl.opengl.GL11.GL_UNSIGNED_INT;
 import static org.lwjgl.opengl.GL11.glBindTexture;
-import static org.lwjgl.opengl.GL11.glDepthMask;
 import static org.lwjgl.opengl.GL11.glPolygonMode;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
 import static org.lwjgl.opengl.GL13.glActiveTexture;
@@ -26,10 +25,10 @@ import org.joml.Vector4f;
 import comp3170.GLBuffers;
 import comp3170.SceneObject;
 import comp3170.Shader;
+import comp3170.ShaderLibrary;
+import comp3170.TextureLibrary;
 import comp3170.demos.week10.cameras.Camera;
 import comp3170.demos.week10.demos.ParticleDemo;
-import comp3170.demos.week10.shaders.ShaderLibrary;
-import comp3170.demos.week10.textures.TextureLibrary;
 
 public class Explosion extends SceneObject {
 	private static final String VERTEX_SHADER = "explosionVertex.glsl";
@@ -54,13 +53,13 @@ public class Explosion extends SceneObject {
 	
 
 	public Explosion() {
-		shader = ShaderLibrary.compileShader(VERTEX_SHADER, FRAGMENT_SHADER);
+		shader = ShaderLibrary.instance.compileShader(VERTEX_SHADER, FRAGMENT_SHADER);
 
 		createQuad();
 		createInstances();
 
 		try {
-			texture = TextureLibrary.loadTexture(PARTICLE_TEXTURE);		
+			texture = TextureLibrary.instance.loadTexture(PARTICLE_TEXTURE);		
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.exit(1);

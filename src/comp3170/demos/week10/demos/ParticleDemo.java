@@ -11,20 +11,26 @@ import static org.lwjgl.opengl.GL11.glClear;
 import static org.lwjgl.opengl.GL11.glClearColor;
 import static org.lwjgl.opengl.GL11.glClearDepth;
 import static org.lwjgl.opengl.GL11.glEnable;
-import static org.lwjgl.opengl.GL11.glViewport;
+
+import java.io.File;
 
 import org.joml.Matrix4f;
 
 import comp3170.IWindowListener;
 import comp3170.InputManager;
 import comp3170.OpenGLException;
+import comp3170.ShaderLibrary;
+import comp3170.TextureLibrary;
 import comp3170.Window;
-import comp3170.demos.common.sceneobjects.Axes3D;
 import comp3170.demos.week10.cameras.Camera;
 import comp3170.demos.week10.cameras.ExplosionCamera;
 import comp3170.demos.week10.sceneobjects.Explosion;
 
 public class ParticleDemo implements IWindowListener {
+
+	private static final File COMMON_DIR = new File("src/comp3170/demos/common/shaders"); 
+	private static final File SHADER_DIR = new File("src/comp3170/demos/week10/shaders"); 
+	private static final File TEXTURE_DIR = new File("src/comp3170/demos/week10/textures"); 
 
 	public static ParticleDemo instance;
 	
@@ -36,8 +42,6 @@ public class ParticleDemo implements IWindowListener {
 	private long oldTime;
 	private ExplosionCamera camera;
 	private Explosion explosion;
-
-	private Axes3D axes;
 
 	public ParticleDemo() throws OpenGLException {
 		// Simple singleton
@@ -59,6 +63,9 @@ public class ParticleDemo implements IWindowListener {
 		glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 		glClearDepth(1f);
 
+		new ShaderLibrary(COMMON_DIR).addPath(SHADER_DIR);
+		new TextureLibrary(TEXTURE_DIR);
+		
 		camera = new ExplosionCamera();
 		explosion = new Explosion();
 
