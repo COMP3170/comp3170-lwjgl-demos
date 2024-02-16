@@ -44,13 +44,7 @@ public abstract class OrbittingCamera implements Camera {
 		return modelMatrix.invert(dest);
 	}
 	
-	/**
-	 * Get the model matrix for the camera
-	 */
-	public Matrix4f getCameraMatrix(Matrix4f dest) {
-		return modelMatrix.get(dest);
-	}
-	
+
 	final static float ROTATION_SPEED = TAU / 4;
 	final static float MOVEMENT_SPEED = 1;
 
