@@ -16,7 +16,7 @@ import comp3170.GLBuffers;
 import comp3170.InputManager;
 import comp3170.SceneObject;
 import comp3170.Shader;
-import comp3170.demos.week7.shaders.ShaderLibrary;
+import comp3170.ShaderLibrary;
 
 public class DirectionalLight extends SceneObject implements Light {
 
@@ -34,7 +34,7 @@ public class DirectionalLight extends SceneObject implements Light {
 
 	
 	public DirectionalLight() {
-		shader = ShaderLibrary.compileShader(VERTEX_SHADER, FRAGMENT_SHADER);
+		shader = ShaderLibrary.instance.compileShader(VERTEX_SHADER, FRAGMENT_SHADER);
 		vertices = new Vector4f[] {
 			new Vector4f(0,0,0,1),
 			new Vector4f(0,0,0,1),

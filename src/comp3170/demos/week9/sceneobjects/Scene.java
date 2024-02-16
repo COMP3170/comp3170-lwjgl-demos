@@ -45,7 +45,7 @@ public class Scene extends SceneObject {
 	}
 	
 	public void update(InputManager input, float deltaTime) {
-		camera.update(input, deltaTime);
+		camera.update(deltaTime, input);
 		light.update(input, deltaTime);
 		cylinder.update(input, deltaTime);
 	}

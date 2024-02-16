@@ -19,9 +19,9 @@ layout(location = 0) out vec4 o_colour;
 void main() {
     // normalise the vectors
     vec4 n = normalize(v_normal);
-    vec4 s = normalize(u_lightDirection);
+    vec4 s = normalize(u_lightDirection);	// assumes light is directional
     vec4 r = vec4(0);
-    vec4 v = normalize(u_viewDirection);
+    vec4 v = normalize(u_viewDirection);	// assumes camera is orthographic
 
     vec3 ambient = u_ambientIntensity * u_diffuseMaterial;
     vec3 diffuse = u_intensity * u_diffuseMaterial * max(0, dot(s,n));

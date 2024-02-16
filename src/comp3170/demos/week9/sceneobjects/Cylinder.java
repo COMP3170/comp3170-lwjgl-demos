@@ -2,10 +2,12 @@ package comp3170.demos.week9.sceneobjects;
 
 import static comp3170.Math.TAU;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_C;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_COMMA;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_N;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_PERIOD;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_V;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_X;
-import static org.lwjgl.glfw.GLFW.*;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_Z;
 import static org.lwjgl.opengl.GL11.GL_TRIANGLES;
 import static org.lwjgl.opengl.GL11.GL_UNSIGNED_INT;
 import static org.lwjgl.opengl.GL11.glDrawElements;
@@ -23,9 +25,9 @@ import comp3170.GLBuffers;
 import comp3170.InputManager;
 import comp3170.SceneObject;
 import comp3170.Shader;
+import comp3170.ShaderLibrary;
 import comp3170.demos.week9.cameras.Camera;
 import comp3170.demos.week9.lights.Light;
-import comp3170.demos.week9.shaders.ShaderLibrary;
 
 public class Cylinder extends SceneObject {
 
@@ -57,12 +59,12 @@ public class Cylinder extends SceneObject {
 	private float specularity = 10;
 
 	public Cylinder() {
-		normalShader = ShaderLibrary.compileShader(NORMAL_VERTEX, NORMAL_FRAGMENT);
+		normalShader = ShaderLibrary.instance.compileShader(NORMAL_VERTEX, NORMAL_FRAGMENT);
 		// turn off checking for missing attributes / uniforms
 		// when we are debugging
 		normalShader.setStrict(showNormals); 
 
-		lightShader = ShaderLibrary.compileShader(LIGHT_VERTEX, LIGHT_FRAGMENT);
+		lightShader = ShaderLibrary.instance.compileShader(LIGHT_VERTEX, LIGHT_FRAGMENT);
 		shader = lightShader;
 		
 		createVertexBuffer();
