@@ -38,7 +38,6 @@ public class ZFightingDemo implements IWindowListener {
 	private InputManager input;
 	private long oldTime;
 	private ZFightingScene scene;
-//	private DepthScene scene;
 
 	public ZFightingDemo() throws OpenGLException {
 		window = new Window("Z-Fighting demo", screenWidth, screenHeight, this);
@@ -55,7 +54,6 @@ public class ZFightingDemo implements IWindowListener {
 		
 		// set up scene
 		scene = new ZFightingScene();
-//		scene = new DepthScene();
 			
 	    // initialise oldTime
 		input = new InputManager(window);
