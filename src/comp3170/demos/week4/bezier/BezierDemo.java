@@ -7,8 +7,6 @@ import static org.lwjgl.opengl.GL11.glClearColor;
 
 import java.io.File;
 
-import org.joml.Vector3f;
-
 import comp3170.IWindowListener;
 import comp3170.OpenGLException;
 import comp3170.Shader;
@@ -22,9 +20,9 @@ public class BezierDemo implements IWindowListener {
 
 	private Window window;
 	private Shader shader;
-	
+
 	final private File DIRECTORY = new File("src/comp3170/demos/week4/bezier");
-	private Scene scene; 
+	private Scene scene;
 
 
 	public BezierDemo() throws OpenGLException {
@@ -35,24 +33,25 @@ public class BezierDemo implements IWindowListener {
 
 	@Override
 	public void init() {
-		
+
 		// set the background colour
 		glClearColor(0.1f, 0.f, 0.1f, 1.0f);
-		
+
 		new ShaderLibrary(DIRECTORY);
 		scene = new Scene();
 	}
 
+	@Override
 	public void draw() {
-		
+
         // clear the colour buffer
-		glClear(GL_COLOR_BUFFER_BIT);	
-		
+		glClear(GL_COLOR_BUFFER_BIT);
+
 		// draw the curve
 		scene.draw();
 	}
-	
-	public static void main(String[] args) throws OpenGLException { 
+
+	public static void main(String[] args) throws OpenGLException {
 		new BezierDemo();
 	}
 
@@ -60,13 +59,13 @@ public class BezierDemo implements IWindowListener {
 	public void resize(int width, int height) {
 		this.width = width;
 		this.height = height;
-		
+
 	}
 
 	@Override
 	public void close() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 

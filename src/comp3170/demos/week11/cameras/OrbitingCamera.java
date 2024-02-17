@@ -21,13 +21,13 @@ public class OrbitingCamera implements Camera {
 	private static final float NEAR = 0.1f;
 	private static final float FAR = 30f;
 	private float distance = 2f;
-	
+
 	private Matrix4f cameraMatrix = new Matrix4f();
-	
+
 	public OrbitingCamera() {
-		
+
 	}
-		
+
 	@Override
 	public Matrix4f getCameraMatrix(Matrix4f dest) {
 		return dest.set(cameraMatrix);
@@ -42,7 +42,7 @@ public class OrbitingCamera implements Camera {
 	public Matrix4f getProjectionMatrix(Matrix4f dest) {
 		return dest.setPerspective(FOVY, ASPECT, NEAR, FAR);
 	}
-	
+
 	@Override
 	public Vector4f getViewVector(Vector4f dest) {
 		// for a perspective camera
@@ -50,9 +50,9 @@ public class OrbitingCamera implements Camera {
 		return cameraMatrix.getColumn(3, dest);
 	}
 
-	private static final float ROTATION_SPEED = TAU/6;
+	private static final float ROTATION_SPEED = TAU / 6;
 	private static final float MOVEMENT_SPEED = 4f;
-	private Vector3f angle = new Vector3f(0,0,0);
+	private Vector3f angle = new Vector3f(0, 0, 0);
 
 	public void update(InputManager input, float deltaTime) {
 		if (input.isKeyDown(GLFW_KEY_LEFT)) {
@@ -81,5 +81,4 @@ public class OrbitingCamera implements Camera {
 		cameraMatrix.translate(0, 0, distance);
 	}
 
-	
 }

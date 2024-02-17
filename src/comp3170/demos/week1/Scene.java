@@ -22,16 +22,15 @@ public class Scene {
 	private int screenWidth;
 	private int screenHeight;
 
-
 	public Scene(int width, int height) {
-		
+
 		screenWidth = width;
 		screenHeight = height;
-		
+
 		// create the shape
 
 		shader = ShaderLibrary.instance.compileShader(VERTEX_SHADER, FRAGMENT_SHADER);
-		
+
 		// vertices of a square as (x,y) pairs
 		// @formatter:off
 
@@ -39,7 +38,7 @@ public class Scene {
 			new Vector4f(1.0f, 1.0f, 0.0f, 1.0f),
 			new Vector4f(-1.0f, 1.0f, 0.0f, 1.0f),
 			new Vector4f(-1.0f, -1.0f, 0.0f, 1.0f),
-			
+
 			new Vector4f(-1.0f, -1.0f, 0.0f, 1.0f),
 			new Vector4f(1.0f, -1.0f, 0.0f, 1.0f),
 			new Vector4f(1.0f, 1.0f, 0.0f, 1.0f),
@@ -51,7 +50,6 @@ public class Scene {
 
 	}
 
-
 	public void draw() {
 		// activate the shader
 		shader.enable();
@@ -59,17 +57,17 @@ public class Scene {
 		// connect the vertex buffer to the a_position attribute
 		shader.setAttribute("a_position", vertexBuffer);
 
-	    // write the colour value into the u_colour uniform 
-	    Vector3f colour = new Vector3f(1.0f, 0.0f, 0.0f);	    
-        shader.setUniform("u_colour", colour);
-        
-        Vector2f screenSize = new Vector2f(screenWidth, screenHeight);
-        shader.setUniform("u_screenSize", screenSize);	
+		// write the colour value into the u_colour uniform
+		Vector3f colour = new Vector3f(1.0f, 0.0f, 0.0f);
+		shader.setUniform("u_colour", colour);
+
+		Vector2f screenSize = new Vector2f(screenWidth, screenHeight);
+		shader.setUniform("u_screenSize", screenSize);
 
 		// mode = GL_TRIANGLES
 		// starting offset = 0
 		// number of elements = 6
 		glDrawArrays(GL_TRIANGLES, 0, vertices.length);
 	}
-	
+
 }

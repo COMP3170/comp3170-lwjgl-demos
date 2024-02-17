@@ -22,7 +22,7 @@ import comp3170.Window;
 
 public class AntialiasingDemo implements IWindowListener {
 
-	private static final File COMMON_DIR = new File("src/comp3170/demos/common/shaders"); 
+	private static final File COMMON_DIR = new File("src/comp3170/demos/common/shaders");
 
 	private Window window;
 	private int screenWidth = 800;
@@ -41,18 +41,18 @@ public class AntialiasingDemo implements IWindowListener {
 		window.run();
 	}
 
-	
+
 	@Override
 	public void init() {
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-		glEnable(GL_MULTISAMPLE);  
+		glEnable(GL_MULTISAMPLE);
 
 		new ShaderLibrary(COMMON_DIR);
 
 		shader = ShaderLibrary.instance.compileShader(VERTEX_SHADER, FRAGMENT_SHADER);
 
 		// draw a triangle
-		
+
 		vertices = new Vector4f[] {
 			new Vector4f(   0,   0.8f, 0, 1),
 			new Vector4f(-0.4f, -0.8f, 0, 1),
@@ -64,29 +64,29 @@ public class AntialiasingDemo implements IWindowListener {
 	}
 
 	private static final Matrix4f mvpMatrix = new Matrix4f();
-	
+
 	@Override
 	public void draw() {
-		glClear(GL_COLOR_BUFFER_BIT);		
+		glClear(GL_COLOR_BUFFER_BIT);
 
 		shader.enable();
 		shader.setAttribute("a_position", vertexBuffer);
 		shader.setUniform("u_mvpMatrix", mvpMatrix);
 		shader.setUniform("u_colour", colour);
-		
+
 		glDrawArrays(GL_TRIANGLES, 0, vertices.length);
 	}
 
 	@Override
 	public void resize(int width, int height) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void close() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	public static void main(String[] args) throws OpenGLException {

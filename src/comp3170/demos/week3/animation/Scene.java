@@ -4,12 +4,9 @@ import java.awt.Color;
 import java.util.ArrayList;
 
 import org.joml.Matrix4f;
-import org.joml.Vector2f;
-import org.joml.Vector3f;
 
 import comp3170.Shader;
 import comp3170.ShaderLibrary;
-import static comp3170.Math.TAU;
 
 public class Scene {
 
@@ -24,39 +21,39 @@ public class Scene {
 		// Compile the shader
 		shader = ShaderLibrary.instance.compileShader(VERTEX_SHADER, FRAGMENT_SHADER);
 
-	    squares = new ArrayList<Square>();
-	    
+	    squares = new ArrayList<>();
+
 	    for (int i = 0; i < NSQUARES; i++) {
-	    	
-	    	Square square = new Square();			
+
+	    	Square square = new Square();
 			// access the model matrix for the square
 	    	// initial M = I (the identity matrix)
 			Matrix4f matrix = square.getMatrix();
-			
+
 			// translate to random (x,y)
 			float x = (float) Math.random() * 2 - 1;
 			float y = (float) Math.random() * 2 - 1;
 			matrix.translate(x, y, 0);
-			
+
 			// rotate and scale
 			matrix.rotateZ(0);
 			matrix.scale(0.1f, 0.1f, 1);
-			
+
 			Color colour = Color.getHSBColor((float) Math.random(), 1, 1);
 			square.setColour(colour);
 
 			squares.add(square);
-			
+
 	    }
 
 	}
-	
+
 
 	public void update(float deltaTime) {
 		// update each square
 		for (Square sq : squares) {
 			sq.update(deltaTime);
-		}	
+		}
 	}
 
 	public void draw() {
@@ -65,6 +62,6 @@ public class Scene {
 
 		for (Square square : squares) {
 			square.draw(shader);
-		}		
+		}
 	}
 }

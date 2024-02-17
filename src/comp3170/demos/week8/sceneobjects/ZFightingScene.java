@@ -23,25 +23,25 @@ public class ZFightingScene extends SceneObject {
 		blueQuad = new Quad(Color.blue);
 		blueQuad.setParent(this);
 		blueQuad.getMatrix().rotateY(0.0001f);
-		
+
 		camera = new PerspectiveCamera();
 	}
-	
+
 	public Camera getCamera() {
 		return camera;
 	}
-	
+
 	private static final float ROTATION_SPEED = TAU/80;
 
 	public void update(float deltaTime, InputManager input) {
-		
+
 		camera.update(deltaTime, input);
-		
+
 		if (input.isKeyDown(GLFW_KEY_A)) {
 			blueQuad.getMatrix().rotateY(ROTATION_SPEED * deltaTime);
 		}
 		if (input.isKeyDown(GLFW_KEY_D)) {
 			blueQuad.getMatrix().rotateY(-ROTATION_SPEED * deltaTime);
-		}		
+		}
 	}
 }

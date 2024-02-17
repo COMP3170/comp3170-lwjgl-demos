@@ -15,8 +15,8 @@ import comp3170.Window;
 
 public class ExtrusionDemo implements IWindowListener {
 
-	private static final File COMMON_DIR = new File("src/comp3170/demos/common/shaders"); 
-	
+	private static final File COMMON_DIR = new File("src/comp3170/demos/common/shaders");
+
 	private Window window;
 	private int screenWidth = 800;
 	private int screenHeight = 800;
@@ -29,14 +29,14 @@ public class ExtrusionDemo implements IWindowListener {
 		window = new Window("Week 5 mesh demo", screenWidth, screenHeight, this);
 		window.run();
 	}
-	
+
 	@Override
 	public void init() {
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-		
+
 		new ShaderLibrary(COMMON_DIR);
 		mesh = new Extrusion();
-				
+
 	    // initialise oldTime
 		input = new InputManager(window);
 	    oldTime = System.currentTimeMillis();
@@ -56,7 +56,7 @@ public class ExtrusionDemo implements IWindowListener {
 	public void draw() {
 		update();
 
-		glClear(GL_COLOR_BUFFER_BIT);		
+		glClear(GL_COLOR_BUFFER_BIT);
 		mesh.draw();
 	}
 

@@ -11,7 +11,7 @@ public abstract class AbstractScene extends SceneObject {
 	public AbstractScene() {
 		camera = new OrbitingCamera();
 	}
-	
+
 	public Camera getCamera() {
 		return camera;
 	}

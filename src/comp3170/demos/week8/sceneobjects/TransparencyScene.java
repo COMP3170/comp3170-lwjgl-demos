@@ -3,7 +3,6 @@ package comp3170.demos.week8.sceneobjects;
 import static comp3170.Math.TAU;
 
 import java.awt.Color;
-import java.io.File;
 
 import comp3170.InputManager;
 import comp3170.SceneObject;
@@ -21,7 +20,7 @@ public class TransparencyScene extends SceneObject {
 		axes.setParent(this);
 		Grid grid = new Grid(10);
 		grid.setParent(this);
-		
+
 		Color red = new Color(1f,0,0,0.5f);
 		Color blue = new Color(0,0,1f,0.5f);
 		Color green = new Color(0,1f,0,0.5f);
@@ -36,7 +35,7 @@ public class TransparencyScene extends SceneObject {
 		camera = new PerspectiveCamera();
 
 	}
-	
+
 	public Camera getCamera() {
 		return camera;
 	}

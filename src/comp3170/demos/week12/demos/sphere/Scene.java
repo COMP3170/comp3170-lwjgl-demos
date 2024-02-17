@@ -21,23 +21,23 @@ public class Scene extends SceneObject {
 	public Scene() {
 		theScene = this;
 		skybox = new Skybox();
-		
+
 		Axes3D axes = new Axes3D();
 		axes.setParent(this);
 		axes.getMatrix().scale(2);
-		
+
 		Sphere sphere = new Sphere();
 		sphere.setParent(this);
-		
+
 		Grid grid = new Grid(20);
 		grid.setParent(this);
 		grid.getMatrix().translate(-0.5f, -1, 0.5f).scale(5);
-		
+
 		camera = new OrbitingCamera();
 	}
 
 	public void update(float deltaTime, InputManager input) {
-		camera.update(deltaTime, input);	
+		camera.update(deltaTime, input);
 		skybox.update(input, deltaTime);
 	}
 
@@ -58,14 +58,14 @@ public class Scene extends SceneObject {
 	public void draw(Matrix4f parentMatrix) {
 		// draw the rest of the scene
 		super.draw(parentMatrix);
-		
-		// draw the cubemap without view translation, 
+
+		// draw the cubemap without view translation,
 		// so it is always centred on the camera
 		camera.getViewMatrix(viewMatrix);
 		viewMatrix.setColumn(3, origin);
 		camera.getProjectionMatrix(projectionMatrix);
 		projectionMatrix.mul(viewMatrix, mvpMatrix);
-		skybox.draw(mvpMatrix);		
+		skybox.draw(mvpMatrix);
 	}
-	
+
 }

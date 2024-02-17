@@ -22,8 +22,8 @@ import comp3170.demos.week7.cameras.DepthSceneCamera;
 import comp3170.demos.week7.sceneobjects.FogScene;
 
 /**
- * It looks like this demo was never completed. 
- * 
+ * It looks like this demo was never completed.
+ *
  * @author malcolmryan
  *
  */
@@ -41,20 +41,20 @@ public class FogDemo implements IWindowListener {
 
 	public FogDemo() throws OpenGLException {
 		window = new Window("Fog demo", screenWidth, screenHeight, this);
-		window.run();		
+		window.run();
 	}
-	
+
 	@Override
 	public void init() {
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		glEnable(GL_DEPTH_TEST);
 
 		new ShaderLibrary(COMMON_DIR);
-		
+
 	    // initialise oldTime
 		input = new InputManager(window);
 	    oldTime = System.currentTimeMillis();
-	    
+
 	    scene = new FogScene();
 	}
 
@@ -63,11 +63,11 @@ public class FogDemo implements IWindowListener {
 		float deltaTime = (time - oldTime) / 1000f;
 		oldTime = time;
 
-		scene.update(deltaTime, input);	
+		scene.update(deltaTime, input);
 		input.clear();
 	}
 
-	
+
 	private Matrix4f viewMatrix = new Matrix4f();
 	private Matrix4f projectionMatrix = new Matrix4f();
 	private Matrix4f mvpMatrix = new Matrix4f();
@@ -75,18 +75,18 @@ public class FogDemo implements IWindowListener {
 	@Override
 	public void draw() {
 		update();
-		
-		glClear(GL_COLOR_BUFFER_BIT);		
+
+		glClear(GL_COLOR_BUFFER_BIT);
 		glViewport(0, 0, screenWidth, screenHeight);
 
 		glClearDepth(1f);
-		glClear(GL_DEPTH_BUFFER_BIT);		
-		
-		DepthSceneCamera camera = scene.getCamera(); 
+		glClear(GL_DEPTH_BUFFER_BIT);
+
+		DepthSceneCamera camera = scene.getCamera();
 		camera.getViewMatrix(viewMatrix);
-		camera.getProjectionMatrix(projectionMatrix);		
+		camera.getProjectionMatrix(projectionMatrix);
 		mvpMatrix.set(projectionMatrix).mul(viewMatrix);
-		
+
 		scene.draw(mvpMatrix);
 	}
 

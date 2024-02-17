@@ -18,14 +18,14 @@ public class OffsetCamera implements Camera {
 	private static final float NEAR = 1f;
 	private static final float FAR = 30f;
 	private static final float HEIGHT = 2f;
-	
+
 	private Matrix4f cameraMatrix = new Matrix4f();
 	private float offAngleX = 0;
 	private float offAngleY = 0;
-	
+
 	public OffsetCamera() {
 	}
-		
+
 	@Override
 	public Matrix4f getCameraMatrix(Matrix4f dest) {
 		return dest.set(cameraMatrix);
@@ -40,7 +40,7 @@ public class OffsetCamera implements Camera {
 	public Matrix4f getProjectionMatrix(Matrix4f dest) {
 		return dest.setPerspectiveOffCenter(FOVY, offAngleX , offAngleY, ASPECT, NEAR, FAR);
 	}
-	
+
 	@Override
 	public Vector4f getViewVector(Vector4f dest) {
 		// for a perspective camera

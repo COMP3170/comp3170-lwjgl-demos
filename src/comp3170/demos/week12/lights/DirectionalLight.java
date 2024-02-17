@@ -33,7 +33,7 @@ public class DirectionalLight extends SceneObject implements Light {
 	private Vector4f colour = new Vector4f(1,1,0,1); // yellow
 	private float length = 10;
 
-	
+
 	public DirectionalLight() {
 		shader = ShaderLibrary.instance.compileShader(VERTEX_SHADER, FRAGMENT_SHADER);
 		vertices = new Vector4f[] {
@@ -45,7 +45,7 @@ public class DirectionalLight extends SceneObject implements Light {
 		vertexBuffer = GLBuffers.createBuffer(vertices);
 		getMatrix().scale(length);
 	}
-	
+
 	@Override
 	public Vector4f getSourceVector(Vector4f dest) {
 		return dest.set(direction);
@@ -60,12 +60,12 @@ public class DirectionalLight extends SceneObject implements Light {
 	public Vector3f getAmbient(Vector3f dest) {
 		return dest.set(ambient);
 	}
-	
+
 	private final static float ROTATION_SPEED = TAU / 6;
 	private Vector3f angle = new Vector3f();
 
 	public void update(InputManager input, float deltaTime) {
-		
+
 		if (input.isKeyDown(GLFW_KEY_A)) {
 			angle.y = (angle.y - ROTATION_SPEED * deltaTime) % TAU;
 		}
@@ -78,23 +78,23 @@ public class DirectionalLight extends SceneObject implements Light {
 		if (input.isKeyDown(GLFW_KEY_S)) {
 			angle.z = (angle.z + ROTATION_SPEED * deltaTime) % TAU;
 		}
-		
+
 		direction.set(1,0,0,0);
 		direction.rotateZ(angle.z).rotateY(angle.y);
-		
+
 		// update the vertex buffer
 		vertices[1].set(0,0,0,1).add(direction);
 		GLBuffers.updateBuffer(vertexBuffer, vertices);
 	}
-	
+
 	@Override
 	protected void drawSelf(Matrix4f mvpMatrix) {
 		shader.enable();
-		
+
 		shader.setAttribute("a_position", vertexBuffer);
 		shader.setUniform("u_mvpMatrix", mvpMatrix);
 		shader.setUniform("u_colour", colour);
-		
+
 		glDrawArrays(GL_LINES, 0, vertices.length);
 	}
 

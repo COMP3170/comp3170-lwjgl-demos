@@ -40,7 +40,7 @@ public class Quad extends SceneObject {
 	static final private String VERTEX_SHADER = "textureVertex.glsl";
 	static final private String FRAGMENT_SHADER = "textureFragment.glsl";
 	static final private String TEXTURE = "brick-diffuse.png";
-	
+
 	private Shader shader;
 	private Vector4f[] vertices;
 	private int vertexBuffer;
@@ -53,37 +53,41 @@ public class Quad extends SceneObject {
 	public Quad() {
 		shader = ShaderLibrary.instance.compileShader(VERTEX_SHADER, FRAGMENT_SHADER);
 
+		// @formatter:off
+
 		//  1---3
 		//  |\  |   y
 		//  | * |   |
 		//  |  \|   +--x
 		//  0---2
-		
+
 		vertices = new Vector4f[] {
 			new Vector4f(-1, -1, 0, 1),
 			new Vector4f(-1,  1, 0, 1),
 			new Vector4f( 1, -1, 0, 1),
 			new Vector4f( 1,  1, 0, 1),
 		};
-		
+
 		vertexBuffer = GLBuffers.createBuffer(vertices);
-		
+
 		uvs = new Vector2f[] {
-				new Vector2f(0, 0),
-				new Vector2f(0, 1),
-				new Vector2f(1, 0),
-				new Vector2f(1, 1),
-			};
-				
+			new Vector2f(0, 0),
+			new Vector2f(0, 1),
+			new Vector2f(1, 0),
+			new Vector2f(1, 1),
+		};
+
 		uvBuffer = GLBuffers.createBuffer(uvs);
 
-		
 		indices = new int[] {
 			0, 1, 3,
 			3, 2, 0,
 		};
+
 		indexBuffer = GLBuffers.createIndexBuffer(indices);
-		
+
+		// @formatter:on
+
 		try {
 			textureID = TextureLibrary.instance.loadTexture(TEXTURE);
 		} catch (IOException e) {
@@ -93,33 +97,33 @@ public class Quad extends SceneObject {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		//Wrap modes
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT); //S is U
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT); //T is V
-		
-		//Filtering
+
+		// Wrap modes
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT); // S is U
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT); // T is V
+
+		// Filtering
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		
-		//MipMaps
+
+		// MipMaps
 		glGenerateMipmap(GL_TEXTURE_2D);
 	}
-	
+
 	@Override
 	public void drawSelf(Matrix4f mvpMatrix) {
 		shader.enable();
 
-		//Texture Settings
+		// Texture Settings
 		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D,textureID);
-		
+		glBindTexture(GL_TEXTURE_2D, textureID);
+
 		shader.setUniform("u_mvpMatrix", mvpMatrix);
 		shader.setAttribute("a_position", vertexBuffer);
 		shader.setAttribute("a_texcoord", uvBuffer);
 
 		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D,textureID);
+		glBindTexture(GL_TEXTURE_2D, textureID);
 		shader.setUniform("u_texture", 0);
 
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);

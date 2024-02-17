@@ -20,13 +20,13 @@ public class ExplosionCamera implements Camera {
 	private static final float FAR = 30f;
 	private static final float DISTANCE = 15f;
 	private static final float ELEVATION = 0f;
-	
+
 	private Matrix4f cameraMatrix = new Matrix4f();
-	
+
 	public ExplosionCamera() {
-		
+
 	}
-		
+
 	@Override
 	public Matrix4f getCameraMatrix(Matrix4f dest) {
 		return dest.set(cameraMatrix);
@@ -41,7 +41,7 @@ public class ExplosionCamera implements Camera {
 	public Matrix4f getProjectionMatrix(Matrix4f dest) {
 		return dest.setPerspective(FOVY, ASPECT, NEAR, FAR);
 	}
-	
+
 	@Override
 	public Vector4f getViewVector(Vector4f dest) {
 		// the view vector is the k-axis of the cameraMatrix
@@ -73,5 +73,5 @@ public class ExplosionCamera implements Camera {
 		cameraMatrix.translate(0, 0, DISTANCE);
 	}
 
-	
+
 }

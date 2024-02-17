@@ -41,12 +41,12 @@ public class OrthographicCamera extends Camera {
 			width += ZOOM_CHANGE * deltaTime;
 			height += ZOOM_CHANGE * deltaTime;
 		}
-		
+
 		if (input.isKeyDown(GLFW_KEY_A)) {
 			width = ZOOM_DEFAULT;
 			height = ZOOM_DEFAULT;
 		}
-		
+
 		if (input.isKeyDown(GLFW_KEY_Q)) {
 			width -= ZOOM_CHANGE * deltaTime;
 			height -= ZOOM_CHANGE * deltaTime;

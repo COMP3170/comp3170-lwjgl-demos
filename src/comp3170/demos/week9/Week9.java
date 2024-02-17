@@ -22,34 +22,34 @@ import comp3170.demos.week9.cameras.Camera;
 import comp3170.demos.week9.sceneobjects.Scene;
 
 public class Week9 implements IWindowListener {
-	
-	private static final File COMMON_DIR = new File("src/comp3170/demos/common/shaders"); 
-	private static final File SHADER_DIR = new File("src/comp3170/demos/week9/shaders"); 
-	
+
+	private static final File COMMON_DIR = new File("src/comp3170/demos/common/shaders");
+	private static final File SHADER_DIR = new File("src/comp3170/demos/week9/shaders");
+
 	private Window window;
 	private int screenWidth = 1000;
 	private int screenHeight = 1000;
-	
+
 	private InputManager input;
 	private long oldTime;
-	
+
 	private Scene scene;
 
 
 	public Week9() throws OpenGLException {
 		window = new Window("Lighting demo", screenWidth, screenHeight, this);
-		window.run();		
+		window.run();
 	}
-	
+
 	@Override
 	public void init() {
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		glEnable(GL_DEPTH_TEST);
 
 		new ShaderLibrary(COMMON_DIR).addPath(SHADER_DIR);
-		
+
 		scene = new Scene();
-				
+
 		input = new InputManager(window);
 	    oldTime = System.currentTimeMillis();
 	}
@@ -58,11 +58,11 @@ public class Week9 implements IWindowListener {
 		long time = System.currentTimeMillis();
 		float deltaTime = (time - oldTime) / 1000f;
 		oldTime = time;
-		
+
 		scene.update(input, deltaTime);
 		input.clear();
 	}
-	
+
 	private Matrix4f viewMatrix = new Matrix4f();
 	private Matrix4f projectionMatrix = new Matrix4f();
 	private Matrix4f mvpMatrix = new Matrix4f();
@@ -70,18 +70,18 @@ public class Week9 implements IWindowListener {
 	@Override
 	public void draw() {
 		update();
-		
-		glClear(GL_COLOR_BUFFER_BIT);		
+
+		glClear(GL_COLOR_BUFFER_BIT);
 		glViewport(0, 0, screenWidth, screenHeight);
 
 		glClearDepth(1f);
-		glClear(GL_DEPTH_BUFFER_BIT);		
-		
+		glClear(GL_DEPTH_BUFFER_BIT);
+
 		Camera camera = scene.getCamera();
 		camera.getViewMatrix(viewMatrix);
-		camera.getProjectionMatrix(projectionMatrix);		
+		camera.getProjectionMatrix(projectionMatrix);
 		mvpMatrix.set(projectionMatrix).mul(viewMatrix);
-		
+
 		scene.draw(mvpMatrix);
 	}
 
@@ -96,7 +96,7 @@ public class Week9 implements IWindowListener {
 		// TODO Auto-generated method stub
 
 	}
-	
+
 	public static void main(String[] args) throws OpenGLException {
 		new Week9();
 	}

@@ -8,7 +8,7 @@ import comp3170.demos.week11.cameras.OrbitingCamera;
 import comp3170.demos.week11.lights.DirectionalLight;
 
 public class NormalMapScene extends SceneObject {
-	
+
 	public static NormalMapScene theScene = null;
 	private OrbitingCamera camera;
 	private DirectionalLight light;
@@ -16,11 +16,11 @@ public class NormalMapScene extends SceneObject {
 
 	public NormalMapScene() {
 		theScene = this;
-		
+
 		camera = new OrbitingCamera();
 		light = new DirectionalLight();
 		light.setParent(this);
-	
+
 		quad = new NormalMapQuad();
 		quad.setParent(this);
 	}

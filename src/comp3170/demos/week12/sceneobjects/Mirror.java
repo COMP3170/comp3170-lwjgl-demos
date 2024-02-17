@@ -52,7 +52,7 @@ public class Mirror extends SceneObject {
 	private int renderTexture;
 	private int debugTexture;
 	private boolean isDebugTexture = false;
-	
+
 	private Vector4f[] vertices;
 	private int vertexBuffer;
 	private Vector2f[] uvs;
@@ -65,17 +65,17 @@ public class Mirror extends SceneObject {
 	private int outlineBuffer;
 	private Vector4f outlineColour = new Vector4f(1,1,0,1); // yellow
 	private int frameBuffer;
-	
+
 	private boolean isDrawn = true;
-	
+
 	public Mirror(Camera mainCamera) {
 		shader = ShaderLibrary.instance.compileShader(VERTEX_SHADER, FRAGMENT_SHADER);
 		outlineShader = ShaderLibrary.instance.compileShader(OUTLINE_VERTEX_SHADER, OUTLINE_FRAGMENT_SHADER);
 		createQuad();
-		
+
 		camera = new MirrorCamera(this, mainCamera);
 		camera.setParent(this);
-		
+
 		renderTexture = TextureLibrary.instance.createRenderTexture(TEXTURE_WIDTH, TEXTURE_HEIGHT, GL_RGBA);
 		try {
 			frameBuffer = GLBuffers.createFrameBuffer(renderTexture);
@@ -83,7 +83,7 @@ public class Mirror extends SceneObject {
 			e.printStackTrace();
 			System.exit(1);
 		}
-		
+
 		try {
 			debugTexture = TextureLibrary.instance.loadTexture(DEBUG_TEXTURE);
 		} catch (IOException | OpenGLException e) {
@@ -95,7 +95,7 @@ public class Mirror extends SceneObject {
 	public void setDrawn(boolean drawn) {
 		isDrawn = drawn;
 	}
-	
+
 	public int getFrameBuffer() {
 		return frameBuffer;
 	}
@@ -107,48 +107,53 @@ public class Mirror extends SceneObject {
 	public Vector4f getVertex(int i, Vector4f dest) {
 		return dest.set(vertices[i]);
 	}
-	
+
 	private void createQuad() {
+		// @formatter:off
+
 		vertices = new Vector4f[] {
-			new Vector4f(-1, -1, 0, 1), 
-			new Vector4f(-1, 1, 0, 1), 
+			new Vector4f(-1, -1, 0, 1),
+			new Vector4f(-1, 1, 0, 1),
 			new Vector4f(1, -1, 0, 1),
-			new Vector4f(1, 1, 0, 1), 
+			new Vector4f(1, 1, 0, 1),
 		};
 
 		vertexBuffer = GLBuffers.createBuffer(vertices);
 
-		uvs = new Vector2f[] { 
-			new Vector2f(0, 0), 
-			new Vector2f(0, 1), 
-			new Vector2f(1, 0), 
-			new Vector2f(1, 1), 
+		uvs = new Vector2f[] {
+			new Vector2f(0, 0),
+			new Vector2f(0, 1),
+			new Vector2f(1, 0),
+			new Vector2f(1, 1),
 		};
 
 		uvBuffer = GLBuffers.createBuffer(uvs);
 
-		indices = new int[] { 
-			0, 1, 2, 
-			3, 2, 1, 
+		indices = new int[] {
+			0, 1, 2,
+			3, 2, 1,
 		};
 		indexBuffer = GLBuffers.createIndexBuffer(indices);
 
-		outline = new int[] { 
-			0, 1, 
-			1, 3, 
-			3, 2, 
-			2, 0, 
+		outline = new int[] {
+			0, 1,
+			1, 3,
+			3, 2,
+			2, 0,
 		};
 		outlineBuffer = GLBuffers.createIndexBuffer(outline);
+
+		// @formatter:on
+
 	}
 
 	private static final float ROTATION_SPEED = TAU/4;
-	
+
 	private Matrix4f modelMatrix = new Matrix4f();
 	private Matrix4f viewMatrix = new Matrix4f();
 	private Matrix4f projectionMatrix = new Matrix4f();
 	private Vector4f position = new Vector4f();
-	
+
 	public void update(float deltaTime, InputManager input) {
 
 		if (input.isKeyDown(GLFW_KEY_A)) {
@@ -163,12 +168,12 @@ public class Mirror extends SceneObject {
 		if (input.isKeyDown(GLFW_KEY_S)) {
 			getMatrix().rotateX(-ROTATION_SPEED * deltaTime);
 		}
-		
+
 		if (input.wasKeyPressed(GLFW_KEY_SPACE)) {
 			isDebugTexture = !isDebugTexture;
 		}
-		
-		camera.update();		
+
+		camera.update();
 		getModelToWorldMatrix(modelMatrix);
 		camera.getViewMatrix(viewMatrix);
 		camera.getProjectionMatrix(projectionMatrix);
@@ -178,36 +183,36 @@ public class Mirror extends SceneObject {
 			position.mul(1/position.w);
 			uvs[i].x = (position.x + 1) / 2;
 			uvs[i].y = (position.y + 1) / 2;
-		}	
-		
+		}
+
 		GLBuffers.updateBuffer(uvBuffer, uvs);
 	}
 
-	
+
 	@Override
 	protected void drawSelf(Matrix4f mvpMatrix) {
 		if (isDrawn) {
 			shader.enable();
-			
+
 			shader.setUniform("u_mvpMatrix", mvpMatrix);
 			shader.setAttribute("a_position", vertexBuffer);
 			shader.setAttribute("a_texcoord", uvBuffer);
-			
+
 			// textures
 			glActiveTexture(GL_TEXTURE0);
 			glBindTexture(GL_TEXTURE_2D, isDebugTexture ? debugTexture : renderTexture);
 			shader.setUniform("u_texture", 0);
-			
+
 			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
 			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 			glDrawElements(GL_TRIANGLES, indices.length, GL_UNSIGNED_INT, 0);
 		}
-		
+
 		outlineShader.enable();
 		outlineShader.setUniform("u_mvpMatrix", mvpMatrix);
 		outlineShader.setAttribute("a_position", vertexBuffer);
 		outlineShader.setUniform("u_colour", outlineColour);
-				
+
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, outlineBuffer);
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 		glDrawElements(GL_LINES, outline.length, GL_UNSIGNED_INT, 0);

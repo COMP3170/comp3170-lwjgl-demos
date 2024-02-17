@@ -15,27 +15,27 @@ public class Scene extends SceneObject {
 	private OrthographicCamera camera;
 	private DirectionalLight light;
 	private Cylinder cylinder;
-	
+
 	public Scene() {
 		// simple implementation of the Singleton pattern
 		// to allow scene objects to access camera and light
 		theScene = this;
-		
+
 		Grid grid = new Grid(10);
 		grid.setParent(this);
-		
+
 		Axes3D axes = new Axes3D();
 		axes.setParent(grid);
 
 		cylinder = new Cylinder();
 		cylinder.setParent(grid);
 		cylinder.getMatrix().scale(0.75f, 1f, 0.75f);
-		
+
 		camera = new OrthographicCamera();
 		light = new DirectionalLight();
 		light.setParent(this);
 	}
-	
+
 	public Camera getCamera() {
 		return camera;
 	}
@@ -43,11 +43,11 @@ public class Scene extends SceneObject {
 	public Light getLight() {
 		return light;
 	}
-	
+
 	public void update(InputManager input, float deltaTime) {
 		camera.update(deltaTime, input);
 		light.update(input, deltaTime);
 		cylinder.update(input, deltaTime);
 	}
-	
+
 }

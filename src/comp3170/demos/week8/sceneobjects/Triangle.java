@@ -25,12 +25,16 @@ public class Triangle extends SceneObject {
 	public Triangle(Color colour) {
 		shader = ShaderLibrary.instance.compileShader(VERTEX_SHADER, FRAGMENT_SHADER);
 
+		// @formatter:off
+
 		vertices = new Vector4f[] {
 			new Vector4f( 0, 1, 0, 1),
 			new Vector4f( 1, 0, 0, 1),
 			new Vector4f(-1, 0, 0, 1),
 		};
-		
+
+		// @formatter:on
+
 		vertexBuffer = GLBuffers.createBuffer(vertices);
 		
 		// convert java Color into RGBA

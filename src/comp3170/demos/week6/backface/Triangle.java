@@ -29,6 +29,8 @@ public class Triangle extends SceneObject {
 		// convert colour to RGB array of floats
 		colour.getRGBColorComponents(this.colour);
 
+		// @formatter:off
+
 		//         0
 		//       /   \
 		//     /       \       y
@@ -36,8 +38,7 @@ public class Triangle extends SceneObject {
 		//  1------*------2    +-x
 		//                    /
 		//                   z
-		
-		
+				
 		vertices = new Vector4f[] {
 			new Vector4f(0, 1, 0, 1),
 			new Vector4f(-1, 0, 0, 1),
@@ -45,6 +46,8 @@ public class Triangle extends SceneObject {
 		};
 			
 		vertexBuffer = GLBuffers.createBuffer(vertices);
+		
+		// @formatter:on
 	}
 
 	@Override

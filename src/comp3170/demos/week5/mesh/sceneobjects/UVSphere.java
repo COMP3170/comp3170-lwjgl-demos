@@ -72,13 +72,18 @@ public class UVSphere extends SceneObject {
 
 	
 	private void createIndexBuffer(int width, int height) {
+		
+		// @formatter:off
+
 		// Each quad looks like
 	    //
 	    // k+1 +--+ k + h + 2
 	    //     |\ |
 	    //     | \|
 	    //   k +--+ k + h + 1
-	    
+
+		// @formatter:on
+
 	    indices = new int[12 * width * height]; // 2 tris * 3  verts * width height
 
 	    int n = 0;

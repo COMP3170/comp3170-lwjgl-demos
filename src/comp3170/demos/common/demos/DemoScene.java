@@ -7,8 +7,8 @@ import comp3170.demos.common.lights.Light;
 import comp3170.demos.common.sceneobjects.Axes3D;
 
 /**
- * Template code for a Scene. 
- * 
+ * Template code for a Scene.
+ *
  * @author malcolmryan
  *
  */
@@ -17,18 +17,18 @@ public class DemoScene extends SceneObject {
 
 	public static DemoScene theScene;
 	private Camera camera;
-	private Light light;  
-	
+	private Light light;
+
 	public DemoScene() {
 		if (theScene != null) {
 			throw new IllegalStateException("Two instances of the Scene singleton have been created");
 		}
-		theScene = this;		
-		
+		theScene = this;
+
 		Axes3D axes = new Axes3D();
 		axes.setParent(this);
 	}
-	
+
 	public Camera getCamera() {
 		return camera;
 	}
@@ -38,6 +38,6 @@ public class DemoScene extends SceneObject {
 	}
 
 	public void update(InputManager input, float deltaTime) {
-		camera.update(deltaTime, input);	
-	}	
+		camera.update(deltaTime, input);
+	}
 }

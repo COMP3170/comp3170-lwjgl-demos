@@ -4,14 +4,14 @@ package comp3170.demos.week4.scenegraph;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_A;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_D;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_DOWN;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_L;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_LEFT;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_O;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_RIGHT;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_S;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_SPACE;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_UP;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_W;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_O;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_L;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_SPACE;
 import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.glClear;
 import static org.lwjgl.opengl.GL11.glClearColor;
@@ -34,14 +34,14 @@ import comp3170.Window;
 public class SceneGraphDemo implements IWindowListener {
 
 	public static final float TAU = (float) (2 * Math.PI);		// https://tauday.com/tau-manifesto
-	
+
 	private int width = 800;
 	private int height = 800;
 
 	private Window window;
 	private Shader shader;
-	
-	final private File DIRECTORY = new File("src/comp3170/demos/week4/scenegraph"); 
+
+	final private File DIRECTORY = new File("src/comp3170/demos/week4/scenegraph");
 	final private String VERTEX_SHADER = "vertex.glsl";
 	final private String FRAGMENT_SHADER = "fragment.glsl";
 
@@ -50,15 +50,15 @@ public class SceneGraphDemo implements IWindowListener {
 
 	private Matrix4f viewMatrix;
 	private Matrix4f projectionMatrix;
-	
+
 	private Matrix4f camGraphMatrix;
 	private Matrix4f camLocalMatrix;
-	
+
 	private SceneObject root;
 	private Arm[] arms;
 	private Camera camera;
 	private boolean showCamera = true;
-	
+
 	public SceneGraphDemo() throws OpenGLException {
 		window = new Window("Week 4 Camera Demo", width, height, this);
 		window.setResizable(true);
@@ -68,10 +68,10 @@ public class SceneGraphDemo implements IWindowListener {
 
 	@Override
 	public void init() {
-		
+
 		// set the background colour to black
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-		
+
 		// Compile the shader
 		try {
 			File vertexShader = new File(DIRECTORY, VERTEX_SHADER);
@@ -84,23 +84,23 @@ public class SceneGraphDemo implements IWindowListener {
 			e.printStackTrace();
 			System.exit(1);
 		}
-				
+
 		input = new InputManager(window);
 
 		// Set up the scene
 		//
 		// sceneGraph -> arm0 -> arm1 -> arm2
-		
+
 		root = new SceneObject();
-		
+
 		arms = new Arm[3];
-		
+
 	    arms[0] = new Arm(shader, 0.2f, 1);
 	    arms[0].setParent(root);
 	    arms[0].getMatrix().translate(0f, -1.0f, 0f);
 //	    arms[0].getMatrix().scale(2,1,1);		// this causes shear in child objects
 	    arms[0].setColour(Color.RED);
-	    
+
 	    arms[1] = new Arm(shader, 0.15f, 0.5f);
 	    arms[1].setParent(arms[0]);
 	    arms[1].getMatrix().translate(0f, 0.9f, 0f);
@@ -110,14 +110,14 @@ public class SceneGraphDemo implements IWindowListener {
 	    arms[2].setParent(arms[1]);
 	    arms[2].getMatrix().translate(0f, 0.4f, 0f);
 	    arms[2].setColour(Color.BLUE);
-	    
+
 	    camera = new Camera(shader);
-	    
+
 	    camera.setParent(arms[2]);
-	    
+
 //	    camera.getMatrix().translate(0, 0.2f, 0f);
-		
-		
+
+
 	    // allocation view and projection matrices
 	    viewMatrix = new Matrix4f();
 	    projectionMatrix = new Matrix4f();
@@ -129,12 +129,12 @@ public class SceneGraphDemo implements IWindowListener {
 	private final float MOVEMENT_SPEED = 0.1f;
 	private final float SCALE_SPEED = 0.1f;
 	private Vector3f armPosition = new Vector3f();
-	
+
 	private void update() {
 		long time = System.currentTimeMillis();
 		float deltaTime = (time - oldTime) / 1000f;
 		oldTime = time;
-		
+
 		if (input.isKeyDown(GLFW_KEY_A)) {
 			arms[0].getMatrix().translate(armPosition.x - MOVEMENT_SPEED * deltaTime, armPosition.y, 0f);
 		}
@@ -142,7 +142,7 @@ public class SceneGraphDemo implements IWindowListener {
 			arms[0].getMatrix().translate(armPosition.x + MOVEMENT_SPEED * deltaTime, armPosition.y, 0f);
 		}
 		float rot = ROTATION_SPEED * deltaTime;
-		
+
 		if (input.isKeyDown(GLFW_KEY_W)) {
 			arms[0].getMatrix().rotateZ(rot);
 		}
@@ -161,34 +161,34 @@ public class SceneGraphDemo implements IWindowListener {
 		if (input.isKeyDown(GLFW_KEY_DOWN)) {
 			arms[2].getMatrix().rotateZ(-rot);
 		}
-		
+
 		if (input.isKeyDown(GLFW_KEY_O)) {
 			arms[2].getMatrix().scale((float)Math.pow(SCALE_SPEED, -deltaTime));
 		}
 		if (input.isKeyDown(GLFW_KEY_L)) {
 			arms[2].getMatrix().scale((float)Math.pow(SCALE_SPEED, deltaTime));
 		}
-		
-		
+
+
 		if (input.wasKeyPressed(GLFW_KEY_SPACE)) {
 			showCamera = !showCamera;
 		}
-		
-		input.clear();		
+
+		input.clear();
 	}
-	
+
 	@Override
 	public void draw() {
-		
+
 		// update the scene
-		update();	
+		update();
 
         // clear the colour buffer
-		glClear(GL_COLOR_BUFFER_BIT);		
+		glClear(GL_COLOR_BUFFER_BIT);
 
 		// activate the shader
-		this.shader.enable();		
-				
+		this.shader.enable();
+
 		if (showCamera) {
 			viewMatrix.identity();
 			projectionMatrix.identity();
@@ -199,30 +199,30 @@ public class SceneGraphDemo implements IWindowListener {
 			camera.getViewMatrix(viewMatrix, camGraphMatrix);
 			camera.getProjectionMatrix(projectionMatrix, camLocalMatrix, width, height);
 		}
-		
+
 		shader.setUniform("u_viewMatrix", viewMatrix);
 		shader.setUniform("u_projectionMatrix", projectionMatrix);
-		
+
 		root.draw();
-		
+
 	}
 
 
 	@Override
 	public void resize(int width, int height) {
-		
+
 		this.width = width;
 		this.height = height;
 		glViewport(0, 0, width, height);
-		
+
 	}
 
 	@Override
 	public void close() {
-		
+
 	}
-	
-	public static void main(String[] args) throws OpenGLException { 
+
+	public static void main(String[] args) throws OpenGLException {
 		new SceneGraphDemo();
 	}
 

@@ -29,7 +29,7 @@ public class DepthScene extends SceneObject {
 		camera = new PerspectiveCamera();
 
 	}
-	
+
 	public Camera getCamera() {
 		return camera;
 	}

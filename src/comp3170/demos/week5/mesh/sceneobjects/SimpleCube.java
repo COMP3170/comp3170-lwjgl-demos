@@ -18,7 +18,7 @@ import comp3170.Shader;
 import comp3170.ShaderLibrary;
 
 public class SimpleCube extends SceneObject {
-	
+
 	private static final String VERTEX_SHADER = "simpleVertex.glsl";
 	private static final String FRAGMENT_SHADER = "simpleFragment.glsl";
 	private Shader shader;
@@ -30,17 +30,19 @@ public class SimpleCube extends SceneObject {
 
 	public SimpleCube() {
 		shader = ShaderLibrary.instance.compileShader(VERTEX_SHADER, FRAGMENT_SHADER);
-		
+
+		// @formatter:off
+
 		//          6-----7
 		//         /|    /|
 		//        / |   / |
 		//       1-----0  |     y    RHS coords
-		//       |  |  |  |     | 
+		//       |  |  |  |     |
 		//       |  5--|--4     +--x
 		//       | /   | /     /
 		//       |/    |/     z
 		//       2-----3
-		
+
 		vertices = new Vector4f[] {
 			new Vector4f( 1, 1, 1, 1),
 			new Vector4f(-1, 1, 1, 1),
@@ -51,7 +53,7 @@ public class SimpleCube extends SceneObject {
 			new Vector4f(-1, 1,-1, 1),
 			new Vector4f( 1, 1,-1, 1),
 		};
-		
+
 		vertexBuffer = GLBuffers.createBuffer(vertices);
 
 		// indices for the lines forming each face
@@ -60,35 +62,37 @@ public class SimpleCube extends SceneObject {
 			// front
 			0, 1, 2,
 			2, 3, 0,
-			
+
 			// back
 			4, 5, 6,
 			6, 7, 4,
-			
+
 			// top
 			0, 7, 6,
 			6, 1, 0,
-			
-			// bottom 
+
+			// bottom
 			2, 5, 4,
 			4, 3, 2,
-			
+
 			// left
 			2, 1, 6,
 			6, 5, 2,
-			
+
 			// right
 			7, 0, 3,
 			3, 4, 7,
-			
+
 		};
-		
+
 		indexBuffer = GLBuffers.createIndexBuffer(indices);
+
+		// @formatter:on
 
 		// scale down to fit in window
 		getMatrix().scale((float) (1.0f / Math.sqrt(3)));
 	}
-	
+
 	@Override
 	protected void drawSelf(Matrix4f modelMatrix) {
 		shader.enable();

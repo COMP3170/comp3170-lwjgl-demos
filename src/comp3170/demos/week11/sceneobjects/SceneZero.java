@@ -10,7 +10,7 @@ public class SceneZero extends AbstractScene {
 
 	public SceneZero() {
 		super();
-		
+
 		try {
 			int texture = TextureLibrary.instance.loadTexture(TEXTURE);
 			TexturedCube cube = new TexturedCube(texture);
@@ -18,6 +18,6 @@ public class SceneZero extends AbstractScene {
 			cube.getMatrix().scale(0.5f);
 		} catch (IOException | OpenGLException e) {
 			e.printStackTrace();
-		}		
+		}
 	}
 }

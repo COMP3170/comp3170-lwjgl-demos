@@ -36,6 +36,9 @@ public class Camera extends SceneObject {
 		position = new Vector3f(0,0,0);
 		angle = new AxisAngle4f(0,0,0,0);
 		scale = new Vector3f(0,0,0);
+		
+		// @formatter:off
+
 		// vertices for a 2x2 square with origin in the centre
 		// 
 		//  (-1,1)         (1,1)
@@ -55,6 +58,8 @@ public class Camera extends SceneObject {
 			-1f,  1f,
 		};
 		
+		// @formatter:on
+
 		// copy the data into a Vertex Buffer Object in graphics memory		
 	    vertexBuffer = GLBuffers.createBuffer(vertices, GL_FLOAT_VEC2);
 

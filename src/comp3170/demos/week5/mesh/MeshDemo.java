@@ -15,7 +15,7 @@ import comp3170.Window;
 
 public class MeshDemo implements IWindowListener {
 
-	private static final File COMMON_DIR = new File("src/comp3170/demos/common/shaders"); 
+	private static final File COMMON_DIR = new File("src/comp3170/demos/common/shaders");
 
 	private Window window;
 	private int screenWidth = 800;
@@ -31,16 +31,16 @@ public class MeshDemo implements IWindowListener {
 		window = new Window("Week 5 mesh demo", screenWidth, screenHeight, this);
 		window.run();
 	}
-	
+
 	@Override
 	public void init() {
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
 		// using the common shaders
 		new ShaderLibrary(COMMON_DIR);
-		
+
 		scene = new Scene();
-		
+
 	    // initialise oldTime
 		input = new InputManager(window);
 	    oldTime = System.currentTimeMillis();
@@ -53,7 +53,7 @@ public class MeshDemo implements IWindowListener {
 		oldTime = time;
 
 		scene.update(deltaTime, input);
-		
+
 		input.clear();
 	}
 

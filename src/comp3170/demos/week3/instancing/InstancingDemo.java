@@ -23,15 +23,15 @@ public class InstancingDemo implements IWindowListener {
 	final private File DIRECTORY = new File("src/comp3170/demos/week3/instancing");
 
 	final private int NSQUARES = 100;
-	
+
 	private Window window;
 
 	private int screenWidth = 800;
 	private int screenHeight = 800;
 	private Squares squares;
-	
+
 	private long oldTime;
-	
+
 	public InstancingDemo() throws OpenGLException {
 		window = new Window("Instancing demo", screenWidth, screenHeight, this);
 		window.run();
@@ -39,17 +39,17 @@ public class InstancingDemo implements IWindowListener {
 
 	/**
 	 * Initialise the GLCanvas
-	 * 
+	 *
 	 * <img src="images/square.png" />
-	 * 
+	 *
 	 */
 	@Override
 	public void init() {
-		
+
 		new ShaderLibrary(DIRECTORY);
-		
+
 	    squares = new Squares(NSQUARES);
-	    
+
 	    // initialise oldTime
 	    oldTime = System.currentTimeMillis();
 	}
@@ -62,19 +62,19 @@ public class InstancingDemo implements IWindowListener {
 
 		squares.update(deltaTime);
 	}
-	
+
 	@Override
 	/**
 	 * Called when the canvas is redrawn
 	 */
 	public void draw() {
 		update();
-		
+
 		// clear the colour buffer to black
 
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
-		
+
 		squares.draw();
 
 	}

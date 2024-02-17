@@ -4,15 +4,14 @@ import static comp3170.Math.TAU;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_DOWN;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_LEFT;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_RIGHT;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_UP;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_S;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_UP;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_W;
 
 import org.joml.Matrix4f;
 import org.joml.Vector4f;
 
 import comp3170.InputManager;
-import comp3170.demos.week10.cameras.Camera;
 
 public class PerspectiveCamera implements Camera {
 
@@ -21,10 +20,10 @@ public class PerspectiveCamera implements Camera {
 	private float near = 0.1f;
 	private float far = 100f;
 	private float distance = 5f;
-	
+
 	private Matrix4f cameraRotation = new Matrix4f();
 	private Matrix4f cameraMatrix = new Matrix4f();
-	
+
 	public PerspectiveCamera() {
 		// default settings
 	}
@@ -59,12 +58,12 @@ public class PerspectiveCamera implements Camera {
 		{
 			distance = distance + MOVEMENT_SPEED * deltaTime;
 		}
-		
+
 		if (input.isKeyDown(GLFW_KEY_W))
 		{
 			distance = distance - MOVEMENT_SPEED * deltaTime;
 		}
-		
+
 		cameraRotation.translate(0,0,distance, cameraMatrix);
 	}
 
@@ -79,5 +78,5 @@ public class PerspectiveCamera implements Camera {
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
+
 }

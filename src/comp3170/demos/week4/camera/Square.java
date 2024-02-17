@@ -34,7 +34,8 @@ public class Square {
 	private Vector3f colour;
 	
 	public Square(Shader shader) {
-		
+		// @formatter:off
+
 		// verices for a 1x1 square with origin in the centre
 		// 
 		//  (-0.5,0.5)   (0.5,0.5)
@@ -63,6 +64,8 @@ public class Square {
 	    };
 	    
 	    this.indexBuffer = GLBuffers.createIndexBuffer(indices);
+
+		// @formatter:on
 
 	    // set up transform
 	    

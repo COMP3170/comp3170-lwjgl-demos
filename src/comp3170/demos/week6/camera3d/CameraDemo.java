@@ -19,7 +19,7 @@ import comp3170.demos.week6.camera3d.sceneobjects.Scene;
 
 public class CameraDemo implements IWindowListener {
 
-	private static final File COMMON_DIR = new File("src/comp3170/demos/common/shaders"); 
+	private static final File COMMON_DIR = new File("src/comp3170/demos/common/shaders");
 
 	private int screenWidth = 800;
 	private int screenHeight = 800;
@@ -37,49 +37,49 @@ public class CameraDemo implements IWindowListener {
 		window.run();
 	}
 
-	
+
 	@Override
 	public void init() {
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
 		new ShaderLibrary(COMMON_DIR);
 		scene = new Scene();
-		
+
 		input = new InputManager(window);
-		oldTime = System.currentTimeMillis();		
+		oldTime = System.currentTimeMillis();
 	}
-	
+
 	private void update() {
 		long time = System.currentTimeMillis();
 		float deltaTime = (time-oldTime) / 1000f;
 		oldTime = time;
-		
-		scene.update(deltaTime, input);		
+
+		scene.update(deltaTime, input);
 		input.clear();
 	}
-	
+
 	private Matrix4f viewMatrix  = new Matrix4f();
 	private Matrix4f projectionMatrix  = new Matrix4f();
 	private Matrix4f mvpMatrix = new Matrix4f();
 
 	@Override
-	public void draw() {		
+	public void draw() {
 		update();
-		
+
         // clear the colour buffer
-		
-		glClear(GL_COLOR_BUFFER_BIT);		
-		
+
+		glClear(GL_COLOR_BUFFER_BIT);
+
 		// pre-multiply projection and view matrices
 
 		Camera camera = scene.getCamera();
 		camera.getViewMatrix(viewMatrix);
-		camera.getProjectionMatrix(projectionMatrix);		
+		camera.getProjectionMatrix(projectionMatrix);
 		mvpMatrix.set(projectionMatrix).mul(viewMatrix);
 
 		// draw the scene with the given MVP matrix
-		
-		scene.draw(mvpMatrix);		
+
+		scene.draw(mvpMatrix);
 	}
 
 	@Override
@@ -92,10 +92,10 @@ public class CameraDemo implements IWindowListener {
 	@Override
 	public void close() {
 		// TODO Auto-generated method stub
-		
+
 	}
-	
-	public static void main(String[] args) throws OpenGLException { 
+
+	public static void main(String[] args) throws OpenGLException {
 		new CameraDemo();
 	}
 

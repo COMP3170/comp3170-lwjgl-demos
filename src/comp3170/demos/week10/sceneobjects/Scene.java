@@ -10,25 +10,25 @@ public class Scene extends SceneObject {
 	public static Scene theScene = null;
 	private PerspectiveCamera camera;
 	private Quad quad;
-	
+
 	public Scene() {
 
 		theScene = this;
-		
+
 		quad = new Quad();
 		quad.setParent(theScene);
-		
+
 		camera = new PerspectiveCamera();
 
 	}
-	
+
 	public Camera getCamera() {
 		return camera;
 	}
-	
+
 	public void update(InputManager input, float deltaTime) {
 		camera.update(input, deltaTime);
-		//quad.update(input, deltaTime);
+		// quad.update(input, deltaTime);
 	}
-	
+
 }

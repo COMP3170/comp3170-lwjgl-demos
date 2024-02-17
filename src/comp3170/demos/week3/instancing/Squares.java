@@ -79,6 +79,8 @@ public class Squares {
 
 	private void makeMesh() {
 
+		// @formatter:off
+
 		vertices = new Vector4f[] { 
 			new Vector4f(-0.5f, -0.5f, 0, 1),     
 			new Vector4f( 0.5f, -0.5f, 0, 1),     
@@ -95,6 +97,7 @@ public class Squares {
 		};
 
 		indexBuffer = GLBuffers.createIndexBuffer(indices);
+		// @formatter:on
 	}
 
 	public void draw() {

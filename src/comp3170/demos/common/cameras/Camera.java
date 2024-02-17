@@ -1,7 +1,6 @@
 package comp3170.demos.common.cameras;
 
 import org.joml.Matrix4f;
-import org.joml.Vector4f;
 
 import comp3170.InputManager;
 

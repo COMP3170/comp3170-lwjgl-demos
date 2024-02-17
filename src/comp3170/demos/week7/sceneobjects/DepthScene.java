@@ -21,21 +21,21 @@ public class DepthScene extends SceneObject {
 		axes.setParent(this);
 		Grid grid = new Grid(10);
 		grid.setParent(this);
-		
+
 		Triangle redTriangle = new Triangle(Color.red);
 		redTriangle.setParent(this);
 		Triangle blueTriangle = new Triangle(Color.blue);
 		blueTriangle.setParent(this);
 		blueTriangle.getMatrix().rotateY(TAU/12);
-		
+
 		camera = new DepthSceneCamera();
 	}
-	
+
 	public Camera getCamera() {
 		return camera;
 	}
 
 	public void update(float deltaTime, InputManager input) {
-		camera.update(deltaTime, input);		
+		camera.update(deltaTime, input);
 	}
 }

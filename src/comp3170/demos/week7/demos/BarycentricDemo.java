@@ -29,7 +29,7 @@ public class BarycentricDemo implements IWindowListener {
 		window.run();
 	}
 
-	
+
 	@Override
 	public void init() {
 		glClearColor(0.5f, 0.0f, 0.0f, 1.0f);
@@ -38,10 +38,10 @@ public class BarycentricDemo implements IWindowListener {
 		triangle = new BarycentricTriangle();
 	}
 
-	
+
 	@Override
 	public void draw() {
-		glClear(GL_COLOR_BUFFER_BIT);		
+		glClear(GL_COLOR_BUFFER_BIT);
 		triangle.draw();
 	}
 

@@ -73,6 +73,7 @@ public class Sphere extends SceneObject {
 		//
 		// 2. Rotate copies of the grid point to form the six faces
 		//
+		// @formatter:off
 
 		Matrix4f[] sides = new Matrix4f[] { 
 			new Matrix4f(), // front
@@ -82,6 +83,7 @@ public class Sphere extends SceneObject {
 			new Matrix4f().rotateX(TAU / 4), // bottom
 			new Matrix4f().rotateX(-TAU / 4), // top
 		};
+		// @formatter:on
 
 		int n = sides.length * grid.length;
 		vertices = new Vector4f[n];
@@ -111,12 +113,16 @@ public class Sphere extends SceneObject {
 		// 3. create the index buffer for each face
 		//
 
+		// @formatter:off
+
 		// Each quad looks like
 		//
 		// k+1 +--+ k + n + 2
 		//     |\ |
 		//     | \|
 		//   k +--+ k + n + 1
+		//
+		// @formatter:on
 
 		indices = new int[6 * vertices.length]; // 2 tris * 3 verts * width * height
 

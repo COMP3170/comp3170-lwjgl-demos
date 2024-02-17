@@ -26,7 +26,8 @@ public class BarycentricTriangle extends SceneObject {
 		shader = ShaderLibrary.instance.compileShader(VERTEX_SHADER, FRAGMENT_SHADER);
 
 		// draw a triangle
-		
+		// @formatter:off
+
 		vertices = new Vector4f[] {
 			new Vector4f(   0,   0.8f, 0, 1),
 			new Vector4f(-0.4f, -0.8f, 0, 1),
@@ -40,23 +41,22 @@ public class BarycentricTriangle extends SceneObject {
 			new Vector3f(0,1,0),
 			new Vector3f(0,0,1),
 		};
-		
+
 		barycentricBuffer = GLBuffers.createBuffer(barcentricCoords);
 
-		
+		// @formatter:on
 	}
-	
+
 	@Override
 	protected void drawSelf(Matrix4f mvpMatrix) {
 		shader.enable();
-		
+
 		shader.setUniform("u_mvpMatrix", mvpMatrix);
 		shader.setAttribute("a_position", vertexBuffer);
 		shader.setAttribute("a_barycentric", barycentricBuffer);
-		
+
 		glDrawArrays(GL_TRIANGLES, 0, vertices.length);
 
 	}
 
-	
 }

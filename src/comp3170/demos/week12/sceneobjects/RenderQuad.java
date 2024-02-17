@@ -33,8 +33,11 @@ public class RenderQuad extends SceneObject {
 	private int[] indices;
 	private int indexBuffer;
 	private int[] textures;
-	
+
 	public RenderQuad() {
+
+		// @formatter:off
+
 		//  2----3
 		//  |\   |
 		//  | \  |
@@ -48,7 +51,7 @@ public class RenderQuad extends SceneObject {
 			new Vector4f(-1,  1, 0, 1),
 			new Vector4f( 1,  1, 0, 1),
 		};
-		
+
 		vertexBuffer = GLBuffers.createBuffer(vertices);
 
 		uvs = new Vector2f[] {
@@ -57,7 +60,7 @@ public class RenderQuad extends SceneObject {
 			new Vector2f(0,1),
 			new Vector2f(1,1),
 		};
-			
+
 		uvBuffer = GLBuffers.createBuffer(uvs);
 
 		indices = new int[] {
@@ -65,28 +68,31 @@ public class RenderQuad extends SceneObject {
 			3,2,1,
 		};
 		indexBuffer = GLBuffers.createIndexBuffer(indices);
-		
+
 		textures = new int[2];
+
+		// @formatter:on
+
 	}
-	
+
 	public void setShader(Shader shader) {
 		this.shader = shader;
 	}
 
-	public void setTexture(int id, int texture)  {
+	public void setTexture(int id, int texture) {
 		textures[id] = texture;
 	}
-	
-	private int[] textureResolution = new int[] {100, 100};
-	
+
+	private int[] textureResolution = new int[] { 100, 100 };
+
 	@Override
 	protected void drawSelf(Matrix4f matrix) {
 		shader.enable();
-		
+
 		// vertex attributes
 		shader.setAttribute("a_position", vertexBuffer);
 		shader.setAttribute("a_texcoord", uvBuffer);
-		
+
 		// textures
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, textures[0]);
@@ -99,10 +105,10 @@ public class RenderQuad extends SceneObject {
 		// toon shading
 		shader.setUniform("u_buckets", 4f);
 		shader.setUniform("u_textureResolution", textureResolution);
-				
+
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
-		glDrawElements(GL_TRIANGLES, indices.length, GL_UNSIGNED_INT, 0);		
+		glDrawElements(GL_TRIANGLES, indices.length, GL_UNSIGNED_INT, 0);
 	}
-	
+
 }

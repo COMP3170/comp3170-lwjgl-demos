@@ -16,7 +16,6 @@ import org.joml.Matrix4f;
 import comp3170.IWindowListener;
 import comp3170.InputManager;
 import comp3170.OpenGLException;
-import comp3170.SceneObject;
 import comp3170.ShaderLibrary;
 import comp3170.Window;
 import comp3170.demos.common.cameras.Camera;
@@ -32,24 +31,24 @@ public class DepthDemo implements IWindowListener {
 
 	private InputManager input;
 	private long oldTime;
-	
+
 	private DepthScene scene;
 
 	public DepthDemo() throws OpenGLException {
 		window = new Window("Antialiasing demo", screenWidth, screenHeight, this);
-		window.run();		
+		window.run();
 	}
-	
+
 	@Override
 	public void init() {
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		glEnable(GL_DEPTH_TEST);
 
 		new ShaderLibrary(COMMON_DIR);
-		
+
 		// set up scene
 		scene = new DepthScene();
-		
+
 	    // initialise oldTime
 		input = new InputManager(window);
 	    oldTime = System.currentTimeMillis();
@@ -59,10 +58,10 @@ public class DepthDemo implements IWindowListener {
 		long time = System.currentTimeMillis();
 		float deltaTime = (time - oldTime) / 1000f;
 		oldTime = time;
-		
+
 		scene.update(deltaTime, input);
 	}
-	
+
 	private Matrix4f viewMatrix = new Matrix4f();
 	private Matrix4f projectionMatrix = new Matrix4f();
 	private Matrix4f mvpMatrix = new Matrix4f();
@@ -70,18 +69,18 @@ public class DepthDemo implements IWindowListener {
 	@Override
 	public void draw() {
 		update();
-		
-		glClear(GL_COLOR_BUFFER_BIT);		
+
+		glClear(GL_COLOR_BUFFER_BIT);
 		glViewport(0, 0, screenWidth, screenHeight);
 
 		glClearDepth(1f);
-		glClear(GL_DEPTH_BUFFER_BIT);		
+		glClear(GL_DEPTH_BUFFER_BIT);
 
 		Camera camera = scene.getCamera();
 		camera.getViewMatrix(viewMatrix);
-		camera.getProjectionMatrix(projectionMatrix);		
+		camera.getProjectionMatrix(projectionMatrix);
 		mvpMatrix.set(projectionMatrix).mul(viewMatrix);
-		
+
 		scene.draw(mvpMatrix);
 	}
 
@@ -100,5 +99,5 @@ public class DepthDemo implements IWindowListener {
 	public static void main(String[] args) throws OpenGLException {
 		new DepthDemo();
 	}
-	
+
 }

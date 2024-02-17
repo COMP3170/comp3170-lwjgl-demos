@@ -28,16 +28,16 @@ import comp3170.demos.week10.sceneobjects.Explosion;
 
 public class ParticleDemo implements IWindowListener {
 
-	private static final File COMMON_DIR = new File("src/comp3170/demos/common/shaders"); 
-	private static final File SHADER_DIR = new File("src/comp3170/demos/week10/shaders"); 
-	private static final File TEXTURE_DIR = new File("src/comp3170/demos/week10/textures"); 
+	private static final File COMMON_DIR = new File("src/comp3170/demos/common/shaders");
+	private static final File SHADER_DIR = new File("src/comp3170/demos/week10/shaders");
+	private static final File TEXTURE_DIR = new File("src/comp3170/demos/week10/textures");
 
 	public static ParticleDemo instance;
-	
+
 	private Window window;
 	private int screenWidth = 1000;
 	private int screenHeight = 1000;
-	
+
 	private InputManager input;
 	private long oldTime;
 	private ExplosionCamera camera;
@@ -47,13 +47,13 @@ public class ParticleDemo implements IWindowListener {
 		// Simple singleton
 		instance = this;
 		window = new Window("Particle demo", screenWidth, screenHeight, this);
-		window.run();		
+		window.run();
 	}
-	
+
 	public Camera getCamera() {
 		return camera;
 	}
-	
+
 	@Override
 	public void init() {
 		glEnable(GL_DEPTH_TEST);
@@ -65,23 +65,23 @@ public class ParticleDemo implements IWindowListener {
 
 		new ShaderLibrary(COMMON_DIR).addPath(SHADER_DIR);
 		new TextureLibrary(TEXTURE_DIR);
-		
+
 		camera = new ExplosionCamera();
 		explosion = new Explosion();
 
 		input = new InputManager(window);
-	    oldTime = System.currentTimeMillis();		
+	    oldTime = System.currentTimeMillis();
 	}
 
 	private void update() {
 		long time = System.currentTimeMillis();
 		float deltaTime = (time - oldTime) / 1000f;
 		oldTime = time;
-		
+
 		camera.update(input, deltaTime);
 		input.clear();
 	}
-	
+
 	private Matrix4f viewMatrix = new Matrix4f();
 	private Matrix4f projectionMatrix = new Matrix4f();
 	private Matrix4f mvpMatrix = new Matrix4f();
@@ -89,27 +89,27 @@ public class ParticleDemo implements IWindowListener {
 	@Override
 	public void draw() {
 		update();
-		
-		glClear(GL_COLOR_BUFFER_BIT);		
-		glClear(GL_DEPTH_BUFFER_BIT);		
-		
+
+		glClear(GL_COLOR_BUFFER_BIT);
+		glClear(GL_DEPTH_BUFFER_BIT);
+
 		camera.getViewMatrix(viewMatrix);
-		camera.getProjectionMatrix(projectionMatrix);		
+		camera.getProjectionMatrix(projectionMatrix);
 		mvpMatrix.set(projectionMatrix).mul(viewMatrix);
-		
+
 		explosion.draw(mvpMatrix);
 	}
 
 	@Override
 	public void resize(int width, int height) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void close() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	public static void main(String[] args) throws OpenGLException {

@@ -20,13 +20,13 @@ public class OrthographicCamera implements Camera {
 	private static final float FAR = 10f;
 	private static final float DISTANCE = 5f;
 	private static final float ELEVATION = 0.5f;
-	
+
 	private Matrix4f cameraMatrix = new Matrix4f();
-	
+
 	public OrthographicCamera() {
-		
+
 	}
-		
+
 	@Override
 	public Matrix4f getViewMatrix(Matrix4f dest) {
 		return cameraMatrix.invert(dest);
@@ -36,7 +36,7 @@ public class OrthographicCamera implements Camera {
 	public Matrix4f getProjectionMatrix(Matrix4f dest) {
 		return dest.setOrthoSymmetric(WIDTH, HEIGHT, NEAR, FAR);
 	}
-	
+
 	@Override
 	public Vector4f getViewVector(Vector4f dest) {
 		// the view vector is the k-axis of the cameraMatrix
@@ -68,5 +68,5 @@ public class OrthographicCamera implements Camera {
 		cameraMatrix.translate(0, 0, DISTANCE);
 	}
 
-	
+
 }

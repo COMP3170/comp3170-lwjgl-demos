@@ -5,7 +5,6 @@ import static org.lwjgl.glfw.GLFW.GLFW_KEY_Q;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_Z;
 
 import org.joml.Matrix4f;
-import org.joml.Vector4f;
 
 import comp3170.InputManager;
 
@@ -35,6 +34,7 @@ public class OrthographicOrbittingCamera extends OrbittingCamera {
 		return dest.setOrtho(-width / 2, width / 2, -height / 2, height / 2, near, far);
 	}
 
+	@Override
 	public void update(float deltaTime, InputManager input) {
 
 		super.update(deltaTime, input);
@@ -42,12 +42,12 @@ public class OrthographicOrbittingCamera extends OrbittingCamera {
 			width += ZOOM_CHANGE * deltaTime;
 			height += ZOOM_CHANGE * deltaTime;
 		}
-		
+
 		if (input.isKeyDown(GLFW_KEY_A)) {
 			width = ZOOM_DEFAULT;
 			height = ZOOM_DEFAULT;
 		}
-		
+
 		if (input.isKeyDown(GLFW_KEY_Q)) {
 			width -= ZOOM_CHANGE * deltaTime;
 			height -= ZOOM_CHANGE * deltaTime;

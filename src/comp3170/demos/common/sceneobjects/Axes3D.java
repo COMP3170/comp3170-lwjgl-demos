@@ -19,17 +19,19 @@ public class Axes3D extends SceneObject {
 	private int xVertexBuffer;
 	private int yVertexBuffer;
 	private int zVertexBuffer;
-	
-	private float[] xColour = new float[] {1, 0, 0, 1}; // RED
-	private float[] yColour = new float[] {0, 1, 0, 1}; // GREEN
-	private float[] zColour = new float[] {0, 0, 1, 1}; // BLUE
-	
+
+	private float[] xColour = new float[] { 1, 0, 0, 1 }; // RED
+	private float[] yColour = new float[] { 0, 1, 0, 1 }; // GREEN
+	private float[] zColour = new float[] { 0, 0, 1, 1 }; // BLUE
+
 	final private String VERTEX_SHADER = "simpleVertex.glsl";
 	final private String FRAGMENT_SHADER = "simpleFragment.glsl";
 	private Shader shader;
 
 	public Axes3D() {
 		shader = ShaderLibrary.instance.compileShader(VERTEX_SHADER, FRAGMENT_SHADER);
+
+		// @formatter:off
 
 		xAxis = new Vector4f[] {
 			new Vector4f(0, 0, 0, 1),
@@ -46,36 +48,36 @@ public class Axes3D extends SceneObject {
 				new Vector4f(0, 0, 1, 1),
 		};
 
+		// @formatter:on
+
 		xVertexBuffer = GLBuffers.createBuffer(xAxis);
 		yVertexBuffer = GLBuffers.createBuffer(yAxis);
 		zVertexBuffer = GLBuffers.createBuffer(zAxis);
 	}
-	
-	
-	
+
 	@Override
 	protected void drawSelf(Matrix4f matrix) {
-		
+
 		shader.enable();
 		shader.setUniform("u_mvpMatrix", matrix);
-		
+
 		// X axis
-		
-	    shader.setAttribute("a_position", xVertexBuffer);
-	    shader.setUniform("u_colour", xColour);	   	    
-		glDrawArrays(GL_LINES, 0, xAxis.length);           	
+
+		shader.setAttribute("a_position", xVertexBuffer);
+		shader.setUniform("u_colour", xColour);
+		glDrawArrays(GL_LINES, 0, xAxis.length);
 
 		// Y axis
-		
-	    shader.setAttribute("a_position", yVertexBuffer);
-	    shader.setUniform("u_colour", yColour);	   	    
-		glDrawArrays(GL_LINES, 0, yAxis.length);           	
+
+		shader.setAttribute("a_position", yVertexBuffer);
+		shader.setUniform("u_colour", yColour);
+		glDrawArrays(GL_LINES, 0, yAxis.length);
 
 		// Z axis
-		
-	    shader.setAttribute("a_position", zVertexBuffer);
-	    shader.setUniform("u_colour", zColour);	   	    
-		glDrawArrays(GL_LINES, 0, zAxis.length);           	
+
+		shader.setAttribute("a_position", zVertexBuffer);
+		shader.setUniform("u_colour", zColour);
+		glDrawArrays(GL_LINES, 0, zAxis.length);
 
 	}
 

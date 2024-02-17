@@ -5,17 +5,12 @@ import static org.lwjgl.opengl.GL11.glClear;
 import static org.lwjgl.opengl.GL11.glClearColor;
 import static org.lwjgl.opengl.GL11.glViewport;
 
-import java.awt.Color;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
-
-import org.joml.Vector2f;
 
 import comp3170.IWindowListener;
 import comp3170.OpenGLException;
-import comp3170.Shader;
 import comp3170.ShaderLibrary;
 import comp3170.Window;
 
@@ -28,19 +23,19 @@ public class AnimationDemo implements IWindowListener {
 
 	final private File DIRECTORY = new File("src/comp3170/demos/week3/animation");
 
-	
+
 	private Window window;
 
 	private int screenWidth = 800;
 	private int screenHeight = 800;
-	
+
 	private int frameRate = 100;
-	
+
 	private long oldTime;
 
 
 	private Scene scene;
-	
+
 	public AnimationDemo() throws OpenGLException {
 		window = new Window("Week 3", screenWidth, screenHeight, this);
 		window.run();
@@ -48,16 +43,16 @@ public class AnimationDemo implements IWindowListener {
 
 	/**
 	 * Initialise the GLCanvas
-	 * 
+	 *
 	 * <img src="images/square.png" />
-	 * 
+	 *
 	 */
 	@Override
 	public void init() {
-				
+
 		new ShaderLibrary(DIRECTORY);
 		scene = new Scene();
-		
+
 	    // initialise oldTime
 	    oldTime = System.currentTimeMillis();
 	}
@@ -71,21 +66,21 @@ public class AnimationDemo implements IWindowListener {
 
 		scene.update(deltaTime);
 	}
-	
+
 	@Override
 	/**
 	 * Called when the canvas is redrawn
 	 */
 	public void draw() {
 		update();
-		
+
 		// clear the colour buffer to black
 
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
-		
+
 		scene.draw();
-		
+
 		// restrict the framerate by sleeping between frames
 		try {
 			TimeUnit.MILLISECONDS.sleep(1000 / frameRate);

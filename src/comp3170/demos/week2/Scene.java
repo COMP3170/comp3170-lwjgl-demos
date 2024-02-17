@@ -18,7 +18,7 @@ import comp3170.Shader;
 import comp3170.ShaderLibrary;
 
 public class Scene {
-	
+
 	final private String VERTEX_SHADER = "colour_vertex.glsl";
 	final private String FRAGMENT_SHADER = "colour_fragment.glsl";
 
@@ -37,24 +37,24 @@ public class Scene {
 		// calculate the vertices of a hexagon as (x,y) pairs
 
 		vertices = new Vector4f[7];
-		
+
 		// the centre
 
 		int n = 0;
 		vertices[n++] = new Vector4f(0,0,0,1);	// x
-		
+
 		// the outer ring
-		
+
 		float radius = 0.8f;
-		
+
 		for (int i = 1; i <= 6; i++) {
 			double angle = i * TAU / 6;
 			float x = (float) (radius * Math.cos(angle));	// x
 			float y = (float) (radius * Math.sin(angle)); // y
-			vertices[n++] = new Vector4f(x, y, 0 , 1); 
+			vertices[n++] = new Vector4f(x, y, 0 , 1);
 		}
-				
-		// copy the data into a Vertex Buffer Object in graphics memory		
+
+		// copy the data into a Vertex Buffer Object in graphics memory
 	    vertexBuffer = GLBuffers.createBuffer(vertices);
 
 	    // @formatter: off
@@ -69,9 +69,9 @@ public class Scene {
 		};
 	    // @formatter: on
 
-		// copy the data into a Vertex Buffer Object in graphics memory		
+		// copy the data into a Vertex Buffer Object in graphics memory
 	    colourBuffer = GLBuffers.createBuffer(colours);
-	    
+
 	    // @formatter: off
 	    indices = new int[] {
 	    	0, 1, 2,
@@ -79,10 +79,10 @@ public class Scene {
 	    	0, 3, 4,
 	    	0, 4, 5,
 	    	0, 5, 6,
-	    	0, 6, 1,	    		
+	    	0, 6, 1,
 	    };
 	    // @formatter: on
-	    
+
 	    indexBuffer = GLBuffers.createIndexBuffer(indices);
 
 	}
@@ -91,19 +91,19 @@ public class Scene {
 	public void draw() {
 		// activate the shader
 		shader.enable();
-		
-        // connect the vertex buffer to the a_position attribute		   
+
+        // connect the vertex buffer to the a_position attribute
 	    shader.setAttribute("a_position", vertexBuffer);
 	    shader.setAttribute("a_colour", colourBuffer);
 
-	    // write the colour value into the u_colour uniform 
-//	    float[] colour = {1.0f, 0.0f, 1.0f};	    
-//	    shader.setUniform("u_colour", colour);	    
-	    
+	    // write the colour value into the u_colour uniform
+//	    float[] colour = {1.0f, 0.0f, 1.0f};
+//	    shader.setUniform("u_colour", colour);
+
 	    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
-	    
+
 	    // draw triangles as wireframe or filled
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-	    glDrawElements(GL_TRIANGLES, indices.length, GL_UNSIGNED_INT, 0);		
+	    glDrawElements(GL_TRIANGLES, indices.length, GL_UNSIGNED_INT, 0);
 	}
 }

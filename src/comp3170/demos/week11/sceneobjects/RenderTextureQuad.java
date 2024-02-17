@@ -32,13 +32,12 @@ public class RenderTextureQuad extends SceneObject {
 
 	private int renderTexture;
 	private int frameBuffer;
-	
 
 	public RenderTextureQuad(Shader shader, int width, int height) {
 		this.shader = shader;
-		createQuad();	
+		createQuad();
 		renderTexture = TextureLibrary.instance.createRenderTexture(width, height, GL_RGBA);
-		
+
 		try {
 			frameBuffer = GLBuffers.createFrameBuffer(renderTexture);
 		} catch (OpenGLException e) {
@@ -57,26 +56,28 @@ public class RenderTextureQuad extends SceneObject {
 	}
 
 	private void createQuad() {
-		
+
 		// Create a quad that fills the sceen in NDC space
-		
+
+		// @formatter:off
+
 		//  2---3
 		//  |\  |    y
 		//  | * |    |
 		//  |  \|    +--x
 		//  0---1   /
 		//         z (out)
-		
+
 		vertices = new Vector4f[] {
 			new Vector4f(-1, -1, 0, 1),	// 0
 			new Vector4f( 1, -1, 0, 1), // 1
-			new Vector4f(-1,  1, 0, 1),	// 2 
-			
+			new Vector4f(-1,  1, 0, 1),	// 2
+
 			new Vector4f( 1,  1, 0, 1), // 3
-			new Vector4f(-1,  1, 0, 1),	// 2 
+			new Vector4f(-1,  1, 0, 1),	// 2
 			new Vector4f( 1, -1, 0, 1), // 1
 		};
-		
+
 		vertexBuffer = GLBuffers.createBuffer(vertices);
 
 		uvs = new Vector2f[] {
@@ -88,22 +89,22 @@ public class RenderTextureQuad extends SceneObject {
 			new Vector2f(0, 1),
 			new Vector2f(1, 0),
 		};
-			
-		uvBuffer = GLBuffers.createBuffer(uvs);
-		
-	}
 
+		uvBuffer = GLBuffers.createBuffer(uvs);
+		// @formatter:on
+
+	}
 
 	@Override
 	public void drawSelf(Matrix4f mvpMatrix) {
 		shader.enable();
-		
+
 		// no MVP matrix, as the quad is draw directly in NDC space
-		
+
 		// vertex attributes
 		shader.setAttribute("a_position", vertexBuffer);
 		shader.setAttribute("a_texcoord", uvBuffer);
-		
+
 		// textures
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, renderTexture);

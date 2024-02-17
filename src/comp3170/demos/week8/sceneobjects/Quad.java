@@ -33,22 +33,26 @@ public class Quad extends SceneObject {
 	public Quad(Color colour) {
 		shader = ShaderLibrary.instance.compileShader(VERTEX_SHADER, FRAGMENT_SHADER);
 
+		// @formatter:off
+
 		vertices = new Vector4f[] {
 			new Vector4f( 1, 1, 0, 1),
 			new Vector4f(-1, 1, 0, 1),
 			new Vector4f( 1,-1, 0, 1),
 			new Vector4f(-1,-1, 0, 1),
 		};
-		
+
 		vertexBuffer = GLBuffers.createBuffer(vertices);
-		
+
 		indices = new int[] {
 			0, 1, 2,
 			3, 2, 1,
 		};
-		
+
 		indexBuffer = GLBuffers.createIndexBuffer(indices);
-		
+
+		// @formatter:on
+
 		// convert java COlor into RGBA
 		float[] rgb = colour.getComponents(new float[4]);
 		this.colour = new Vector4f(rgb[0], rgb[1], rgb[2], 1);
@@ -67,7 +71,7 @@ public class Quad extends SceneObject {
 		glDrawElements(GL_TRIANGLES, indices.length, GL_UNSIGNED_INT, 0);
 
 	}
-	
-	
-	
+
+
+
 }

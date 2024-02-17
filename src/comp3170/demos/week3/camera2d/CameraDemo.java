@@ -1,8 +1,5 @@
 package comp3170.demos.week3.camera2d;
 
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_A;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_D;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_E;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_KP_0;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_KP_1;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_KP_2;
@@ -11,11 +8,6 @@ import static org.lwjgl.glfw.GLFW.GLFW_KEY_KP_6;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_KP_7;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_KP_8;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_KP_9;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_Q;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_S;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_W;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_X;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_Z;
 import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.GL_SCISSOR_TEST;
 import static org.lwjgl.opengl.GL11.glClear;
@@ -48,13 +40,13 @@ public class CameraDemo implements IWindowListener {
 	final private File DIRECTORY = new File("src/comp3170/demos/week3/camera2d");
 	final private String VERTEX_SHADER = "vertex.glsl";
 	final private String FRAGMENT_SHADER = "fragment.glsl";
-	
+
 	private Shader shader;
 	private Window window;
 
 	private int width = 1200;
 	private int height = 1200;
-	
+
 	private long oldTime;
 	private InputManager input;
 
@@ -63,7 +55,7 @@ public class CameraDemo implements IWindowListener {
 	private Axes2D cameraAxes;
 	private House house;
 	private CameraView camera;
-	
+
 	public CameraDemo() throws OpenGLException {
 		window = new Window("Model / World / View / NDC", width, height, this);
 		window.setResizable(true);
@@ -72,18 +64,18 @@ public class CameraDemo implements IWindowListener {
 
 	/**
 	 * Initialise the GLCanvas
-	 * 
+	 *
 	 * <img src="images/square.png" />
-	 * 
+	 *
 	 */
 	@Override
 	public void init() {
 		glEnable(GL_SCISSOR_TEST);
 
 		new ShaderLibrary(DIRECTORY);
-		
+
 		// Note: I didn't use a Scene class here, as it would make the draw code below more complicated.
-		
+
 		// Compile the shader
 		shader = ShaderLibrary.instance.compileShader(VERTEX_SHADER, FRAGMENT_SHADER);
 
@@ -92,10 +84,10 @@ public class CameraDemo implements IWindowListener {
 		cameraAxes = new Axes2D();
 		house = new House();
 		camera = new CameraView();
-				
+
 	    // initialise oldTime
 	    oldTime = System.currentTimeMillis();
-		// add an input manager 
+		// add an input manager
 		input = new InputManager(window);
 
 	}
@@ -109,16 +101,16 @@ public class CameraDemo implements IWindowListener {
 	private static final float ROTATION_SPEED = TAU / 6;
 	private static final float SCALE_SPEED = 1.1f;
 	private float cameraScale = 1;
-	
+
 	private void update() {
 		long time = System.currentTimeMillis();
 		float dt = (time - oldTime) / 1000f;
 		oldTime = time;
 
 		house.update(input, dt);
-		
+
 		// Camera movement using keypad KP_
-		
+
 		if (input.isKeyDown(GLFW_KEY_KP_1)) {
 			float s = (float)Math.pow(SCALE_SPEED, dt);
 			cameraScale *= s;
@@ -131,68 +123,68 @@ public class CameraDemo implements IWindowListener {
 			cameraModelMatrix.scale(1f/s); 		// scale down
 			perspectiveMatrix.scale(s); 	// scale up
 		}
-		
+
 		if (input.isKeyDown(GLFW_KEY_KP_7)) {
-			cameraModelMatrix.rotateZ(ROTATION_SPEED * dt);	
-			viewMatrix.rotateLocalZ(-ROTATION_SPEED * dt);	
+			cameraModelMatrix.rotateZ(ROTATION_SPEED * dt);
+			viewMatrix.rotateLocalZ(-ROTATION_SPEED * dt);
 		}
 		if (input.isKeyDown(GLFW_KEY_KP_9)) {
-			cameraModelMatrix.rotateZ(-ROTATION_SPEED * dt);	
-			viewMatrix.rotateLocalZ(ROTATION_SPEED * dt);	
+			cameraModelMatrix.rotateZ(-ROTATION_SPEED * dt);
+			viewMatrix.rotateLocalZ(ROTATION_SPEED * dt);
 		}
 		if (input.isKeyDown(GLFW_KEY_KP_8)) {
-			cameraModelMatrix.translate(0, MOVEMENT_SPEED / cameraScale * dt, 0);	
-			viewMatrix.translateLocal(0, -MOVEMENT_SPEED * dt, 0);	
+			cameraModelMatrix.translate(0, MOVEMENT_SPEED / cameraScale * dt, 0);
+			viewMatrix.translateLocal(0, -MOVEMENT_SPEED * dt, 0);
 		}
 		if (input.isKeyDown(GLFW_KEY_KP_2)) {
-			cameraModelMatrix.translate(0, -MOVEMENT_SPEED / cameraScale * dt, 0);	
-			viewMatrix.translateLocal(0, MOVEMENT_SPEED * dt, 0);	
+			cameraModelMatrix.translate(0, -MOVEMENT_SPEED / cameraScale * dt, 0);
+			viewMatrix.translateLocal(0, MOVEMENT_SPEED * dt, 0);
 		}
 		if (input.isKeyDown(GLFW_KEY_KP_4)) {
-			cameraModelMatrix.translate(-MOVEMENT_SPEED / cameraScale *dt, 0, 0);	
-			viewMatrix.translateLocal(MOVEMENT_SPEED * dt, 0, 0);	
+			cameraModelMatrix.translate(-MOVEMENT_SPEED / cameraScale *dt, 0, 0);
+			viewMatrix.translateLocal(MOVEMENT_SPEED * dt, 0, 0);
 		}
 		if (input.isKeyDown(GLFW_KEY_KP_6)) {
-			cameraModelMatrix.translate(MOVEMENT_SPEED / cameraScale *dt, 0, 0);	
-			viewMatrix.translateLocal(-MOVEMENT_SPEED * dt, 0, 0);	
+			cameraModelMatrix.translate(MOVEMENT_SPEED / cameraScale *dt, 0, 0);
+			viewMatrix.translateLocal(-MOVEMENT_SPEED * dt, 0, 0);
 		}
 
 		input.clear();
 	}
-	
+
 	@Override
 	/**
 	 * Called when the canvas is redrawn
 	 */
-	public void draw() {	
+	public void draw() {
 		update();
-		
+
 		shader.enable();
 
 		// MODEL COORDINATES
-		
+
 		glViewport(0,height/2,width/2,height/2);
 		glScissor(0,height/2,width/2,height/2);
-		glClearColor(0.1f, 0.0f, 0.0f, 1.0f);			
-		glClear(GL_COLOR_BUFFER_BIT);		
-		
+		glClearColor(0.1f, 0.0f, 0.0f, 1.0f);
+		glClear(GL_COLOR_BUFFER_BIT);
+
 		shader.setUniform("u_modelMatrix", identity);
-		shader.setUniform("u_viewMatrix", identity);		
-		shader.setUniform("u_perspectiveMatrix", identity);	
-		
+		shader.setUniform("u_viewMatrix", identity);
+		shader.setUniform("u_perspectiveMatrix", identity);
+
 		modelAxes.draw(shader);
 		house.draw(shader);
 
 		// WORLD COORDINATES
-		
+
 		glViewport(width/2,height/2,width/2,height/2);
 		glScissor(width/2,height/2,width/2,height/2);
-		glClearColor(0.0f, 0.1f, 0.0f, 1.0f);			
-		glClear(GL_COLOR_BUFFER_BIT);		
-		
+		glClearColor(0.0f, 0.1f, 0.0f, 1.0f);
+		glClear(GL_COLOR_BUFFER_BIT);
+
 		shader.setUniform("u_modelMatrix", identity);
-		shader.setUniform("u_viewMatrix", identity);		
-		shader.setUniform("u_perspectiveMatrix", identity);		
+		shader.setUniform("u_viewMatrix", identity);
+		shader.setUniform("u_perspectiveMatrix", identity);
 		worldAxes.draw(shader);
 
 		shader.setUniform("u_modelMatrix", house.getMatrix());
@@ -207,11 +199,11 @@ public class CameraDemo implements IWindowListener {
 
 		glViewport(0,0,width/2,height/2);
 		glScissor(0,0,width/2,height/2);
-		glClearColor(0.0f, 0.0f, 0.1f, 1.0f);			
-		glClear(GL_COLOR_BUFFER_BIT);		
+		glClearColor(0.0f, 0.0f, 0.1f, 1.0f);
+		glClear(GL_COLOR_BUFFER_BIT);
 
-		shader.setUniform("u_viewMatrix", viewMatrix);		
-		shader.setUniform("u_perspectiveMatrix", identity);		
+		shader.setUniform("u_viewMatrix", viewMatrix);
+		shader.setUniform("u_perspectiveMatrix", identity);
 
 		shader.setUniform("u_modelMatrix", identity);
 		worldAxes.draw(shader);
@@ -225,14 +217,14 @@ public class CameraDemo implements IWindowListener {
 		camera.draw(shader);
 
 		// NDC COORDINATES
-		
+
 		glViewport(width/2,0,width/2,height/2);
 		glScissor(width/2,0,width/2,height/2);
-		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);			
-		glClear(GL_COLOR_BUFFER_BIT);		
-		
-		shader.setUniform("u_viewMatrix", viewMatrix);		
-		shader.setUniform("u_perspectiveMatrix", perspectiveMatrix);		
+		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+		glClear(GL_COLOR_BUFFER_BIT);
+
+		shader.setUniform("u_viewMatrix", viewMatrix);
+		shader.setUniform("u_perspectiveMatrix", perspectiveMatrix);
 
 		shader.setUniform("u_modelMatrix", identity);
 		worldAxes.draw(shader);

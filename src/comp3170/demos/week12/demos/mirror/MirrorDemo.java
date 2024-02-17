@@ -29,54 +29,54 @@ import comp3170.demos.week12.sceneobjects.Mirror;
 
 public class MirrorDemo implements IWindowListener {
 
-	private static final File COMMON_DIR = new File("src/comp3170/demos/common/shaders"); 
-	private static final File SHADER_DIR = new File("src/comp3170/demos/week12/shaders"); 
-	private static final File TEXTURE_DIR = new File("src/comp3170/demos/week12/textures"); 
+	private static final File COMMON_DIR = new File("src/comp3170/demos/common/shaders");
+	private static final File SHADER_DIR = new File("src/comp3170/demos/week12/shaders");
+	private static final File TEXTURE_DIR = new File("src/comp3170/demos/week12/textures");
 
 	private Window window;
 	private int screenWidth = 2400;
 	private int screenHeight = 800;
-	
+
 	private InputManager input;
 	private long oldTime;
-	
+
 	private Scene scene;
 
 	public MirrorDemo() throws OpenGLException {
 		window = new Window("Reflection demo", screenWidth, screenHeight, this);
 		window.run();
 	}
-	
+
 	@Override
 	public void init() {
 		glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-		glEnable(GL_DEPTH_TEST);	
+		glEnable(GL_DEPTH_TEST);
 		glEnable(GL_SCISSOR_TEST);
 
 		new ShaderLibrary(COMMON_DIR).addPath(SHADER_DIR);
 		new TextureLibrary(TEXTURE_DIR);
-		
+
 		scene = new Scene();
-		
+
 		input = new InputManager(window);
 		oldTime = System.currentTimeMillis();
-		
+
 	}
 
 	public void update() {
 		long time = System.currentTimeMillis();
 		float deltaTime = (time - oldTime) / 1000.0f;
 		oldTime = time;
-		
+
 		scene.update(deltaTime, input);
 		input.clear();
 	}
-	
+
 	private Matrix4f viewMatrix = new Matrix4f();
 	private Matrix4f projectionMatrix = new Matrix4f();
 	private Matrix4f mvpMatrix = new Matrix4f();
 	private Vector4f black = new Vector4f(0,0,0,1);
-	
+
 	@Override
 	public void draw() {
 		update();
@@ -84,31 +84,31 @@ public class MirrorDemo implements IWindowListener {
 		Mirror mirror = scene.getMirror();
 
 		// render to texture
-		int frameBuffer = mirror.getFrameBuffer();		
-		glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);		
+		int frameBuffer = mirror.getFrameBuffer();
+		glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
 		scene.setDrawVolumes(false);
 		mirror.setDrawn(false);
 		glViewport(0, 0, 1024, 1024);
-		glScissor(0, 0, 1024, 1024);		
-		draw(scene.getMirrorCamera(), black);		
+		glScissor(0, 0, 1024, 1024);
+		draw(scene.getMirrorCamera(), black);
 
 		// render to window 0
 		scene.setDrawVolumes(true);
 		mirror.setDrawn(true);
-		glBindFramebuffer(GL_FRAMEBUFFER, 0);		
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 		drawWindow(0, scene.getOverheadCamera());
 
 		// render to window 1
 		scene.setDrawVolumes(false);
 		mirror.setDrawn(true);
-		glBindFramebuffer(GL_FRAMEBUFFER, 0);		
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 		drawWindow(1, scene.getMainCamera());
-		
-		// render to window 2 
-		glBindFramebuffer(GL_FRAMEBUFFER, 0);		
+
+		// render to window 2
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 		scene.setDrawVolumes(false);
 		mirror.setDrawn(false);
-		drawWindow(2, scene.getMirrorCamera());		
+		drawWindow(2, scene.getMirrorCamera());
 
 
 	}
@@ -118,41 +118,41 @@ public class MirrorDemo implements IWindowListener {
 		new Vector4f(0, 0.1f, 0, 1),
 		new Vector4f(0, 0, 0.1f, 1),
 	};
-	
+
 	private void drawWindow(int window, Camera camera) {
 		glViewport(window * screenWidth / 3, 0, screenWidth / 3, screenHeight);
 		glScissor(window * screenWidth / 3, 0, screenWidth / 3, screenHeight);
-		
+
 		Vector4f c = clearColours[window];
-		draw(camera, c);		
+		draw(camera, c);
 	}
 
 	private void draw(Camera camera, Vector4f c) {
 		glClearColor(c.x, c.y, c.z, c.w);
-		glClear(GL_COLOR_BUFFER_BIT);		
+		glClear(GL_COLOR_BUFFER_BIT);
 
 		glClearDepth(1f);
-		glClear(GL_DEPTH_BUFFER_BIT);		
-		
+		glClear(GL_DEPTH_BUFFER_BIT);
+
 		camera.getViewMatrix(viewMatrix);
-		camera.getProjectionMatrix(projectionMatrix);		
+		camera.getProjectionMatrix(projectionMatrix);
 		mvpMatrix.set(projectionMatrix).mul(viewMatrix);
-		
+
 		scene.draw(mvpMatrix);
 	}
-	
-	
+
+
 
 	@Override
 	public void resize(int width, int height) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void close() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	public static void main(String[] args) throws OpenGLException {

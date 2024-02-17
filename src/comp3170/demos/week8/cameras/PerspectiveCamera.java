@@ -20,10 +20,10 @@ public class PerspectiveCamera implements Camera {
 	private float near = 0.1f;
 	private float far = 100f;
 	private float distance = 4f;
-	
+
 	private Matrix4f cameraRotation = new Matrix4f();
 	private Matrix4f cameraMatrix = new Matrix4f();
-	
+
 	public PerspectiveCamera() {
 		// default settings
 	}
@@ -33,9 +33,9 @@ public class PerspectiveCamera implements Camera {
 		this.aspect = aspect;
 		this.near = near;
 		this.far = far;
-		this.distance = distance;		
+		this.distance = distance;
 	}
-	
+
 
 	@Override
 	public Matrix4f getViewMatrix(Matrix4f dest) {
@@ -50,6 +50,7 @@ public class PerspectiveCamera implements Camera {
 	private static final float ROTATION_SPEED = TAU/6;
 	private static final float MOVEMENT_SPEED = 5;
 
+	@Override
 	public void update(float deltaTime, InputManager input) {
 		if (input.isKeyDown(GLFW_KEY_RIGHT)) {
 			cameraRotation.rotateLocalY(ROTATION_SPEED * deltaTime);
@@ -67,15 +68,15 @@ public class PerspectiveCamera implements Camera {
 		{
 			distance = distance + MOVEMENT_SPEED * deltaTime;
 		}
-		
+
 		if (input.isKeyDown(GLFW_KEY_W))
 		{
 			distance = distance - MOVEMENT_SPEED * deltaTime;
 		}
-		
+
 		cameraRotation.translate(0,0,distance, cameraMatrix);
 	}
 
 
-	
+
 }

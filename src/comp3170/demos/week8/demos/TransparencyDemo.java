@@ -28,7 +28,7 @@ import comp3170.demos.week8.sceneobjects.TransparencyScene;
 
 public class TransparencyDemo implements IWindowListener {
 
-	private static final File COMMON_DIR = new File("src/comp3170/demos/common/shaders"); 
+	private static final File COMMON_DIR = new File("src/comp3170/demos/common/shaders");
 
 	private Window window;
 	private int screenWidth = 800;
@@ -48,14 +48,14 @@ public class TransparencyDemo implements IWindowListener {
 
 		glEnable(GL_DEPTH_TEST);
 		glDepthFunc(GL_LEQUAL);
-		
+
 		// enable alpha blending
 		glEnable(GL_BLEND);
-		
+
 		// setting the blend function to c = a * c_new + (1-a) c_old
 		glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
-				
-		
+
+
 		new ShaderLibrary(COMMON_DIR);
 		// set up scene
 		scene = new TransparencyScene();

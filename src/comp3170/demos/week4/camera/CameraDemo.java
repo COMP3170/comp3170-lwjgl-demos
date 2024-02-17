@@ -11,12 +11,9 @@ import static org.lwjgl.glfw.GLFW.GLFW_KEY_S;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_SPACE;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_W;
 import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
-import static org.lwjgl.opengl.GL11.GL_SCISSOR_TEST;
 import static org.lwjgl.opengl.GL11.glClear;
-import static org.lwjgl.opengl.GL11.glEnable;
 import static org.lwjgl.opengl.GL11.glClearColor;
 import static org.lwjgl.opengl.GL11.glViewport;
-import static org.lwjgl.opengl.GL11.glScissor;
 
 import java.awt.Color;
 import java.io.File;
@@ -36,14 +33,14 @@ import comp3170.Window;
 public class CameraDemo implements IWindowListener {
 
 	public static final float TAU = (float) (2 * Math.PI);		// https://tauday.com/tau-manifesto
-	
+
 	private int width = 800;
 	private int height = 800;
 
 	private Window window;
 	private Shader shader;
-	
-	final private File DIRECTORY = new File("src/comp3170/demos/week4/camera"); 
+
+	final private File DIRECTORY = new File("src/comp3170/demos/week4/camera");
 	final private String VERTEX_SHADER = "vertex.glsl";
 	final private String FRAGMENT_SHADER = "fragment.glsl";
 
@@ -65,15 +62,15 @@ public class CameraDemo implements IWindowListener {
 	}
 
 	private static final int NSQUARES = 100;
-	
+
 	@Override
 	public void init() {
 		//glEnable(GL_SCISSOR_TEST);
-		
-		
+
+
 		// set the background colour to black
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-		
+
 		// Compile the shader
 		try {
 			File vertexShader = new File(DIRECTORY, VERTEX_SHADER);
@@ -88,8 +85,8 @@ public class CameraDemo implements IWindowListener {
 		}
 
 		// Set up the scene
-		
-	    this.squares = new ArrayList<Square>();
+
+	    this.squares = new ArrayList<>();
 
 	    for (int i = 0; i < NSQUARES; i++) {
 			Square square = new Square(shader);
@@ -102,7 +99,7 @@ public class CameraDemo implements IWindowListener {
 			square.setScale(0.1f, 0.1f);
 			squares.add(square);
 	    }
-	    
+
 	    // Set up the camera
 
 	    camera = new Camera(shader);
@@ -110,14 +107,14 @@ public class CameraDemo implements IWindowListener {
 	    camera.setAngle(0);
 	    camera.setZoom(width * 2f);	// pixels per world unit
 	    camera.setSize(width, height);
-	    
+
 	    // allocation view and projection matrices
 	    viewMatrix = new Matrix3f();
 	    projectionMatrix = new Matrix3f();
-	    
+
 	    // add an input manager
 		input = new InputManager(window);
-		
+
 	    // initialise oldTime
 	    oldTime = System.currentTimeMillis();
 
@@ -127,18 +124,18 @@ public class CameraDemo implements IWindowListener {
 	private static final float CAMERA_ROTATION_SPEED = TAU / 6;
 	private static final float CAMERA_MOVEMENT_SPEED = 1f;
 	private static final float CAMERA_ZOOM_SPEED = 1.5f;
-	
+
 	private void update() {
 		long time = System.currentTimeMillis();
 		float deltaTime = (time - oldTime) / 1000f;
 		oldTime = time;
 		System.out.println("update: dt = " + deltaTime + "s");
-				
+
 		for (Square sq : squares) {
-			sq.rotate(ROTATION_SPEED * deltaTime);  
-		}	
-		
-		
+			sq.rotate(ROTATION_SPEED * deltaTime);
+		}
+
+
 		if (input.isKeyDown(GLFW_KEY_LEFT)) {
 			camera.rotate(-CAMERA_ROTATION_SPEED * deltaTime);
 		}
@@ -149,7 +146,7 @@ public class CameraDemo implements IWindowListener {
 
 		if (input.isKeyDown(GLFW_KEY_W)) {
 			camera.translate(0, CAMERA_MOVEMENT_SPEED * deltaTime);
-			
+
 		}
 		if (input.isKeyDown(GLFW_KEY_S)) {
 			camera.translate(0, -CAMERA_MOVEMENT_SPEED * deltaTime);
@@ -170,31 +167,31 @@ public class CameraDemo implements IWindowListener {
 		if (input.wasKeyPressed(GLFW_KEY_SPACE)) {
 			showCamera = !showCamera;
 		}
-		input.clear();		
-		
+		input.clear();
+
 
 	}
-	
-	
-	public static void main(String[] args) throws OpenGLException { 
+
+
+	public static void main(String[] args) throws OpenGLException {
 		new CameraDemo();
 	}
 
 	@Override
 	public void draw() {
 		// TODO Auto-generated method stub
-		
+
 		// update the scene
-		update();	
-		
+		update();
+
 		//glViewport(0, 0, width, height);
-		
-		glClear(GL_COLOR_BUFFER_BIT);		
-		
+
+		glClear(GL_COLOR_BUFFER_BIT);
+
 		// activate the shader
-		this.shader.enable();		
-		
-		
+		this.shader.enable();
+
+
 		if (showCamera) {
 			viewMatrix.identity();
 			projectionMatrix.identity();
@@ -203,21 +200,21 @@ public class CameraDemo implements IWindowListener {
 			camera.getViewMatrix(viewMatrix);
 			camera.getProjectionMatrix(projectionMatrix);
 		}
-		
+
 		shader.setUniform("u_viewMatrix", viewMatrix);
 		shader.setUniform("u_projectionMatrix", projectionMatrix);
-		
+
 		// draw the squares
 		for (Square sq : squares) {
 			sq.draw(shader);
 		}
 
-		
+
 		if (showCamera) {
 			// draw the camera rectangle
-			camera.draw(shader);			
+			camera.draw(shader);
 		}
-		
+
 		// restrict the framerate by sleeping between frames
 		try {
 			TimeUnit.MILLISECONDS.sleep(1000 / frameRate);
@@ -228,24 +225,24 @@ public class CameraDemo implements IWindowListener {
 
 	@Override
 	public void resize(int width, int height) {
-		
+
 		this.width = width;
 		this.height = height;
-		
-		
+
+
 		camera.setSize(width, height);
-		
+
 		glViewport(0, 0, width, height);
 
-		
 
-		
+
+
 	}
 
 	@Override
 	public void close() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 

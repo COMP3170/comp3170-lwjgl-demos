@@ -14,19 +14,19 @@ import comp3170.demos.common.sceneobjects.Grid;
 public class Scene extends SceneObject {
 	private Camera camera;
 
-	public Scene() {		
-		
+	public Scene() {
+
 		// Set up the scene
 		Grid grid = new Grid(11);
 		grid.setParent(this);
-		
+
 		Axes3D axes = new Axes3D();
 		axes.setParent(this);
-		
+
 		Triangle triangle = new Triangle(Color.YELLOW);
 		triangle.setParent(this);
-		
-		camera = new PerspectiveOrbittingCamera(2, TAU/6, 1, 0.1f, 10f);	
+
+		camera = new PerspectiveOrbittingCamera(2, TAU/6, 1, 0.1f, 10f);
 	}
 
 	public Camera getCamera() {
@@ -34,7 +34,7 @@ public class Scene extends SceneObject {
 	}
 
 	public void update(float deltaTime, InputManager input) {
-		camera.update(deltaTime, input);		
+		camera.update(deltaTime, input);
 	}
 
 }

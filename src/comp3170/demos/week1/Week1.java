@@ -1,20 +1,15 @@
 package comp3170.demos.week1;
 
 import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
-import static org.lwjgl.opengl.GL11.GL_TRIANGLES;
 import static org.lwjgl.opengl.GL11.glClear;
 import static org.lwjgl.opengl.GL11.glClearColor;
-import static org.lwjgl.opengl.GL11.glDrawArrays;
 import static org.lwjgl.opengl.GL11.glViewport;
-import static org.lwjgl.opengl.GL20.GL_FLOAT_VEC2;
 
 import java.io.File;
 import java.io.IOException;
 
-import comp3170.GLBuffers;
 import comp3170.IWindowListener;
 import comp3170.OpenGLException;
-import comp3170.Shader;
 import comp3170.ShaderLibrary;
 import comp3170.Window;
 
@@ -41,16 +36,16 @@ public class Week1 implements IWindowListener {
 
 	/**
 	 * Initialise the GLCanvas
-	 * 
+	 *
 	 * <img src="images/square.png" />
-	 * 
+	 *
 	 */
 	@Override
 	public void init() {
 
 		ShaderLibrary shaderLibrary = new ShaderLibrary(DIRECTORY);
 
-		scene = new Scene(screenWidth, screenHeight);		
+		scene = new Scene(screenWidth, screenHeight);
 	}
 
 	@Override
