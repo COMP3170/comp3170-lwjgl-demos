@@ -2,12 +2,12 @@ package comp3170.demos.week9.sceneobjects;
 
 import comp3170.InputManager;
 import comp3170.SceneObject;
+import comp3170.demos.common.lights.Light;
 import comp3170.demos.common.sceneobjects.Axes3D;
 import comp3170.demos.common.sceneobjects.Grid;
 import comp3170.demos.week9.cameras.Camera;
 import comp3170.demos.week9.cameras.OrthographicCamera;
 import comp3170.demos.week9.lights.DirectionalLight;
-import comp3170.demos.week9.lights.Light;
 
 public class Scene extends SceneObject {
 

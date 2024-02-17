@@ -26,8 +26,8 @@ import comp3170.InputManager;
 import comp3170.SceneObject;
 import comp3170.Shader;
 import comp3170.ShaderLibrary;
+import comp3170.demos.common.lights.Light;
 import comp3170.demos.week9.cameras.Camera;
-import comp3170.demos.week9.lights.Light;
 
 public class Cylinder extends SceneObject {
 

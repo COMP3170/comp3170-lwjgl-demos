@@ -17,6 +17,7 @@ import comp3170.InputManager;
 import comp3170.SceneObject;
 import comp3170.Shader;
 import comp3170.ShaderLibrary;
+import comp3170.demos.common.lights.Light;
 
 public class DirectionalLight extends SceneObject implements Light {
 
