@@ -1,19 +1,23 @@
 package comp3170.demos.week11.sceneobjects;
 
-import java.awt.Color;
+import java.io.IOException;
 
-import comp3170.InputManager;
-import comp3170.SceneObject;
-import comp3170.demos.common.sceneobjects.Axes3D;
-import comp3170.demos.week11.cameras.Camera;
-import comp3170.demos.week11.cameras.OrbitingCamera;
+import comp3170.OpenGLException;
+import comp3170.TextureLibrary;
 
 public class SceneZero extends AbstractScene {
+	private static final String TEXTURE = "colours.png";
+
 	public SceneZero() {
 		super();
-		Cube cube = new Cube(Color.RED);
-		cube.setParent(this);
-		cube.getMatrix().scale(0.5f);
 		
+		try {
+			int texture = TextureLibrary.instance.loadTexture(TEXTURE);
+			TexturedCube cube = new TexturedCube(texture);
+			cube.setParent(this);
+			cube.getMatrix().scale(0.5f);
+		} catch (IOException | OpenGLException e) {
+			e.printStackTrace();
+		}		
 	}
 }

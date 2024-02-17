@@ -19,7 +19,7 @@ import comp3170.GLBuffers;
 import comp3170.OpenGLException;
 import comp3170.SceneObject;
 import comp3170.Shader;
-import comp3170.demos.week11.textures.TextureLibrary;
+import comp3170.TextureLibrary;
 
 public class RenderTextureQuad extends SceneObject {
 
@@ -37,7 +37,7 @@ public class RenderTextureQuad extends SceneObject {
 	public RenderTextureQuad(Shader shader, int width, int height) {
 		this.shader = shader;
 		createQuad();	
-		renderTexture = TextureLibrary.createRenderTexture(width, height, GL_RGBA);
+		renderTexture = TextureLibrary.instance.createRenderTexture(width, height, GL_RGBA);
 		
 		try {
 			frameBuffer = GLBuffers.createFrameBuffer(renderTexture);

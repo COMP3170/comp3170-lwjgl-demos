@@ -1,10 +1,10 @@
 package comp3170.demos.week11.sceneobjects;
 
 import static comp3170.Math.TAU;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_N;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_SPACE;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_X;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_Z;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_N;
 import static org.lwjgl.opengl.GL11.GL_FILL;
 import static org.lwjgl.opengl.GL11.GL_FRONT_AND_BACK;
 import static org.lwjgl.opengl.GL11.GL_LINEAR;
@@ -35,9 +35,9 @@ import comp3170.InputManager;
 import comp3170.OpenGLException;
 import comp3170.SceneObject;
 import comp3170.Shader;
-import comp3170.demos.week11.lights.Light;
-import comp3170.demos.week11.shaders.ShaderLibrary;
-import comp3170.demos.week11.textures.TextureLibrary;
+import comp3170.ShaderLibrary;
+import comp3170.TextureLibrary;
+import comp3170.demos.common.lights.Light;
 
 public class NormalMapQuad extends SceneObject {
 
@@ -69,8 +69,8 @@ public class NormalMapQuad extends SceneObject {
 	private boolean isNormalMapVisible = false;
 
 	public NormalMapQuad() {
-		normalMapShader = ShaderLibrary.compileShader(NORMAL_MAP_VERTEX_SHADER, NORMAL_MAP_FRAGMENT_SHADER);
-		diffuseShader = ShaderLibrary.compileShader(DIFFUSE_VERTEX_SHADER, DIFFUSE_FRAGMENT_SHADER);
+		normalMapShader = ShaderLibrary.instance.compileShader(NORMAL_MAP_VERTEX_SHADER, NORMAL_MAP_FRAGMENT_SHADER);
+		diffuseShader = ShaderLibrary.instance.compileShader(DIFFUSE_VERTEX_SHADER, DIFFUSE_FRAGMENT_SHADER);
 		diffuseShader.setStrict(false);
 		createQuad();		
 		loadTextures();
@@ -125,8 +125,8 @@ public class NormalMapQuad extends SceneObject {
 
 	private void loadTextures() {
 		try {
-			diffuseTexture = TextureLibrary.loadTexture(DIFFUSE_TEXTURE);
-			normalTexture = TextureLibrary.loadTexture(NORMAL_TEXTURE);
+			diffuseTexture = TextureLibrary.instance.loadTexture(DIFFUSE_TEXTURE);
+			normalTexture = TextureLibrary.instance.loadTexture(NORMAL_TEXTURE);
 		} catch (IOException e) {
 			e.printStackTrace();
 			System.exit(1);

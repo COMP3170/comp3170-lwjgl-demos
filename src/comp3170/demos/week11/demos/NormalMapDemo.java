@@ -9,16 +9,24 @@ import static org.lwjgl.opengl.GL11.glClearDepth;
 import static org.lwjgl.opengl.GL11.glEnable;
 import static org.lwjgl.opengl.GL11.glViewport;
 
+import java.io.File;
+
 import org.joml.Matrix4f;
 
 import comp3170.IWindowListener;
 import comp3170.InputManager;
 import comp3170.OpenGLException;
+import comp3170.ShaderLibrary;
+import comp3170.TextureLibrary;
 import comp3170.Window;
 import comp3170.demos.week11.cameras.Camera;
 import comp3170.demos.week11.sceneobjects.NormalMapScene;
 
 public class NormalMapDemo implements IWindowListener {
+
+	private static final File COMMON_DIR = new File("src/comp3170/demos/common/shaders"); 
+	private static final File SHADER_DIR = new File("src/comp3170/demos/week11/shaders"); 
+	private static final File TEXTURE_DIR = new File("src/comp3170/demos/week11/textures"); 
 
 	private Window window;
 	private int screenWidth = 1000;
@@ -39,6 +47,9 @@ public class NormalMapDemo implements IWindowListener {
 		glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 		glEnable(GL_DEPTH_TEST);	
 		
+		new ShaderLibrary(COMMON_DIR).addPath(SHADER_DIR);
+		new TextureLibrary(TEXTURE_DIR);
+		
 		scene = new NormalMapScene();
 		
 		input = new InputManager(window);
@@ -50,7 +61,7 @@ public class NormalMapDemo implements IWindowListener {
 		float deltaTime = (time - oldTime) / 1000.0f;
 		oldTime = time;
 		
-		scene.update(input, deltaTime);
+		scene.update(deltaTime, input);
 		input.clear();
 	}
 	

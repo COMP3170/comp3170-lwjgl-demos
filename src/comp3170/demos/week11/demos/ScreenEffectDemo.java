@@ -12,19 +12,26 @@ import static org.lwjgl.opengl.GL11.glViewport;
 import static org.lwjgl.opengl.GL30.GL_FRAMEBUFFER;
 import static org.lwjgl.opengl.GL30.glBindFramebuffer;
 
+import java.io.File;
+
 import org.joml.Matrix4f;
 
 import comp3170.IWindowListener;
 import comp3170.InputManager;
 import comp3170.OpenGLException;
 import comp3170.Shader;
+import comp3170.ShaderLibrary;
+import comp3170.TextureLibrary;
 import comp3170.Window;
 import comp3170.demos.week11.cameras.Camera;
 import comp3170.demos.week11.sceneobjects.RenderTextureQuad;
 import comp3170.demos.week11.sceneobjects.SceneZero;
-import comp3170.demos.week11.shaders.ShaderLibrary;
 
 public class ScreenEffectDemo implements IWindowListener {
+
+	private static final File COMMON_DIR = new File("src/comp3170/demos/common/shaders"); 
+	private static final File SHADER_DIR = new File("src/comp3170/demos/week11/shaders"); 
+	private static final File TEXTURE_DIR = new File("src/comp3170/demos/week11/textures"); 
 
 	public static final String VERTEX_SHADER = "greyscaleVertex.glsl";
 	public static final String FRAGMENT_SHADER = "greyscaleFragment.glsl";
@@ -50,10 +57,13 @@ public class ScreenEffectDemo implements IWindowListener {
 	public void init() {
 		glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 		glEnable(GL_DEPTH_TEST);	
-		
+
+		new ShaderLibrary(COMMON_DIR).addPath(SHADER_DIR);
+		new TextureLibrary(TEXTURE_DIR);
+
 		scene = new SceneZero();
 		
-		Shader filterShader = ShaderLibrary.compileShader(VERTEX_SHADER, FRAGMENT_SHADER);
+		Shader filterShader = ShaderLibrary.instance.compileShader(VERTEX_SHADER, FRAGMENT_SHADER);
 		quad = new RenderTextureQuad(filterShader, screenWidth, screenHeight);
 				
 		input = new InputManager(window);

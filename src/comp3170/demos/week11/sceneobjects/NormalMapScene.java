@@ -2,10 +2,10 @@ package comp3170.demos.week11.sceneobjects;
 
 import comp3170.InputManager;
 import comp3170.SceneObject;
+import comp3170.demos.common.lights.Light;
 import comp3170.demos.week11.cameras.Camera;
 import comp3170.demos.week11.cameras.OrbitingCamera;
 import comp3170.demos.week11.lights.DirectionalLight;
-import comp3170.demos.week11.lights.Light;
 
 public class NormalMapScene extends SceneObject {
 	
@@ -33,7 +33,7 @@ public class NormalMapScene extends SceneObject {
 		return light;
 	}
 
-	public void update(InputManager input, float deltaTime) {
+	public void update(float deltaTime, InputManager input) {
 		camera.update(input, deltaTime);
 		light.update(input, deltaTime);
 		quad.update(input, deltaTime);
