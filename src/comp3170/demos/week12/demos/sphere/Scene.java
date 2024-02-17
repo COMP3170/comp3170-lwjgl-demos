@@ -36,8 +36,8 @@ public class Scene extends SceneObject {
 		camera = new OrbitingCamera();
 	}
 
-	public void update(InputManager input, float deltaTime) {
-		camera.update(input, deltaTime);	
+	public void update(float deltaTime, InputManager input) {
+		camera.update(deltaTime, input);	
 		skybox.update(input, deltaTime);
 	}
 

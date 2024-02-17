@@ -24,9 +24,8 @@ import comp3170.InputManager;
 import comp3170.OpenGLException;
 import comp3170.SceneObject;
 import comp3170.Shader;
-import comp3170.demos.week12.cameras.Camera;
-import comp3170.demos.week12.shaders.ShaderLibrary;
-import comp3170.demos.week12.textures.TextureLibrary;
+import comp3170.ShaderLibrary;
+import comp3170.TextureLibrary;
 
 public class Skybox extends SceneObject {
 	
@@ -59,7 +58,7 @@ public class Skybox extends SceneObject {
 
 	
 	public Skybox() {
-		shader = ShaderLibrary.compileShader(VERTEX_SHADER, FRAGMENT_SHADER);
+		shader = ShaderLibrary.instance.compileShader(VERTEX_SHADER, FRAGMENT_SHADER);
 		
 		createCube();
 		loadTextures();
@@ -125,8 +124,8 @@ public class Skybox extends SceneObject {
 
 	private void loadTextures() {
 		try {
-			texture = TextureLibrary.loadCubemap(TEXTURE_FILES);
-			skyboxTexture = TextureLibrary.loadCubemap(SKYBOX_TEXTURE_FILES);
+			texture = TextureLibrary.instance.loadCubemap(TEXTURE_FILES);
+			skyboxTexture = TextureLibrary.instance.loadCubemap(SKYBOX_TEXTURE_FILES);
 		} catch (IOException e) {
 			e.printStackTrace();
 			System.exit(1);

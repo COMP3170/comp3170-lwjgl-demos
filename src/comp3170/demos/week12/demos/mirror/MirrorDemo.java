@@ -13,17 +13,25 @@ import static org.lwjgl.opengl.GL11.glViewport;
 import static org.lwjgl.opengl.GL30.GL_FRAMEBUFFER;
 import static org.lwjgl.opengl.GL30.glBindFramebuffer;
 
+import java.io.File;
+
 import org.joml.Matrix4f;
 import org.joml.Vector4f;
 
 import comp3170.IWindowListener;
 import comp3170.InputManager;
 import comp3170.OpenGLException;
+import comp3170.ShaderLibrary;
+import comp3170.TextureLibrary;
 import comp3170.Window;
 import comp3170.demos.week12.cameras.Camera;
 import comp3170.demos.week12.sceneobjects.Mirror;
 
 public class MirrorDemo implements IWindowListener {
+
+	private static final File COMMON_DIR = new File("src/comp3170/demos/common/shaders"); 
+	private static final File SHADER_DIR = new File("src/comp3170/demos/week12/shaders"); 
+	private static final File TEXTURE_DIR = new File("src/comp3170/demos/week12/textures"); 
 
 	private Window window;
 	private int screenWidth = 2400;
@@ -45,6 +53,8 @@ public class MirrorDemo implements IWindowListener {
 		glEnable(GL_DEPTH_TEST);	
 		glEnable(GL_SCISSOR_TEST);
 
+		new ShaderLibrary(COMMON_DIR).addPath(SHADER_DIR);
+		new TextureLibrary(TEXTURE_DIR);
 		
 		scene = new Scene();
 		
@@ -58,7 +68,7 @@ public class MirrorDemo implements IWindowListener {
 		float deltaTime = (time - oldTime) / 1000.0f;
 		oldTime = time;
 		
-		scene.update(input, deltaTime);
+		scene.update(deltaTime, input);
 		input.clear();
 	}
 	

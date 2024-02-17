@@ -75,12 +75,12 @@ public class Scene extends SceneObject {
 		}
 	}
 
-	public void update(InputManager input, float deltaTime) {
-		overheadCamera.update(input, deltaTime);
-		mainCamera.update(input, deltaTime);
-		mainView.update(input, deltaTime);
-		mirror.update(input, deltaTime);
-		mirrorView.update(input, deltaTime);
+	public void update(float deltaTime, InputManager input) {
+		overheadCamera.update(deltaTime, input);
+		mainCamera.update(deltaTime, input);
+		mainView.update(deltaTime, input);
+		mirror.update(deltaTime, input);
+		mirrorView.update(deltaTime, input);
 	}
 
 

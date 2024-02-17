@@ -1,13 +1,17 @@
 package comp3170.demos.week12.sceneobjects;
 
 import static comp3170.Math.TAU;
-import static org.lwjgl.glfw.GLFW.*;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_A;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_D;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_S;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_SPACE;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_W;
 import static org.lwjgl.opengl.GL11.GL_FILL;
 import static org.lwjgl.opengl.GL11.GL_FRONT_AND_BACK;
+import static org.lwjgl.opengl.GL11.GL_LINES;
 import static org.lwjgl.opengl.GL11.GL_RGBA;
 import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
 import static org.lwjgl.opengl.GL11.GL_TRIANGLES;
-import static org.lwjgl.opengl.GL11.GL_LINES;
 import static org.lwjgl.opengl.GL11.GL_UNSIGNED_INT;
 import static org.lwjgl.opengl.GL11.glBindTexture;
 import static org.lwjgl.opengl.GL11.glDrawElements;
@@ -28,10 +32,10 @@ import comp3170.InputManager;
 import comp3170.OpenGLException;
 import comp3170.SceneObject;
 import comp3170.Shader;
+import comp3170.ShaderLibrary;
+import comp3170.TextureLibrary;
 import comp3170.demos.week12.cameras.Camera;
 import comp3170.demos.week12.cameras.MirrorCamera;
-import comp3170.demos.week12.shaders.ShaderLibrary;
-import comp3170.demos.week12.textures.TextureLibrary;
 
 public class Mirror extends SceneObject {
 
@@ -65,14 +69,14 @@ public class Mirror extends SceneObject {
 	private boolean isDrawn = true;
 	
 	public Mirror(Camera mainCamera) {
-		shader = ShaderLibrary.compileShader(VERTEX_SHADER, FRAGMENT_SHADER);
-		outlineShader = ShaderLibrary.compileShader(OUTLINE_VERTEX_SHADER, OUTLINE_FRAGMENT_SHADER);
+		shader = ShaderLibrary.instance.compileShader(VERTEX_SHADER, FRAGMENT_SHADER);
+		outlineShader = ShaderLibrary.instance.compileShader(OUTLINE_VERTEX_SHADER, OUTLINE_FRAGMENT_SHADER);
 		createQuad();
 		
 		camera = new MirrorCamera(this, mainCamera);
 		camera.setParent(this);
 		
-		renderTexture = TextureLibrary.createRenderTexture(TEXTURE_WIDTH, TEXTURE_HEIGHT, GL_RGBA);
+		renderTexture = TextureLibrary.instance.createRenderTexture(TEXTURE_WIDTH, TEXTURE_HEIGHT, GL_RGBA);
 		try {
 			frameBuffer = GLBuffers.createFrameBuffer(renderTexture);
 		} catch (OpenGLException e) {
@@ -81,7 +85,7 @@ public class Mirror extends SceneObject {
 		}
 		
 		try {
-			debugTexture = TextureLibrary.loadTexture(DEBUG_TEXTURE);
+			debugTexture = TextureLibrary.instance.loadTexture(DEBUG_TEXTURE);
 		} catch (IOException | OpenGLException e) {
 			e.printStackTrace();
 			System.exit(1);
@@ -145,7 +149,7 @@ public class Mirror extends SceneObject {
 	private Matrix4f projectionMatrix = new Matrix4f();
 	private Vector4f position = new Vector4f();
 	
-	public void update(InputManager input, float deltaTime) {
+	public void update(float deltaTime, InputManager input) {
 
 		if (input.isKeyDown(GLFW_KEY_A)) {
 			getMatrix().rotateY(ROTATION_SPEED * deltaTime);

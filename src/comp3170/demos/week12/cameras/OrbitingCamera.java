@@ -55,7 +55,7 @@ public class OrbitingCamera extends SceneObject implements Camera {
 	private static final float MOVEMENT_SPEED = 4f;
 	private Vector3f angle = new Vector3f(0,0,0);
 
-	public void update(InputManager input, float deltaTime) {
+	public void update(float deltaTime, InputManager input) {
 		if (input.isKeyDown(GLFW_KEY_LEFT)) {
 			angle.y = (angle.y + ROTATION_SPEED * deltaTime) % TAU;
 		}

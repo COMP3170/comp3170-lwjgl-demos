@@ -20,9 +20,9 @@ import org.joml.Vector4f;
 import comp3170.GLBuffers;
 import comp3170.SceneObject;
 import comp3170.Shader;
+import comp3170.ShaderLibrary;
 import comp3170.demos.week12.cameras.Camera;
 import comp3170.demos.week12.demos.sphere.Scene;
-import comp3170.demos.week12.shaders.ShaderLibrary;
 
 public class Sphere extends SceneObject {
 
@@ -39,7 +39,7 @@ public class Sphere extends SceneObject {
 	private Vector4f colour = new Vector4f(1,1,1,1);
 
 	public Sphere() {
-		shader = ShaderLibrary.compileShader(VERTEX_SHADER, FRAGMENT_SHADER);
+		shader = ShaderLibrary.instance.compileShader(VERTEX_SHADER, FRAGMENT_SHADER);
 		shader.setStrict(false);
 		
 		Vector4f[] grid = createGrid();

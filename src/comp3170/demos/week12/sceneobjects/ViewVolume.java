@@ -16,8 +16,8 @@ import comp3170.GLBuffers;
 import comp3170.InputManager;
 import comp3170.SceneObject;
 import comp3170.Shader;
+import comp3170.ShaderLibrary;
 import comp3170.demos.week12.cameras.Camera;
-import comp3170.demos.week12.shaders.ShaderLibrary;
 
 public class ViewVolume extends SceneObject {
 
@@ -35,7 +35,7 @@ public class ViewVolume extends SceneObject {
 	private Camera camera;
 	
 	public ViewVolume(Camera camera) {
-		shader = ShaderLibrary.compileShader(VERTEX_SHADER, FRAGMENT_SHADER);
+		shader = ShaderLibrary.instance.compileShader(VERTEX_SHADER, FRAGMENT_SHADER);
 
 		this.camera = camera;
 		
@@ -99,7 +99,7 @@ public class ViewVolume extends SceneObject {
 		indexBuffer = GLBuffers.createIndexBuffer(indices);	
 	}
 	
-	public void update(InputManager input, float deltaTime) {
+	public void update(float deltaTime, InputManager input) {
 		
 		modelMatrix = getMatrix();
 		camera.getCameraMatrix(modelMatrix);

@@ -33,7 +33,7 @@ public class Scene extends SceneObject {
 		camera = new PerspectiveCamera();
 	}
 
-	public void update(InputManager input, float deltaTime) {
+	public void update(float deltaTime, InputManager input) {
 		camera.update(input, deltaTime);	
 		cubemap.update(input, deltaTime);
 	}
