@@ -36,12 +36,12 @@ public class Sphere extends SceneObject {
 	private int normalBuffer;
 	private int[] indices;
 	private int indexBuffer;
-	private Vector4f colour = new Vector4f(1,1,1,1);
+	private Vector4f colour = new Vector4f(1, 1, 1, 1);
 
 	public Sphere() {
 		shader = ShaderLibrary.instance.compileShader(VERTEX_SHADER, FRAGMENT_SHADER);
 		shader.setStrict(false);
-		
+
 		Vector4f[] grid = createGrid();
 		createVertexBuffer(grid);
 		createIndexBuffer();
@@ -68,14 +68,14 @@ public class Sphere extends SceneObject {
 
 		return grid;
 	}
-	
+
 	private void createVertexBuffer(Vector4f[] grid) {
 		//
 		// 2. Rotate copies of the grid point to form the six faces
 		//
 		// @formatter:off
 
-		Matrix4f[] sides = new Matrix4f[] { 
+		Matrix4f[] sides = new Matrix4f[] {
 			new Matrix4f(), // front
 			new Matrix4f().rotateY(TAU / 2), // back
 			new Matrix4f().rotateY(TAU / 4), // right
@@ -88,26 +88,26 @@ public class Sphere extends SceneObject {
 		int n = sides.length * grid.length;
 		vertices = new Vector4f[n];
 		normals = new Vector4f[n];
-		
+
 		int k = 0;
-		for (int s = 0; s < sides.length; s++) {
-			for (int i = 0; i < grid.length; i++) {
+		for (Matrix4f side : sides) {
+			for (Vector4f element : grid) {
 				// rotate and scale each point
-				vertices[k] = new Vector4f(grid[i]).mul(sides[s]);					
+				vertices[k] = new Vector4f(element).mul(side);
 				vertices[k].normalize3(); // vk = vk / |vk.xyz]
-				vertices[k].w = 1;	// correct w
-				
+				vertices[k].w = 1; // correct w
+
 				// sphere normals are the same as vertices
 				normals[k] = new Vector4f(vertices[k]);
 				normals[k].w = 0;
-				
+
 				k++;
 			}
 		}
 		vertexBuffer = GLBuffers.createBuffer(vertices);
 		normalBuffer = GLBuffers.createBuffer(normals);
 	}
-	
+
 	private void createIndexBuffer() {
 		//
 		// 3. create the index buffer for each face
@@ -127,7 +127,7 @@ public class Sphere extends SceneObject {
 		indices = new int[6 * vertices.length]; // 2 tris * 3 verts * width * height
 
 		int ns = NSEGMENTS + 1;
-		
+
 		int n = 0;
 		for (int s = 0; s < 6; s++) {
 			for (int i = 0; i < NSEGMENTS; i++) { // note there is no quad for the last row
@@ -148,21 +148,21 @@ public class Sphere extends SceneObject {
 		indexBuffer = GLBuffers.createIndexBuffer(indices);
 
 	}
-	
+
 	private Matrix4f modelMatrix = new Matrix4f();
 	private Matrix4f normalMatrix = new Matrix4f();
 	private Vector4f cameraPosition = new Vector4f();
-	
+
 	@Override
 	protected void drawSelf(Matrix4f mvpMatrix) {
 		shader.enable();
-		
+
 		// matrices
 		getModelToWorldMatrix(modelMatrix);
 		shader.setUniform("u_mvpMatrix", mvpMatrix);
 		shader.setUniform("u_modelMatrix", modelMatrix);
 		shader.setUniform("u_normalMatrix", modelMatrix.normal(normalMatrix));
-		
+
 		// vertex attributes
 		shader.setAttribute("a_position", vertexBuffer);
 		shader.setAttribute("a_normal", normalBuffer);
@@ -170,7 +170,7 @@ public class Sphere extends SceneObject {
 		// camera
 		Camera camera = Scene.theScene.getCamera();
 		shader.setUniform("u_cameraPosition", camera.getViewVector(cameraPosition));
-		
+
 		// texture
 		Skybox skybox = Scene.theScene.getSkybox();
 		glActiveTexture(GL_TEXTURE0);

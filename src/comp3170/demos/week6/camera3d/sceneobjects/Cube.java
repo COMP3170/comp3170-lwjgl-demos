@@ -18,7 +18,7 @@ import comp3170.Shader;
 import comp3170.ShaderLibrary;
 
 public class Cube extends SceneObject {
-	
+
 	final private String VERTEX_SHADER = "simpleVertex.glsl";
 	final private String FRAGMENT_SHADER = "simpleFragment.glsl";
 
@@ -27,16 +27,16 @@ public class Cube extends SceneObject {
 	private int vertexBuffer;
 	private int[] indices;
 	private int indexBuffer;
-	
-	private Vector4f colour = new Vector4f(1f, 1f, 1f, 1f); 
-	
+
+	private Vector4f colour = new Vector4f(1f, 1f, 1f, 1f);
 
 	public Cube(Vector4f colour) {
 		shader = ShaderLibrary.instance.compileShader(VERTEX_SHADER, FRAGMENT_SHADER);
-		
+
 		this.colour = colour;
 
-		
+		// @formatter:off
+
 		//    6-----7
 		//   /|    /|
 		//  / |   / |
@@ -47,15 +47,15 @@ public class Cube extends SceneObject {
 		// |/    |/ z
 		// 2-----3
 
-		vertices = new Vector4f[] { 
-			new Vector4f(1, 1, 1, 1), 
-			new Vector4f(-1, 1, 1, 1), 
+		vertices = new Vector4f[] {
+			new Vector4f(1, 1, 1, 1),
+			new Vector4f(-1, 1, 1, 1),
 			new Vector4f(-1, -1, 1, 1),
-			new Vector4f(1, -1, 1, 1), 
-			new Vector4f(1, -1, -1, 1), 
+			new Vector4f(1, -1, 1, 1),
+			new Vector4f(1, -1, -1, 1),
 			new Vector4f(-1, -1, -1, 1),
-			new Vector4f(-1, 1, -1, 1), 
-			new Vector4f(1, 1, -1, 1), 
+			new Vector4f(-1, 1, -1, 1),
+			new Vector4f(1, 1, -1, 1),
 		};
 
 		vertexBuffer = GLBuffers.createBuffer(vertices);
@@ -64,30 +64,32 @@ public class Cube extends SceneObject {
 
 		indices = new int[] {
 			// front
-			0, 1, 2, 
-			2, 3, 0, 
+			0, 1, 2,
+			2, 3, 0,
 
 			// back
-			4, 5, 6, 
-			6, 7, 4, 
+			4, 5, 6,
+			6, 7, 4,
 
 			// top
-			0, 7, 6, 
+			0, 7, 6,
 			6, 1, 0,
 
 			// bottom
-			2, 5, 4, 
+			2, 5, 4,
 			4, 3, 2,
 
-			// left 
+			// left
 			1, 6, 5,
 			5, 2, 1,
-			
+
 			// right
 			0, 3, 4,
 			4, 7, 0,
 
 		};
+
+		// @formatter:on
 
 		indexBuffer = GLBuffers.createIndexBuffer(indices);
 
@@ -98,7 +100,7 @@ public class Cube extends SceneObject {
 
 	@Override
 	public void drawSelf(Matrix4f mvpMatrix) {
-		
+
 		shader.enable();
 		shader.setUniform("u_mvpMatrix", mvpMatrix);
 		shader.setAttribute("a_position", vertexBuffer);

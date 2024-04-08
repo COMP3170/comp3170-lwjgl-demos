@@ -7,7 +7,6 @@ import static org.lwjgl.opengl.GL11.GL_TRIANGLES;
 import static org.lwjgl.opengl.GL11.GL_UNSIGNED_INT;
 import static org.lwjgl.opengl.GL15.GL_ELEMENT_ARRAY_BUFFER;
 import static org.lwjgl.opengl.GL15.glBindBuffer;
-import static org.lwjgl.opengl.GL20.GL_FLOAT_VEC2;
 import static org.lwjgl.opengl.GL31.glDrawElementsInstanced;
 import static org.lwjgl.opengl.GL33.glVertexAttribDivisor;
 
@@ -45,7 +44,7 @@ public class Squares {
 
 	public Squares(int nSquares) {
 		this.nSquares = nSquares;
-		
+
 		// Compile the shader
 		shader = ShaderLibrary.instance.compileShader(VERTEX_SHADER, FRAGMENT_SHADER);
 
@@ -67,8 +66,7 @@ public class Squares {
 			Color c = Color.getHSBColor((float) Math.random(), 1, 1);
 			colour[i] = new Vector3f(c.getRed() / 255f, c.getGreen() / 255f, c.getBlue() / 255f);
 		}
-		
-		
+
 		// create buffers for all the matrices and colours
 		positionBuffer = GLBuffers.createBuffer(position);
 		rotationBuffer = GLBuffers.createBuffer(angle, GL_FLOAT);
@@ -81,19 +79,19 @@ public class Squares {
 
 		// @formatter:off
 
-		vertices = new Vector4f[] { 
-			new Vector4f(-0.5f, -0.5f, 0, 1),     
-			new Vector4f( 0.5f, -0.5f, 0, 1),     
-			new Vector4f(-0.5f,  0.5f, 0, 1),     
-			new Vector4f( 0.5f,  0.5f, 0, 1),     
+		vertices = new Vector4f[] {
+			new Vector4f(-0.5f, -0.5f, 0, 1),
+			new Vector4f( 0.5f, -0.5f, 0, 1),
+			new Vector4f(-0.5f,  0.5f, 0, 1),
+			new Vector4f( 0.5f,  0.5f, 0, 1),
 		};
 
 		// copy the data into a Vertex Buffer Object in graphics memory
 		vertexBuffer = GLBuffers.createBuffer(vertices);
 
-		indices = new int[] { 
-			0, 1, 2, 
-			3, 2, 1, 
+		indices = new int[] {
+			0, 1, 2,
+			3, 2, 1,
 		};
 
 		indexBuffer = GLBuffers.createIndexBuffer(indices);
@@ -103,7 +101,7 @@ public class Squares {
 	public void draw() {
 
 		shader.enable();
-		
+
 		// pass in all the model matrices
 		shader.setAttribute("a_worldPos", positionBuffer);
 		glVertexAttribDivisor(shader.getAttribute("a_worldPos"), 1);
@@ -117,21 +115,27 @@ public class Squares {
 		// write the colour value into the u_colour uniform
 		shader.setAttribute("a_colour", colourBuffer);
 		glVertexAttribDivisor(shader.getAttribute("a_colour"), 1);
-		
+
 		// connect the vertex buffer to the a_position attribute
 		shader.setAttribute("a_position", vertexBuffer);
 
 		// draw using an index buffer
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
 		glDrawElementsInstanced(GL_TRIANGLES, indices.length, GL_UNSIGNED_INT, 0, nSquares);
-	}
 
+		// set back to non-instance based drawing
+		glVertexAttribDivisor(shader.getAttribute("a_worldPos"), 0);
+		glVertexAttribDivisor(shader.getAttribute("a_rotation"), 0);
+		glVertexAttribDivisor(shader.getAttribute("a_scale"), 0);
+		glVertexAttribDivisor(shader.getAttribute("a_colour"), 0);
+
+	}
 
 	private static final Vector2f MOVEMENT_SPEED = new Vector2f(0.0f, 0.0f);
 	private static final float ROTATION_SPEED = TAU / 6;
 	private static final float SCALE_SPEED = 1.0f;
 	private Vector2f movement = new Vector2f();
-	
+
 	public void update(float dt) {
 		// update all the squares
 		MOVEMENT_SPEED.mul(dt, movement); // movement = speed * dt

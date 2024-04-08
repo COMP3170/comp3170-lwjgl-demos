@@ -21,18 +21,20 @@ public class Arm extends SceneObject {
 	private int vertexBuffer;
 	private int[] indices;
 	private int indexBuffer;
-		
+
 	private Vector3f colour;
-	
+
 	private Shader shader;
-	
+
 	public Arm(Shader shader, float width, float height) {
-		
+
 		this.shader = shader;
-		
+
+		// @formatter:off
+
 		// vertices for a wxh square with origin at the end
-		// 
-		//  (-w/2, h)     (w/2, h)		
+		//
+		//  (-w/2, h)     (w/2, h)
 		//       2-----------3
 		//       | \         |
 		//       |   \       |
@@ -40,53 +42,53 @@ public class Arm extends SceneObject {
 		//       |       \   |
 		//       |         \ |
 		//       0-----*-----1
-		//  (-w/2, 0)     (w/2, 0)		
-		
+		//  (-w/2, 0)     (w/2, 0)
+
 		vertices = new float[] {
 			-width/2, 0f,
 			 width/2, 0f,
 			-width/2, height,
 			 width/2, height,
 		};
-		
-		// copy the data into a Vertex Buffer Object in graphics memory		
+
+		// copy the data into a Vertex Buffer Object in graphics memory
 	    vertexBuffer = GLBuffers.createBuffer(vertices, GL_FLOAT_VEC2);
-	    
+
 	    indices = new int[] {
 	    	0, 1, 2,
 	    	3, 2, 1,
 	    };
-	    
+
 	    indexBuffer = GLBuffers.createIndexBuffer(indices);
 	    colour = new Vector3f(1f, 1f, 1f);	// default is white
+
+		// @formatter:on
 	}
-	
+
 	public Vector3f getColour() {
 		return colour;
 	}
-	
-	public void setColour(Color color) {		
+
+	public void setColour(Color color) {
 		colour.x = color.getRed() / 255f;
 		colour.y = color.getBlue() / 255f;
 		colour.z = color.getGreen() / 255f;
 	}
 
-
 	@Override
 	protected void drawSelf(Matrix4f matrix) {
-					
-		// set the model matrix		
-		shader.setUniform("u_modelMatrix", matrix);
-		
-        // connect the vertex buffer to the a_position attribute		   
-	    shader.setAttribute("a_position", vertexBuffer);
 
-	    // write the colour value into the u_colour uniform 
-	    shader.setUniform("u_colour", colour);	    
-	    
-	    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
-	    glDrawElements(GL_TRIANGLES, indices.length, GL_UNSIGNED_INT, 0);	
+		// set the model matrix
+		shader.setUniform("u_modelMatrix", matrix);
+
+		// connect the vertex buffer to the a_position attribute
+		shader.setAttribute("a_position", vertexBuffer);
+
+		// write the colour value into the u_colour uniform
+		shader.setUniform("u_colour", colour);
+
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
+		glDrawElements(GL_TRIANGLES, indices.length, GL_UNSIGNED_INT, 0);
 	}
 
-	
 }

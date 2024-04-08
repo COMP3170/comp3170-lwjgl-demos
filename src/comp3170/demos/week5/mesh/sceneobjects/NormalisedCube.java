@@ -35,12 +35,12 @@ public class NormalisedCube extends SceneObject {
 
 	public NormalisedCube(boolean normalise) {
 		shader = ShaderLibrary.instance.compileShader(VERTEX_SHADER, FRAGMENT_SHADER);
-		
+
 		isNormalised = normalise;
-		//		
+		//
 		// Create a cube with each face divided into an n x n grid
 		//
-		
+
 		Vector4f[] grid = createGrid();
 		createVertexBuffer(grid);
 		createIndexBuffer();
@@ -67,13 +67,15 @@ public class NormalisedCube extends SceneObject {
 
 		return grid;
 	}
-	
+
 	private void createVertexBuffer(Vector4f[] grid) {
+		// @formatter:off
+
 		//
 		// 2. Rotate copies of the grid point to form the six faces
 		//
 
-		Matrix4f[] sides = new Matrix4f[] { 
+		Matrix4f[] sides = new Matrix4f[] {
 			new Matrix4f(), // front
 			new Matrix4f().rotateY(TAU / 2), // back
 			new Matrix4f().rotateY(TAU / 4), // right
@@ -83,7 +85,7 @@ public class NormalisedCube extends SceneObject {
 		};
 
 
-		Vector4f[] sideColour = new Vector4f[] { 
+		Vector4f[] sideColour = new Vector4f[] {
 			new Vector4f(0,0,1,1), // front
 			new Vector4f(0,0,1,1), // back
 			new Vector4f(1,0,0,1), // right
@@ -91,22 +93,23 @@ public class NormalisedCube extends SceneObject {
 			new Vector4f(0,1,0,1), // bottom
 			new Vector4f(0,1,0,1), // top
 		};
+		// @formatter:on
 
 		int n = sides.length * grid.length;
 		vertices = new Vector4f[n];
 		colours = new Vector4f[n];
-		
+
 		// scale of 1/sqrt(3) means the corner points lie on the unit cube
 		Matrix4f scale = new Matrix4f().scaling(1.0f / (float) Math.sqrt(3));
 
 		int k = 0;
 		for (int s = 0; s < sides.length; s++) {
-			for (int i = 0; i < grid.length; i++) {
+			for (Vector4f element : grid) {
 				// rotate and scale each point
-				vertices[k] = new Vector4f(grid[i]).mul(sides[s]).mul(scale);					
+				vertices[k] = new Vector4f(element).mul(sides[s]).mul(scale);
 				if (isNormalised) {
 					vertices[k].normalize3(); // vk = vk / |vk.xyz]
-					vertices[k].w = 1;	// correct w
+					vertices[k].w = 1; // correct w
 				}
 				colours[k] = sideColour[s];
 				k++;
@@ -116,8 +119,10 @@ public class NormalisedCube extends SceneObject {
 		colourBuffer = GLBuffers.createBuffer(colours);
 
 	}
-	
+
 	private void createIndexBuffer() {
+		// @formatter:off
+
 		//
 		// 3. create the index buffer for each face
 		//
@@ -129,10 +134,12 @@ public class NormalisedCube extends SceneObject {
 		//     | \|
 		//   k +--+ k + n + 1
 
+		// @formatter:on
+
 		indices = new int[6 * vertices.length]; // 2 tris * 3 verts * width * height
 
 		int ns = NSEGMENTS + 1;
-		
+
 		int n = 0;
 		for (int s = 0; s < 6; s++) {
 			for (int i = 0; i < NSEGMENTS; i++) { // note there is no quad for the last row
@@ -153,7 +160,7 @@ public class NormalisedCube extends SceneObject {
 		indexBuffer = GLBuffers.createIndexBuffer(indices);
 
 	}
-	
+
 	@Override
 	protected void drawSelf(Matrix4f modelMatrix) {
 		shader.enable();
