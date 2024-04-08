@@ -21,8 +21,8 @@ public class Triangle extends SceneObject {
 	private Shader shader;
 	private Vector4f[] vertices;
 	private int vertexBuffer;
-	private float[] colour = {1f, 1f, 1f, 1f};
-	
+	private float[] colour = { 1f, 1f, 1f, 1f };
+
 	public Triangle(Color colour) {
 		shader = ShaderLibrary.instance.compileShader(VERTEX_SHADER, FRAGMENT_SHADER);
 
@@ -34,19 +34,19 @@ public class Triangle extends SceneObject {
 		//         0
 		//       /   \
 		//     /       \       y
-		//   /           \     |   RH 
+		//   /           \     |   RH
 		//  1------*------2    +-x
 		//                    /
 		//                   z
-				
+
 		vertices = new Vector4f[] {
 			new Vector4f(0, 1, 0, 1),
 			new Vector4f(-1, 0, 0, 1),
 			new Vector4f( 1, 0, 0, 1),
 		};
-			
+
 		vertexBuffer = GLBuffers.createBuffer(vertices);
-		
+
 		// @formatter:on
 	}
 
@@ -59,8 +59,7 @@ public class Triangle extends SceneObject {
 		shader.setUniform("u_colour", colour);
 
 		// Draw a solid triangle
-		glDrawArrays(GL_TRIANGLES, 0, vertices.length);           	
+		glDrawArrays(GL_TRIANGLES, 0, vertices.length);
 	}
 
-	
 }

@@ -36,7 +36,7 @@ public class Triangle extends SceneObject {
 		// @formatter:on
 
 		vertexBuffer = GLBuffers.createBuffer(vertices);
-		
+
 		// convert java Color into RGBA
 		float[] rgba = colour.getComponents(new float[4]);
 		this.colour = new Vector4f(rgba[0], rgba[1], rgba[2], rgba[3]);
@@ -45,10 +45,10 @@ public class Triangle extends SceneObject {
 	@Override
 	protected void drawSelf(Matrix4f mvpMatrix) {
 		shader.enable();
-		
+
 		shader.setUniform("u_mvpMatrix", mvpMatrix);
 		shader.setAttribute("a_position", vertexBuffer);
-		
+
 		if (shader.hasUniform("u_colour")) {
 			shader.setUniform("u_colour", colour);
 		}
