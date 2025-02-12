@@ -1,1 +1,1 @@
-# comp3170-23s1-demos
+# comp3170-lwjgl-demos
