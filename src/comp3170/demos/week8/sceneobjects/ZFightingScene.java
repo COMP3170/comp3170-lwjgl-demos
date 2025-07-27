@@ -8,13 +8,13 @@ import java.awt.Color;
 
 import comp3170.InputManager;
 import comp3170.SceneObject;
-import comp3170.demos.common.cameras.Camera;
-import comp3170.demos.week8.cameras.PerspectiveCamera;
+import comp3170.demos.common.cameras.ICamera;
+import comp3170.demos.week8.cameras.Camera;
 
 public class ZFightingScene extends SceneObject {
 
 	private Quad blueQuad;
-	private Camera camera;
+	private ICamera camera;
 
 	public ZFightingScene() {
 		Quad redQuad = new Quad(Color.red);
@@ -24,10 +24,10 @@ public class ZFightingScene extends SceneObject {
 		blueQuad.setParent(this);
 		blueQuad.getMatrix().rotateY(0.0001f);
 
-		camera = new PerspectiveCamera();
+		camera = new Camera();
 	}
 
-	public Camera getCamera() {
+	public ICamera getCamera() {
 		return camera;
 	}
 

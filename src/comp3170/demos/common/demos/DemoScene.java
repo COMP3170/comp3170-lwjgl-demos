@@ -2,7 +2,7 @@ package comp3170.demos.common.demos;
 
 import comp3170.InputManager;
 import comp3170.SceneObject;
-import comp3170.demos.common.cameras.Camera;
+import comp3170.demos.common.cameras.ICamera;
 import comp3170.demos.common.lights.Light;
 import comp3170.demos.common.sceneobjects.Axes3D;
 
@@ -16,7 +16,7 @@ import comp3170.demos.common.sceneobjects.Axes3D;
 public class DemoScene extends SceneObject {
 
 	public static DemoScene theScene;
-	private Camera camera;
+	private ICamera camera;
 	private Light light;
 
 	public DemoScene() {
@@ -29,7 +29,7 @@ public class DemoScene extends SceneObject {
 		axes.setParent(this);
 	}
 
-	public Camera getCamera() {
+	public ICamera getCamera() {
 		return camera;
 	}
 

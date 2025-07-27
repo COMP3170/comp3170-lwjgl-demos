@@ -6,13 +6,13 @@ import java.awt.Color;
 
 import comp3170.InputManager;
 import comp3170.SceneObject;
-import comp3170.demos.common.cameras.Camera;
+import comp3170.demos.common.cameras.ICamera;
 import comp3170.demos.common.cameras.PerspectiveOrbittingCamera;
 import comp3170.demos.common.sceneobjects.Axes3D;
 import comp3170.demos.common.sceneobjects.Grid;
 
 public class Scene extends SceneObject {
-	private Camera camera;
+	private ICamera camera;
 
 	public Scene() {
 
@@ -29,7 +29,7 @@ public class Scene extends SceneObject {
 		camera = new PerspectiveOrbittingCamera(2, TAU/6, 1, 0.1f, 10f);
 	}
 
-	public Camera getCamera() {
+	public ICamera getCamera() {
 		return camera;
 	}
 
