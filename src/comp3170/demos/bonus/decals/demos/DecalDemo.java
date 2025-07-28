@@ -73,6 +73,7 @@ public class DecalDemo implements IWindowListener {
 	public void draw() {
 		update();
 
+		glViewport(0, 0, screenWidth, screenHeight);
 		glClear(GL_COLOR_BUFFER_BIT);
 		glClear(GL_DEPTH_BUFFER_BIT);
 

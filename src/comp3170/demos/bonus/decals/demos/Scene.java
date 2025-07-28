@@ -4,16 +4,23 @@ import org.joml.Matrix4f;
 
 import comp3170.InputManager;
 import comp3170.SceneObject;
+import comp3170.demos.bonus.decals.cameras.Camera;
+import comp3170.demos.bonus.decals.sceneobjects.Quad;
 import comp3170.demos.common.cameras.ICamera;
 
 public class Scene extends SceneObject {
 
 	public static Scene theScene = null;
 
-	private ICamera camera;
+	private Camera camera;
 	
 	public Scene() {
 		theScene = this;
+		camera = new Camera();
+		camera.setParent(this);
+		
+		Quad quad = new Quad();
+		quad.setParent(this);
 	}
 
 	public ICamera getCamera() {
