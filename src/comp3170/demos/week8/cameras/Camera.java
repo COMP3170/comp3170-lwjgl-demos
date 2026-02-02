@@ -8,8 +8,8 @@ import org.joml.Vector4f;
 import comp3170.InputManager;
 import comp3170.SceneObject;
 import comp3170.demos.common.cameras.ICamera;
-import comp3170.demos.common.cameras.OrbitingArmature;
 import comp3170.demos.common.cameras.PerspectiveCamera;
+import comp3170.demos.common.sceneobjects.OrbitingArmature;
 
 public class Camera extends SceneObject implements ICamera {
 
