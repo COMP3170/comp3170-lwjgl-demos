@@ -6,7 +6,7 @@ import java.awt.Color;
 
 import comp3170.InputManager;
 import comp3170.SceneObject;
-import comp3170.demos.common.cameras.Camera;
+import comp3170.demos.common.cameras.ICamera;
 import comp3170.demos.common.cameras.OrthographicOrbittingCamera;
 import comp3170.demos.common.sceneobjects.Axes3D;
 import comp3170.demos.common.sceneobjects.Grid;
@@ -31,7 +31,7 @@ public class DepthScene extends SceneObject {
 		camera = new DepthSceneCamera();
 	}
 
-	public Camera getCamera() {
+	public ICamera getCamera() {
 		return camera;
 	}
 

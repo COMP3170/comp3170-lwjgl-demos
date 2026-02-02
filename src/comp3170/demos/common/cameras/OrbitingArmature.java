@@ -12,42 +12,20 @@ import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
 import comp3170.InputManager;
+import comp3170.SceneObject;
 
-/**
- * A camera that revolves around the origin.
- * Note that this is just an abstract class that handles movement.
- * It needs to be extended to implement the projection matrix
- *
- * @author malcolmryan. Ported to GLFW controls by camedmond
- */
-
-public abstract class OrbittingCamera implements ICamera {
-
-	private Matrix4f modelMatrix = new Matrix4f();
-
-	private float distance;
-	private Vector3f angle;
-
-	public OrbittingCamera(float distance) {
-		this.distance = distance;
-		angle = new Vector3f(0,0,0);
-		modelMatrix.translate(0,0,distance);
-	}
-
-	/**
-	 * Get the view matrix
-	 */
-	@Override
-	public Matrix4f getViewMatrix(Matrix4f dest) {
-		// invert the model matrix (assuming we have never applied any scale)
-		return modelMatrix.invert(dest);
-	}
-
+public class OrbitingArmature extends SceneObject {
 
 	final static float ROTATION_SPEED = TAU / 4;
 	final static float MOVEMENT_SPEED = 1;
 
-	@Override
+	private float distance;
+	private Vector3f angle = new Vector3f(0, 0, 0);
+
+	public OrbitingArmature(float distance) {
+		this.distance = distance;
+	}
+	
 	public void update(float deltaTime, InputManager input) {
 
 		// key controls to orbit camera around the origin
@@ -70,10 +48,13 @@ public abstract class OrbittingCamera implements ICamera {
 		if (input.isKeyDown(GLFW_KEY_W)) {
 			distance -= MOVEMENT_SPEED * deltaTime;
 		}
-
+		
+		Matrix4f modelMatrix = getMatrix();
 		modelMatrix.identity();
 		modelMatrix.rotateY(angle.y);	// heading
 		modelMatrix.rotateX(angle.x);	// pitch
+		modelMatrix.rotateZ(angle.z);	// roll
 		modelMatrix.translate(0,0,distance);
 	}
+
 }
