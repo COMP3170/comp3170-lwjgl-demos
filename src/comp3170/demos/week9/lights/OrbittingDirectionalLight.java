@@ -1,102 +1,67 @@
 package comp3170.demos.week9.lights;
 
-import static comp3170.Math.TAU;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_A;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_D;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_S;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_W;
-import static org.lwjgl.opengl.GL11.GL_LINES;
-import static org.lwjgl.opengl.GL11.glDrawArrays;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_KP_8;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_KP_2;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_KP_4;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_KP_6;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_KP_7;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_KP_9;
 
-import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
 
-import comp3170.GLBuffers;
 import comp3170.InputManager;
 import comp3170.SceneObject;
-import comp3170.Shader;
-import comp3170.ShaderLibrary;
-import comp3170.demos.common.lights.Light;
+import comp3170.demos.common.lights.DirectionalLight;
+import comp3170.demos.common.lights.ILight;
+import comp3170.demos.common.sceneobjects.OrbitingArmature;
 
-public class DirectionalLight extends SceneObject implements Light {
+/**
+ * Implement a directional light that rotates around the parent object
+ */
 
-	static final private String VERTEX_SHADER = "simpleVertex.glsl";
-	static final private String FRAGMENT_SHADER = "simpleFragment.glsl";
-	private Shader shader;
+public class OrbittingDirectionalLight extends SceneObject implements ILight {
 
-	private Vector4f direction = new Vector4f(1,0,0,0);
-	private Vector3f intensity = new Vector3f(1,1,1);	// white
-	private Vector3f ambient = new Vector3f(0.1f,0.1f,0.1f); // dim white
-	private Vector4f[] vertices;
-	private int vertexBuffer;
-	private Vector4f colour = new Vector4f(1,1,0,1); // yellow
-	private float length = 10;
-
-
-	public DirectionalLight() {
-		shader = ShaderLibrary.instance.compileShader(VERTEX_SHADER, FRAGMENT_SHADER);
-		vertices = new Vector4f[] {
-			new Vector4f(0,0,0,1),
-			new Vector4f(0,0,0,1),
-		};
-		vertices[1].add(direction);
-
-		vertexBuffer = GLBuffers.createBuffer(vertices);
-		getMatrix().scale(length);
+	// note this distance doesn't really matter for a directional light.
+	private float distance = 10;
+	private OrbitingArmature armature;
+	private DirectionalLight light;
+	
+	// change default key-bindings to avoid overlap with Camera
+	private int keyUp = GLFW_KEY_KP_8;
+	private int keyDown = GLFW_KEY_KP_2;
+	private int keyLeft = GLFW_KEY_KP_4;
+	private int keyRight = GLFW_KEY_KP_6;
+	private int keyOut = GLFW_KEY_KP_7;
+	private int keyIn = GLFW_KEY_KP_9;
+	
+	public OrbittingDirectionalLight() {
+		armature = new OrbitingArmature(distance);
+		armature.setParent(this);
+		armature.rebindKeys(keyUp, keyDown, keyLeft, keyRight, keyIn, keyOut);
+		armature.setDrawArm(true);
+		
+		light = new DirectionalLight();
+		light.setParent(armature);
 	}
 
 	@Override
 	public Vector4f getSourceVector(Vector4f dest) {
-		return dest.set(direction);
+		return light.getSourceVector(dest);
 	}
 
 	@Override
 	public Vector3f getIntensity(Vector3f dest) {
-		return dest.set(intensity);
+		return light.getIntensity(dest);
 	}
 
 	@Override
 	public Vector3f getAmbient(Vector3f dest) {
-		return dest.set(ambient);
+		return light.getAmbient(dest);
 	}
 
-	private final static float ROTATION_SPEED = TAU / 6;
-	private Vector3f angle = new Vector3f();
-
-	public void update(InputManager input, float deltaTime) {
-
-		if (input.isKeyDown(GLFW_KEY_A)) {
-			angle.y = (angle.y - ROTATION_SPEED * deltaTime) % TAU;
-		}
-		if (input.isKeyDown(GLFW_KEY_D)) {
-			angle.y = (angle.y + ROTATION_SPEED * deltaTime) % TAU;
-		}
-		if (input.isKeyDown(GLFW_KEY_W)) {
-			angle.z = (angle.z - ROTATION_SPEED * deltaTime) % TAU;
-		}
-		if (input.isKeyDown(GLFW_KEY_S)) {
-			angle.z = (angle.z + ROTATION_SPEED * deltaTime) % TAU;
-		}
-
-		direction.set(1,0,0,0);
-		direction.rotateZ(angle.z).rotateY(angle.y);
-
-		// update the vertex buffer
-		vertices[1].set(0,0,0,1).add(direction);
-		GLBuffers.updateBuffer(vertexBuffer, vertices);
+	public void update(float deltaTime, InputManager input) {
+		armature.update(deltaTime, input);	
 	}
-
-	@Override
-	protected void drawSelf(Matrix4f mvpMatrix) {
-		shader.enable();
-
-		shader.setAttribute("a_position", vertexBuffer);
-		shader.setUniform("u_mvpMatrix", mvpMatrix);
-		shader.setUniform("u_colour", colour);
-
-		glDrawArrays(GL_LINES, 0, vertices.length);
-	}
-
 
 }

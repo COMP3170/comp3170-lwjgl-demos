@@ -2,18 +2,18 @@ package comp3170.demos.week9.sceneobjects;
 
 import comp3170.InputManager;
 import comp3170.SceneObject;
-import comp3170.demos.common.lights.Light;
+import comp3170.demos.common.lights.ILight;
 import comp3170.demos.common.sceneobjects.Axes3D;
 import comp3170.demos.common.sceneobjects.Grid;
 import comp3170.demos.week9.cameras.Camera;
 import comp3170.demos.week9.cameras.OrthographicCamera;
-import comp3170.demos.week9.lights.DirectionalLight;
+import comp3170.demos.week9.lights.OrbittingDirectionalLight;
 
 public class Scene extends SceneObject {
 
 	public static Scene theScene = null;
 	private OrthographicCamera camera;
-	private DirectionalLight light;
+	private OrbittingDirectionalLight light;
 	private Cylinder cylinder;
 
 	public Scene() {
@@ -32,7 +32,7 @@ public class Scene extends SceneObject {
 		cylinder.getMatrix().scale(0.75f, 1f, 0.75f);
 
 		camera = new OrthographicCamera();
-		light = new DirectionalLight();
+		light = new OrbittingDirectionalLight();
 		light.setParent(this);
 	}
 
@@ -40,13 +40,13 @@ public class Scene extends SceneObject {
 		return camera;
 	}
 
-	public Light getLight() {
+	public ILight getLight() {
 		return light;
 	}
 
 	public void update(InputManager input, float deltaTime) {
 		camera.update(deltaTime, input);
-		light.update(input, deltaTime);
+		light.update(deltaTime, input);
 		cylinder.update(input, deltaTime);
 	}
 
