@@ -25,7 +25,7 @@ import comp3170.InputManager;
 import comp3170.OpenGLException;
 import comp3170.ShaderLibrary;
 import comp3170.Window;
-import comp3170.demos.common.cameras.Camera;
+import comp3170.demos.common.cameras.ICamera;
 import comp3170.demos.week8.sceneobjects.ZFightingScene;
 
 public class ZFightingDemo implements IWindowListener {
@@ -96,7 +96,7 @@ public class ZFightingDemo implements IWindowListener {
 		glClearDepth(1f);
 		glClear(GL_DEPTH_BUFFER_BIT);
 
-		Camera camera = scene.getCamera();
+		ICamera camera = scene.getCamera();
 		camera.getViewMatrix(viewMatrix);
 		camera.getProjectionMatrix(projectionMatrix);
 		mvpMatrix.set(projectionMatrix).mul(viewMatrix);

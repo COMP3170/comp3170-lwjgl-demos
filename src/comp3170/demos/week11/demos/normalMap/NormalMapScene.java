@@ -1,24 +1,24 @@
-package comp3170.demos.week11.sceneobjects;
+package comp3170.demos.week11.demos.normalMap;
 
 import comp3170.InputManager;
 import comp3170.SceneObject;
-import comp3170.demos.common.lights.Light;
+import comp3170.demos.common.lights.ILight;
 import comp3170.demos.week11.cameras.Camera;
-import comp3170.demos.week11.cameras.OrbitingCamera;
-import comp3170.demos.week11.lights.DirectionalLight;
+import comp3170.demos.week11.lights.OrbittingDirectionalLight;
+import comp3170.demos.week11.sceneobjects.NormalMapQuad;
 
 public class NormalMapScene extends SceneObject {
 
 	public static NormalMapScene theScene = null;
-	private OrbitingCamera camera;
-	private DirectionalLight light;
+	private Camera camera;
+	private OrbittingDirectionalLight light;
 	private NormalMapQuad quad;
 
 	public NormalMapScene() {
 		theScene = this;
 
-		camera = new OrbitingCamera();
-		light = new DirectionalLight();
+		camera = new Camera();
+		light = new OrbittingDirectionalLight();
 		light.setParent(this);
 
 		quad = new NormalMapQuad();
@@ -29,14 +29,14 @@ public class NormalMapScene extends SceneObject {
 		return camera;
 	}
 
-	public Light getLight() {
+	public ILight getLight() {
 		return light;
 	}
 
 	public void update(float deltaTime, InputManager input) {
-		camera.update(input, deltaTime);
-		light.update(input, deltaTime);
-		quad.update(input, deltaTime);
+		camera.update(deltaTime, input);
+		light.update(deltaTime, input);
+		quad.update(deltaTime, input);
 	}
 
 }

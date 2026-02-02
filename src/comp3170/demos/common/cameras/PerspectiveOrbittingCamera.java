@@ -1,57 +1,59 @@
 package comp3170.demos.common.cameras;
 
-import static comp3170.Math.TAU;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_A;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_Q;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_Z;
-
 import org.joml.Matrix4f;
+import org.joml.Vector4f;
 
 import comp3170.InputManager;
+import comp3170.SceneObject;
+import comp3170.demos.common.sceneobjects.OrbitingArmature;
 
 /**
- * A perspective camera that orbits the origin.
+ * This class combines the OrthographicCamera and the OrbittingArmature to 
+ * implement an orthographic camera that orbits its parent in the scene graph
+ * 
+ * It creates a local scene graph as:
+ * 
+ * this -> armature -> camera
+ *  
+ * I split this into separate classes to handle camera & orbiting features, 
+ * but kept this class for backward compatibility with old code. 
  *
  * @author malcolmryan
  *
  */
 
-public class PerspectiveOrbittingCamera extends OrbittingCamera implements Camera {
+public class PerspectiveOrbittingCamera extends SceneObject implements ICamera {
 
-	private float near;
-	private float far;
-	private float fovy;
-	private float aspect;
+	private PerspectiveCamera camera;
+	private OrbitingArmature armature;
 
 	public PerspectiveOrbittingCamera(float distance, float fovy, float aspect, float near, float far) {
-		super(distance);
-		this.fovy = fovy;
-		this.aspect = aspect;
-		this.near = near;
-		this.far = far;
+		armature = new OrbitingArmature(distance);
+		armature.setParent(this);
+		
+		camera = new PerspectiveCamera(fovy, aspect, near, far);
+		camera.setParent(armature);
+	}
+
+	@Override
+	public void update(float deltaTime, InputManager input) {
+		camera.update(deltaTime, input);
+		armature.update(deltaTime, input);
 	}
 
 	@Override
 	public Matrix4f getProjectionMatrix(Matrix4f dest) {
-		return dest.setPerspective(fovy, aspect, near, far);
+		return camera.getProjectionMatrix(dest);
 	}
 
-	private float FOV_DEFAULT = TAU / 6;
-	private float FOV_CHANGE = TAU / 6;
+	@Override
+	public Matrix4f getViewMatrix(Matrix4f dest) {
+		return camera.getViewMatrix(dest);
+	}
 
 	@Override
-	public void update(float deltaTime, InputManager input) {
-
-		super.update(deltaTime, input);
-		if (input.isKeyDown(GLFW_KEY_Z)) {
-			fovy += FOV_CHANGE * deltaTime;
-		}
-		if (input.isKeyDown(GLFW_KEY_A)) {
-			fovy = FOV_DEFAULT;
-		}
-		if (input.isKeyDown(GLFW_KEY_Q)) {
-			fovy -= FOV_CHANGE * deltaTime;
-		}
+	public Vector4f getDirection(Vector4f dest) {
+		return camera.getDirection(dest);
 	}
 
 

@@ -6,14 +6,14 @@ import java.awt.Color;
 
 import comp3170.InputManager;
 import comp3170.SceneObject;
-import comp3170.demos.common.cameras.Camera;
+import comp3170.demos.common.cameras.ICamera;
 import comp3170.demos.common.sceneobjects.Axes3D;
 import comp3170.demos.common.sceneobjects.Grid;
-import comp3170.demos.week8.cameras.PerspectiveCamera;
+import comp3170.demos.week8.cameras.Camera;
 
 public class TransparencyScene extends SceneObject {
 
-	private PerspectiveCamera camera;
+	private Camera camera;
 
 	public TransparencyScene() {
 		Axes3D axes = new Axes3D();
@@ -32,11 +32,11 @@ public class TransparencyScene extends SceneObject {
 		Triangle greenTriangle = new Triangle(green);
 		greenTriangle.setParent(this); greenTriangle.getMatrix().rotateY(TAU/6);
 
-		camera = new PerspectiveCamera();
+		camera = new Camera();
 
 	}
 
-	public Camera getCamera() {
+	public ICamera getCamera() {
 		return camera;
 	}
 

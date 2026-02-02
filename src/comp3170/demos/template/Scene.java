@@ -2,7 +2,7 @@ package comp3170.demos.template;
 
 import comp3170.InputManager;
 import comp3170.SceneObject;
-import comp3170.demos.common.cameras.Camera;
+import comp3170.demos.common.cameras.ICamera;
 import comp3170.demos.common.sceneobjects.Axes3D;
 import comp3170.demos.common.sceneobjects.Grid;
 import comp3170.demos.template.sceneobjects.Cylinder;
@@ -52,7 +52,7 @@ public class Scene extends SceneObject {
 		cylinder.update(deltaTime, input);
 	}
 
-	public Camera getCamera() {
+	public ICamera getCamera() {
 		return camera;
 	}
 

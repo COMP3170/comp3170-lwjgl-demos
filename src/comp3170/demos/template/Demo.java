@@ -22,7 +22,7 @@ import comp3170.OpenGLException;
 import comp3170.ShaderLibrary;
 import comp3170.TextureLibrary;
 import comp3170.Window;
-import comp3170.demos.common.cameras.Camera;
+import comp3170.demos.common.cameras.ICamera;
 
 /**
  * Template for Demo scenes.
@@ -145,7 +145,7 @@ public class Demo implements IWindowListener{
 		// We typically use a Camera object to implement the view and projection matrices
 		// We multiply the view and projection matrices together to get the MVP matrix
 		
-		Camera camera = scene.getCamera();
+		ICamera camera = scene.getCamera();
 		camera.getViewMatrix(viewMatrix);
 		camera.getProjectionMatrix(projectionMatrix);
 		mvpMatrix.set(projectionMatrix).mul(viewMatrix);
@@ -166,7 +166,7 @@ public class Demo implements IWindowListener{
 		screenWidth = width;
 		screenHeight = height;
 		// adjust the camera here if necessary
-		Camera camera = scene.getCamera();
+		ICamera camera = scene.getCamera();
 		// ...
 	}
 

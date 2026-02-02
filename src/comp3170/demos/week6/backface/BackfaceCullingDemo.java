@@ -24,7 +24,7 @@ import comp3170.InputManager;
 import comp3170.OpenGLException;
 import comp3170.ShaderLibrary;
 import comp3170.Window;
-import comp3170.demos.common.cameras.Camera;
+import comp3170.demos.common.cameras.ICamera;
 
 public class BackfaceCullingDemo implements IWindowListener {
 
@@ -119,7 +119,7 @@ public class BackfaceCullingDemo implements IWindowListener {
         // clear the colour buffer
 		glClear(GL_COLOR_BUFFER_BIT);
 
-		Camera camera = scene.getCamera();
+		ICamera camera = scene.getCamera();
 		// pre-multiply projetion and view matrices
 		camera.getViewMatrix(viewMatrix);
 		camera.getProjectionMatrix(projectionMatrix);
