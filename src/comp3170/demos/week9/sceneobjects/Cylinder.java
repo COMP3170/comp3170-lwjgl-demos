@@ -26,7 +26,7 @@ import comp3170.InputManager;
 import comp3170.SceneObject;
 import comp3170.Shader;
 import comp3170.ShaderLibrary;
-import comp3170.demos.common.lights.Light;
+import comp3170.demos.common.lights.ILight;
 import comp3170.demos.week9.cameras.Camera;
 
 public class Cylinder extends SceneObject {
@@ -229,7 +229,7 @@ public class Cylinder extends SceneObject {
 		shader.setUniform("u_viewDirection", camera.getViewVector(viewDirection));
 
 		// light
-		Light light = Scene.theScene.getLight();
+		ILight light = Scene.theScene.getLight();
 		shader.setUniform("u_lightDirection", light.getSourceVector(lightDirection));
 		shader.setUniform("u_intensity", light.getIntensity(lightIntensity));
 		shader.setUniform("u_ambientIntensity", light.getAmbient(ambientIntensity));

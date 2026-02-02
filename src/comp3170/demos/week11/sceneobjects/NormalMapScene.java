@@ -2,7 +2,7 @@ package comp3170.demos.week11.sceneobjects;
 
 import comp3170.InputManager;
 import comp3170.SceneObject;
-import comp3170.demos.common.lights.Light;
+import comp3170.demos.common.lights.ILight;
 import comp3170.demos.week11.cameras.Camera;
 import comp3170.demos.week11.cameras.OrbitingCamera;
 import comp3170.demos.week11.lights.DirectionalLight;
@@ -29,7 +29,7 @@ public class NormalMapScene extends SceneObject {
 		return camera;
 	}
 
-	public Light getLight() {
+	public ILight getLight() {
 		return light;
 	}
 

@@ -17,9 +17,9 @@ import comp3170.InputManager;
 import comp3170.SceneObject;
 import comp3170.Shader;
 import comp3170.ShaderLibrary;
-import comp3170.demos.common.lights.Light;
+import comp3170.demos.common.lights.ILight;
 
-public class DirectionalLight extends SceneObject implements Light {
+public class DirectionalLight extends SceneObject implements ILight {
 
 	static final private String VERTEX_SHADER = "simpleVertex.glsl";
 	static final private String FRAGMENT_SHADER = "simpleFragment.glsl";

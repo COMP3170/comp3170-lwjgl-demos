@@ -37,7 +37,7 @@ import comp3170.SceneObject;
 import comp3170.Shader;
 import comp3170.ShaderLibrary;
 import comp3170.TextureLibrary;
-import comp3170.demos.common.lights.Light;
+import comp3170.demos.common.lights.ILight;
 
 public class NormalMapQuad extends SceneObject {
 
@@ -279,7 +279,7 @@ public class NormalMapQuad extends SceneObject {
 		shader.setAttribute("a_texcoord", uvBuffer);
 
 		// light
-		Light light = NormalMapScene.theScene.getLight();
+		ILight light = NormalMapScene.theScene.getLight();
 		shader.setUniform("u_lightDirection", light.getSourceVector(lightDirection));
 		shader.setUniform("u_intensity", light.getIntensity(lightIntensity));
 		shader.setUniform("u_ambientIntensity", light.getAmbient(ambientIntensity));
