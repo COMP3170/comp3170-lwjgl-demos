@@ -49,6 +49,7 @@ public class OrthographicCamera extends SceneObject implements ICamera {
 	@Override
 	public Vector4f getDirection(Vector4f dest) {
 		// for an orthographic camera, the direction is the same everywhere
+		// and is equal to the local z-axis of the camera 
 		getModelToWorldMatrix(modelMatrix);
 		return dest.set(0,0,1,0).mul(modelMatrix);
 	}
