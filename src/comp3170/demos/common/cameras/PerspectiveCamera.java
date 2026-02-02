@@ -11,6 +11,16 @@ import org.joml.Vector4f;
 import comp3170.InputManager;
 import comp3170.SceneObject;
 
+/**
+ * An implementation of the ICamera interface for a perspective camera.
+ * 
+ * Note: this camera is implemented as a SceneObject so it can be attached to the scenegraph
+ * and moved using getMatrix(). The view matrix is automatically calculated using the modelToWorld matrix
+ * of the camera in the scene graph.
+ * 
+ * Note: The getDirection() method is left as an exercise for the student.
+ */
+
 public class PerspectiveCamera extends SceneObject implements ICamera {
 
 	private float fovy;
@@ -48,12 +58,25 @@ public class PerspectiveCamera extends SceneObject implements ICamera {
 		return dest;
 	}
 
+	/**
+	 * Get the 'direction' vector for the camera in world space, to compute lighting.
+	 * Note that for a perspective camera, this is not just the camera z direction.
+	 * This has been deliberate left incomplete as an exercise for the students.
+	 * Refer to the week 9 lectures for details on how to implement this.
+	 * 
+	 * TODO: If you use this class in your assignment without updating this comment, you're likely to lose marks. 
+	 */
+	
 	@Override
 	public Vector4f getDirection(Vector4f dest) {
 		// TODO Auto-generated method stub
 		throw new UnsupportedOperationException();
 	}
 
+	/**
+	 * Press page up / page down to change the FOV. Press end to restore the default FOV 
+	 */
+	
 	public void update(float deltaTime, InputManager input) {
 		if (input.isKeyDown(GLFW_KEY_PAGE_DOWN)) {
 			fovy += FOVY_CHANGE * deltaTime;

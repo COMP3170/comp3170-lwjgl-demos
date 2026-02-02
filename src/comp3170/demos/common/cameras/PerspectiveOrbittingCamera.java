@@ -5,10 +5,16 @@ import org.joml.Vector4f;
 
 import comp3170.InputManager;
 import comp3170.SceneObject;
+import comp3170.demos.common.sceneobjects.OrbitingArmature;
 
 /**
- * A perspective camera that orbits the origin.
+ * This class combines the OrthographicCamera and the OrbittingArmature to 
+ * implement an orthographic camera that orbits its parent in the scene graph
  * 
+ * It creates a local scene graph as:
+ * 
+ * this -> armature -> camera
+ *  
  * I split this into separate classes to handle camera & orbiting features, 
  * but kept this class for backward compatibility with old code. 
  *
