@@ -114,14 +114,11 @@ public class Quad extends SceneObject {
 	public void drawSelf(Matrix4f mvpMatrix) {
 		shader.enable();
 
-		// Texture Settings
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, textureID);
-
 		shader.setUniform("u_mvpMatrix", mvpMatrix);
 		shader.setAttribute("a_position", vertexBuffer);
 		shader.setAttribute("a_texcoord", uvBuffer);
-
+		
+		// Texture Settings
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, textureID);
 		shader.setUniform("u_texture", 0);
@@ -129,7 +126,6 @@ public class Quad extends SceneObject {
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 		glDrawElements(GL_TRIANGLES, indices.length, GL_UNSIGNED_INT, 0);
-
 	}
 
 }
