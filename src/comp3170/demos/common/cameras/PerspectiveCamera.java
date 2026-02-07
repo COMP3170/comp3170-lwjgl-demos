@@ -6,7 +6,6 @@ import static org.lwjgl.glfw.GLFW.GLFW_KEY_PAGE_DOWN;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_PAGE_UP;
 
 import org.joml.Matrix4f;
-import org.joml.Vector4f;
 
 import comp3170.InputManager;
 import comp3170.SceneObject;
@@ -45,32 +44,24 @@ public class PerspectiveCamera extends SceneObject implements ICamera {
 		return dest.setPerspective(fovy, aspect, near, far);
 	}
 
-	private Matrix4f modelToWorldMatrix = new Matrix4f();
-	
 	@Override
 	public Matrix4f getViewMatrix(Matrix4f dest) {
 
 		// invert the model matrix and remove scale
-		getModelToWorldMatrix(modelToWorldMatrix);
-		modelToWorldMatrix.invert(dest);
+		getModelToWorldMatrix(dest);
+		dest.invert();
 		dest.normalize3x3();
 		
 		return dest;
 	}
 
 	/**
-	 * Get the 'direction' vector for the camera in world space, to compute lighting.
-	 * Note that for a perspective camera, this is not just the camera z direction.
-	 * This has been deliberate left incomplete as an exercise for the students.
-	 * Refer to the week 9 lectures for details on how to implement this.
-	 * 
-	 * TODO: If you use this class in your assignment without updating this comment, you're likely to lose marks. 
+	 * Get the model to world matrix for the camera
 	 */
 	
 	@Override
-	public Vector4f getDirection(Vector4f dest) {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException();
+	public Matrix4f getModelMatrix(Matrix4f dest) {
+		return getModelToWorldMatrix(dest);
 	}
 
 	/**

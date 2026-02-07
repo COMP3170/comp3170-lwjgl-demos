@@ -1,7 +1,6 @@
 package comp3170.demos.common.cameras;
 
 import org.joml.Matrix4f;
-import org.joml.Vector4f;
 
 import comp3170.InputManager;
 import comp3170.SceneObject;
@@ -50,8 +49,8 @@ public class OrthographicOrbittingCamera extends SceneObject implements ICamera 
 	}
 
 	@Override
-	public Vector4f getDirection(Vector4f dest) {
-		return camera.getDirection(dest);
+	public Matrix4f getModelMatrix(Matrix4f dest) {
+		return camera.getModelMatrix(dest);
 	}
 
 

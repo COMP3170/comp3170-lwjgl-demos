@@ -208,10 +208,10 @@ public class Cylinder extends SceneObject {
 	}
 
 	private Matrix4f modelMatrix = new Matrix4f();
-
 	private Vector4f lightDirection = new Vector4f();
 	private Vector3f lightIntensity = new Vector3f();
 	private Vector3f ambientIntensity = new Vector3f();
+	private Matrix4f cameraMatrix = new Matrix4f();
 	private Vector4f viewDirection = new Vector4f();
 
 	@Override
@@ -225,8 +225,13 @@ public class Cylinder extends SceneObject {
 		shader.setUniform("u_normalMatrix", modelMatrix.normal(normalMatrix));
 
 		// camera
+
+		// the view direction for an orthrgrahic camera is equal to the k vector of its model matrix
+		// NOTE: This does not work for a perspective camera.  
 		Camera camera = Scene.theScene.getCamera();
-		shader.setUniform("u_viewDirection", camera.getViewVector(viewDirection));
+		camera.getModelMatrix(cameraMatrix);		
+		cameraMatrix.getColumn(3, viewDirection);
+		shader.setUniform("u_viewDirection", viewDirection);
 
 		// light
 		ILight light = Scene.theScene.getLight();

@@ -18,7 +18,7 @@ import comp3170.InputManager;
 import comp3170.OpenGLException;
 import comp3170.ShaderLibrary;
 import comp3170.Window;
-import comp3170.demos.week9.cameras.Camera;
+import comp3170.demos.common.cameras.ICamera;
 import comp3170.demos.week9.sceneobjects.Scene;
 
 public class Week9 implements IWindowListener {
@@ -77,7 +77,7 @@ public class Week9 implements IWindowListener {
 		glClearDepth(1f);
 		glClear(GL_DEPTH_BUFFER_BIT);
 
-		Camera camera = scene.getCamera();
+		ICamera camera = scene.getCamera();
 		camera.getViewMatrix(viewMatrix);
 		camera.getProjectionMatrix(projectionMatrix);
 		mvpMatrix.set(projectionMatrix).mul(viewMatrix);

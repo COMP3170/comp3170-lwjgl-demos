@@ -1,7 +1,6 @@
 package comp3170.demos.common.cameras;
 
 import org.joml.Matrix4f;
-import org.joml.Vector4f;
 
 import comp3170.InputManager;
 
@@ -34,7 +33,7 @@ public interface ICamera {
 	 * @return
 	 */
 
-	public Vector4f getDirection(Vector4f dest);
+	public Matrix4f getModelMatrix(Matrix4f dest);
 
 	/**
 	 * Handle any per-frame updates & input

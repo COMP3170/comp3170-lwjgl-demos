@@ -41,8 +41,6 @@ public class OrthographicCamera extends SceneObject implements ICamera {
 		return dest.setOrtho(-width / 2, width / 2, -height / 2, height / 2, near, far);
 	}
 
-	private Matrix4f modelMatrix = new Matrix4f();
-
 	/**
 	 * Calculate the view matrix based on the scene graph
 	 */
@@ -51,8 +49,8 @@ public class OrthographicCamera extends SceneObject implements ICamera {
 	public Matrix4f getViewMatrix(Matrix4f dest) {
 
 		// invert the model matrix and remove scale
-		getModelToWorldMatrix(modelMatrix);
-		modelMatrix.invert(dest);
+		getModelMatrix(dest);
+		dest.invert();
 		dest.normalize3x3();
 		
 		return dest;
@@ -63,11 +61,8 @@ public class OrthographicCamera extends SceneObject implements ICamera {
 	 */
 	
 	@Override
-	public Vector4f getDirection(Vector4f dest) {
-		// for an orthographic camera, the direction is the same everywhere
-		// and is equal to the local z-axis of the camera 
-		getModelToWorldMatrix(modelMatrix);
-		return dest.set(0,0,1,0).mul(modelMatrix);
+	public Matrix4f getModelMatrix(Matrix4f dest) {
+		return getModelToWorldMatrix(dest);
 	}
 
 	/**

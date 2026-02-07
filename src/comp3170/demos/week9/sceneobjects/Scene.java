@@ -6,13 +6,12 @@ import comp3170.demos.common.lights.ILight;
 import comp3170.demos.common.sceneobjects.Axes3D;
 import comp3170.demos.common.sceneobjects.Grid;
 import comp3170.demos.week9.cameras.Camera;
-import comp3170.demos.week9.cameras.OrthographicCamera;
 import comp3170.demos.week9.lights.OrbittingDirectionalLight;
 
 public class Scene extends SceneObject {
 
 	public static Scene theScene = null;
-	private OrthographicCamera camera;
+	private Camera camera;
 	private OrbittingDirectionalLight light;
 	private Cylinder cylinder;
 
@@ -31,7 +30,7 @@ public class Scene extends SceneObject {
 		cylinder.setParent(grid);
 		cylinder.getMatrix().scale(0.75f, 1f, 0.75f);
 
-		camera = new OrthographicCamera();
+		camera = new Camera();
 		light = new OrbittingDirectionalLight();
 		light.setParent(this);
 	}
